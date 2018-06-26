@@ -1,0 +1,52 @@
+{
+  "name": "mdm-work",
+  "description": "A Vue.js project",
+  "version": "1.0.0",
+  "author": "jiaozhiye <jiaozhiye@163.com>",
+  "private": true,
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jiaozhiye/erp-vue-cli/issues"
+  },
+  "homepage": "https://github.com/jiaozhiye/erp-vue-cli",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.dev.conf.js --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.prod.conf.js --progress"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "element-ui": "2.4.1",
+    "highcharts": "^6.1.0",
+    "js-cookie": "^2.2.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.22.2",
+    "nprogress": "^0.2.0",
+    "vue": "^2.5.13",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-plugin-transform-vue-jsx": "^3.5.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.22.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "cross-env": "^5.1.5",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^2.30.1",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
+    "uglifyjs-webpack-plugin": "^1.1.1",
+    "url-loader": "^1.0.1",
+    "vue-loader": "^13.3.0",
+    "vue-style-loader": "^3.0.1",
+    "vue-template-compiler": "^2.5.2",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1",
+    "webpack-merge": "^4.1.0"
+  }
+}

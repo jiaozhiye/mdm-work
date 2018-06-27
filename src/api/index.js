@@ -146,10 +146,24 @@ export const addStaffScoreRecord = params => instance.post('/mgr/performance/add
 // 新增分类
 export const addTrainClass = params => instance.post('/mgr/train/type/add', params)
 
+// 获取分类列表
+export const getTrainClassList = () => instance.get('/mgr/train/type/list')
 
+// 获取分类记录
+export const getTrainClass = params => instance.get('/mgr/train/type/showById', {params})
 
+// 修改分类记录
+export const modTrainClass = params => instance.post('/mgr/train/type/updateById', params)
 
+// 删除分类
+export const delTrainClassRecord = params => instance.get('/mgr/train/type/deleteById', {params})
 
+// 获取文章列表
+export const getArticleList = params => instance.get('/mgr/train/article/list', {params})
 
+// 删除文章记录
+export const delArticleRecord = params => instance.get('/mgr/train/article/deleteById', {params})
 
+// 添加文章
+export const addArticleRecord = params => instance.post('/mgr/train/article/add', params)
 

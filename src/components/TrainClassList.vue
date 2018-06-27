@@ -9,20 +9,15 @@
         <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
             @click="dialog.addVisible = true">新建分类</el-button>
     </nav>
-    <div class="component-main">
+    <div class="component-main" style="padding-top: 10px;">
         <el-table size="small" :data="list" stripe border v-loading="loading">
             <el-table-column prop="name" label="分类名称" min-width="200"></el-table-column>
             <el-table-column prop="sort" label="分类排序"></el-table-column>
-            <el-table-column label="状态" width="120">
+            <el-table-column label="操作" width="160">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="操作" width="150">
-                <template slot-scope="scope">
-                    <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
+                    <el-button @click.stop="recordHandler(scope.row.id, 'modVisible')" size="mini">
                         修改
-                    </el-button><el-button @click.stop="" type="danger" size="mini">
+                    </el-button><el-button @click.stop="deleteHandler(scope.row.id)" type="danger" size="mini">
                         删除
                     </el-button>
                 </template>
@@ -33,30 +28,26 @@
         <app-add-class @reloadEvent="reloadGetData"></app-add-class>
     </app-dialog>
     <app-dialog title="修改分类" :visible.sync="dialog.modVisible">
-        <app-mod-store :record-id="recordId" @reloadEvent="reloadGetData"></app-mod-store>
+        <app-mod-class :record-id="recordId" @reloadEvent="reloadGetData"></app-mod-class>
     </app-dialog>
 </div>
 </template>
 
 <script>
-import { getStoreList, stopStore } from 'api'
+import { getTrainClassList, delTrainClassRecord } from 'api'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppAddClass from 'components/AddClass.vue'
-import AppModStore from 'components/ModStore.vue'
+import AppModClass from 'components/ModClass.vue'
 
 export default {
     name: 'app-store-list',
     data (){
         return {
-            search: {
-                name: ''
-            },
             list: [],
             loading: !1,
             dialog: {
                 addVisible: !1,
-                showVisible: !1,
                 modVisible: !1
             },
             recordId: ''
@@ -68,23 +59,22 @@ export default {
             this.recordId = _id
         },
         async getRecordList(){
-            const response = await getStoreList({ name: this.search.name })
+            this.loading = !0
+            const response = await getTrainClassList()
             if (response.code == 1){
                 this.list = response.data || []
             } else {
                 this.$message.error(response.message)
             }
+            this.loading = !1
         },
-        stopItemHandle(item){
-            this.$confirm(`确认${item.status == '1' ? '停用' : '启用'}此门店吗?`, '提示', {
+        deleteHandler(_id){
+            this.$confirm(`确认删除次分类吗?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                const response = await stopStore({
-                    id: item.id,
-                    status: item.status == '1' ? '0' : '1' // 1 -> 启用    0 -> 停用
-                })
+                const response = await delTrainClassRecord({ id: _id})
                 if (response.code == 1){
                     this.getRecordList()
                     this.$message.success(response.message)
@@ -92,9 +82,6 @@ export default {
                     this.$message.error(response.message)
                 }
             }).catch(() => {})
-        },
-        searchHandle(){
-            this.getRecordList()
         },
         reloadGetData(res){
             if (res == 'reload'){
@@ -109,7 +96,7 @@ export default {
     components: {
         AppDialog,
         AppAddClass,
-        AppModStore
+        AppModClass
     }
 }
 </script>

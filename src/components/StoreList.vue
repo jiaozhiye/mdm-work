@@ -92,12 +92,14 @@ export default {
             this.recordId = _id
         },
         async getRecordList(){
+            this.loading = !0
             const response = await getStoreList({ name: this.search.name })
             if (response.code == 1){
                 this.list = response.data || []
             } else {
                 this.$message.error(response.message)
             }
+            this.loading = !1
         },
         stopItemHandle(item){
             this.$confirm(`确认${item.status == '1' ? '停用' : '启用'}此门店吗?`, '提示', {

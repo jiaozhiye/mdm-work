@@ -13,6 +13,7 @@ const AppStaffInList = () => import('components/StaffInList.vue')
 const AppStaffOutList = () => import('components/StaffOutList.vue')
 const AppScoreList = () => import('components/ScoreList.vue')
 const AppTrainClassList = () => import('components/TrainClassList.vue')
+const AppArticleList = () => import('components/ArticleList.vue')
 
 export const allRoutesMap = [
     {
@@ -83,6 +84,11 @@ export const allRoutesMap = [
                 path: 'type_list',
                 name: '分类列表',
                 component: AppTrainClassList
+            },
+            {
+                path: 'article_list',
+                name: '文章列表',
+                component: AppArticleList
             }
         ]
     }

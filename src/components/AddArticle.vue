@@ -1,19 +1,16 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
-        <el-form-item label="分类名称" prop="name">
-            <el-input v-model="form.name" clearable placeholder="请输入门店名称"></el-input>
-        </el-form-item>
-        <el-form-item label="上级分类" prop="parent_id">
-            <el-select v-model="form.parent_id" clearable placeholder="上级分类">
+        <el-form-item label="所属分类" prop="class_id">
+            <el-select v-model="form.class_id" clearable placeholder="选择分类">
                 <el-option v-for="(item, key) in cityList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="排序">
-            <el-input type="number" v-model="form.sort" placeholder="输入数字"></el-input>
+        <el-form-item label="文章标题" prop="title">
+            <el-input v-model="form.title" clearable placeholder="请输入文章标题"></el-input>
         </el-form-item>
-        <el-form-item label="分类描述">
-            <el-input v-model="form.desc" type="textarea" :rows="4" clearable placeholder="请输入分类描述..."></el-input>
+        <el-form-item label="内容">
+            <el-input v-model="form.content" type="textarea" :rows="4" clearable></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
@@ -24,25 +21,24 @@
 </template>
 
 <script>
-import { addTrainClass } from 'api'
+import { addArticleRecord } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-add-class',
+    name: 'app-add-article',
     data (){
         return {
             form: {
-                name: '',
-                parent_id: '',
-                sort: '',
+                class_id: '',
+                title: '',
                 desc: ''
             },
             rules: {
-                name: [
-                    { required: true, message: '请输入分类名称', trigger: 'blur' }
+                title: [
+                    { required: true, message: '请输入文章标题', trigger: 'blur' }
                 ],
-                parent_id: [
-                    { required: true, message: '请选上级分类', trigger: 'change' }
+                class_id: [
+                    { required: true, message: '请选所属分类', trigger: 'change' }
                 ]
             }
         }
@@ -54,7 +50,7 @@ export default {
     methods: {
         ...mapActions('dict', ['createCityList']),
         async saveRecord(){
-            const response = await addTrainClass(this.form)
+            const response = await addArticleRecord(this.form)
             if (response.code == 1){
                 this.closePanle()
             } else {

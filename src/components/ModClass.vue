@@ -2,7 +2,7 @@
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
         <el-form-item label="分类名称" prop="name">
-            <el-input v-model="form.name" clearable placeholder="请输入门店名称"></el-input>
+            <el-input v-model="form.name" clearable placeholder="请输入分类名称"></el-input>
         </el-form-item>
         <el-form-item label="上级分类" prop="parent_id">
             <el-select v-model="form.parent_id" clearable placeholder="上级分类">
@@ -24,11 +24,12 @@
 </template>
 
 <script>
-import { addTrainClass } from 'api'
+import { modTrainClass, getTrainClass } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-add-class',
+    name: 'app-mod-class',
+    props: ['recordId'],
     data (){
         return {
             form: {
@@ -53,8 +54,16 @@ export default {
     },
     methods: {
         ...mapActions('dict', ['createCityList']),
+        async getFormInfo(request, attrName){
+            const response = await request()
+            if (response.code == 1){
+                this[attrName] = response.data || []
+            } else {
+                this.$message.error(response.message)
+            }
+        },
         async saveRecord(){
-            const response = await addTrainClass(this.form)
+            const response = await modTrainClass(this.form)
             if (response.code == 1){
                 this.closePanle()
             } else {
@@ -78,6 +87,7 @@ export default {
         }
     },
     created(){
+        this.getFormInfo(async () => getTrainClass({ id: this.recordId }), 'form')
         this.createCityList()
     }
 }

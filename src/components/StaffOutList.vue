@@ -4,7 +4,7 @@
         <el-breadcrumb class="fl" separator="/"> 
             <el-breadcrumb-item :to="{ path: '/sys_setting' }">系统管理</el-breadcrumb-item>
             <el-breadcrumb-item>员工管理</el-breadcrumb-item>
-            <el-breadcrumb-item>调入员工列表</el-breadcrumb-item>
+            <el-breadcrumb-item>调出员工列表</el-breadcrumb-item>
         </el-breadcrumb>
     </nav>
     <div class="component-top">

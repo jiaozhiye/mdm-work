@@ -2,21 +2,23 @@
 <div>
     <nav class="app-location-wrapper">
         <el-breadcrumb class="fl" separator="/"> 
-            <el-breadcrumb-item :to="{ path: '/performance' }">绩效管理</el-breadcrumb-item>
-            <el-breadcrumb-item>绩效考核</el-breadcrumb-item>
-            <el-breadcrumb-item>绩效列表</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/train' }">培训管理</el-breadcrumb-item>
+            <el-breadcrumb-item>文章管理</el-breadcrumb-item>
+            <el-breadcrumb-item>文章列表</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
+            @click="dialog.addVisible = true">添加文章</el-button>
     </nav>
     <div class="component-top">
-        <div class="search-title fl">门店：</div>
+        <div class="search-title fl">所属分类：</div>
         <el-select 
             class="fl" 
             size="small"
             style="width: 120px; margin-right: 10px;"
-            v-model="search.store_id" 
+            v-model="search.class_id" 
             clearable 
             @change="searchHandle" 
-            placeholder="门店">
+            placeholder="分类">
             <el-option
                 v-for="(item, key) in deptList"
                 :key="key"
@@ -24,33 +26,11 @@
                 :value="item.value">
             </el-option>
         </el-select>
-        <div class="search-title fl">开始日期：</div>
-        <el-date-picker
-            class="fl" 
-            size="small"
-            style="width: 120px; margin-right: 10px;"
-            v-model="search.start_date"
-            type="date"
-            placeholder="开始日期"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
-        </el-date-picker>
-        <div class="search-title fl">结束日期：</div>
-        <el-date-picker
-            class="fl" 
-            size="small"
-            style="width: 120px; margin-right: 10px;"
-            v-model="search.end_date"
-            type="date"
-            placeholder="结束日期"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
-        </el-date-picker>
         <el-input
             class="fl"
-            style="width: 160px"
+            style="width: 180px"
             size="small"
-            placeholder="姓名/拼音"
+            placeholder="文章标题/拼音"
             prefix-icon="el-icon-search"
             v-model="search.keyword"
             @keyup.enter.native="searchHandle"
@@ -59,15 +39,9 @@
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
-            <el-table-column label="门店名称" min-width="200">
-                <template slot-scope="scope">
-                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="date" label="日期"></el-table-column>
-            <el-table-column prop="type" label="奖罚"></el-table-column>
-            <el-table-column prop="name" label="姓名"></el-table-column>
-            <el-table-column prop="money" label="金额"></el-table-column>
+            <el-table-column prop="title" label="文章标题" min-width="200"></el-table-column>
+            <el-table-column prop="datetime" label="日期"></el-table-column>
+            <el-table-column prop="creater_name" label="发布人"></el-table-column>
             <el-table-column label="操作" width="250">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
@@ -84,6 +58,9 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
+    <app-dialog title="添加文章" :visible.sync="dialog.addVisible">
+        <app-add-article @reloadEvent="reloadGetData"></app-add-article>
+    </app-dialog>
     <app-dialog title="查看奖罚信息" :visible.sync="dialog.showVisible">
         <app-show-score :record-id="recordId"></app-show-score>
     </app-dialog>
@@ -94,28 +71,28 @@
 </template>
 
 <script>
-import { getStaffScoreList, delStaffScoreRecord } from 'api'
+import { getArticleList, delArticleRecord } from 'api'
 
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
+import AppAddArticle from 'components/AddArticle.vue'
 import AppShowScore from 'components/ShowScore.vue'
 import AppModScore from 'components/ModScore.vue'
 
 export default {
-    name: 'app-score-list',
+    name: 'app-article-list',
     data (){
         return {
             search: {
-                store_id: '',
-                start_date: '',
-                end_date: '',
+                class_id: '',
                 keyword: ''
             },
             list: [],
             loading: !1,
             curPageIndex: 1,
             dialog: {
+                addVisible: !1,
                 showVisible: !1,
                 modVisible: !1
             },
@@ -123,18 +100,18 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'transferInList'])
+        ...mapState('dict', ['deptList'])
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createTransferInList']),
+        ...mapActions('dict', ['createDeptList']),
         recordHandler(_id, _type){
             this.dialog[_type] = !0
             this.recordId = _id
         },
-        async getStaffScoreInfo(curPage, callback){
+        async getArticleInfo(curPage, callback){
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
             this.loading = !0
-            const response = await getStaffScoreList({
+            const response = await getArticleList({
                 pageNum: curPage,
                 pageSize: 10,
                 ...this.search
@@ -154,9 +131,9 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                const response = await delStaffScoreRecord({ id: _id})
+                const response = await delArticleRecord({ id: _id})
                 if (response.code == 1){
-                    this.getStaffScoreInfo(this.curPageIndex)
+                    this.getArticleInfo(this.curPageIndex)
                     this.$message.success(response.message)
                 } else {
                     this.$message.error(response.message)
@@ -164,26 +141,26 @@ export default {
             }).catch(() => {})
         },
         searchHandle(){
-            this.getStaffScoreInfo(1)
+            this.getArticleInfo(1)
         },
         handleCurrentChange(index){
             this.curPageIndex = index
-            this.getStaffScoreInfo(index)
+            this.getArticleInfo(index)
         },
         reloadGetData(res){
             if (res == 'reload'){
                 for (let attr in this.dialog) this.dialog[attr] = !1
-                this.getStaffScoreInfo(this.curPageIndex)
+                this.getArticleInfo(this.curPageIndex)
             }
         }
     },
     created(){
-        this.getStaffScoreInfo()
+        this.getArticleInfo()
         this.createDeptList()
-        this.createTransferInList()
     },
     components: {
         AppDialog,
+        AppAddArticle,
         AppShowScore,
         AppModScore
     }

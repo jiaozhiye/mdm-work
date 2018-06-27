@@ -4,15 +4,12 @@
         <el-breadcrumb class="fl" separator="/"> 
             <el-breadcrumb-item :to="{ path: '/sys_setting' }">系统管理</el-breadcrumb-item>
             <el-breadcrumb-item>员工管理</el-breadcrumb-item>
-            <el-breadcrumb-item>员工列表</el-breadcrumb-item>
+            <el-breadcrumb-item>不在职员工列表</el-breadcrumb-item>
         </el-breadcrumb>
         <el-dropdown class="fr" style="margin-left: 10px;" size="small" placement="bottom-start" split-button type="primary">
             操作
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.stop.native="dialog.addVisible = true">录入员工</el-dropdown-item>
-                <el-dropdown-item @click.stop.native="batchHandler('quit')">员工离职</el-dropdown-item>
-                <el-dropdown-item @click.stop.native="batchHandler('out')">员工调动</el-dropdown-item>
-                <el-dropdown-item @click.stop.native="batchHandler('score')">绩效考核</el-dropdown-item>
+                <el-dropdown-item @click.stop.native="recoverHandler">恢复在职</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
     </nav>
@@ -125,19 +122,14 @@
             <el-table-column prop="kind" label="岗位"></el-table-column>
             <el-table-column prop="wage" label="薪资"></el-table-column>
             <el-table-column prop="type" label="工作类型"></el-table-column>
-            <el-table-column label="状态" width="120">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
-                </template>
-            </el-table-column>
             <el-table-column label="操作" width="250">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
                         查看
                     </el-button><el-button @click.stop="recordHandler(scope.row.id, 'modVisible')" type="primary" size="mini">
                         修改
-                    </el-button><el-button @click.stop="" type="success" size="mini">
-                        下周闲时
+                    </el-button><el-button @click.stop="recordHandler(scope.row.id, 'show2Visible')" type="success" size="mini">
+                        离职信息
                     </el-button>
                 </template>
             </el-table-column>
@@ -146,42 +138,30 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
-    <app-dialog title="新增员工" :visible.sync="dialog.addVisible" top="0" custom-class="dialog-full-height">
-        <app-add-staff @reloadEvent="reloadGetData"></app-add-staff>
-    </app-dialog>
-    <app-dialog title="员工离职" :visible.sync="dialog.quitVisible">
-        <app-staff-quit :record-id="recordId" :params="multipleSelection" @reloadEvent="reloadGetData"></app-staff-quit>
-    </app-dialog>
     <app-dialog title="修改员工信息" :visible.sync="dialog.modVisible" top="0" custom-class="dialog-full-height">
-        <app-mod-staff :record-id="recordId" type="onjob" @reloadEvent="reloadGetData"></app-mod-staff>
+        <app-mod-staff :record-id="recordId" type="offjob" @reloadEvent="reloadGetData"></app-mod-staff>
     </app-dialog>
     <app-dialog title="显示员工信息" :visible.sync="dialog.showVisible" top="0" custom-class="dialog-full-height">
-        <app-show-staff :record-id="recordId" type="onjob"></app-show-staff>
+        <app-show-staff :record-id="recordId" type="offjob"></app-show-staff>
     </app-dialog>
-    <app-dialog title="调出员工" :visible.sync="dialog.outVisible">
-        <app-transfer-out :record-id="recordId" :params="multipleSelection" @reloadEvent="reloadGetData"></app-transfer-out>
-    </app-dialog>
-    <app-dialog title="绩效考核" :visible.sync="dialog.scoreVisible">
-        <app-exec-score :record-id="recordId" :params="multipleSelection" @reloadEvent="reloadGetData"></app-exec-score>
+    <app-dialog title="员工离职信息" :visible.sync="dialog.show2Visible">
+        <app-show2-staff :record-id="recordId"></app-show2-staff>
     </app-dialog>
 </div>
 </template>
 
 <script>
-import { getStaffInfo } from 'api'
+import { getNoJobStaffInfo, recoverStaffOnJob } from 'api'
 
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
-import AppAddStaff from 'components/AddStaff.vue'
-import AppStaffQuit from 'components/StaffQuit.vue'
 import AppModStaff from 'components/ModStaff.vue'
 import AppShowStaff from 'components/ShowStaff.vue'
-import AppTransferOut from 'components/TransferOut.vue'
-import AppExecScore from 'components/ExecScore.vue'
+import AppShow2Staff from 'components/Show2Staff.vue'
 
 export default {
-    name: 'app-staff-list',
+    name: 'app-nojobstaff-list',
     data (){
         return {
             search: {
@@ -197,12 +177,9 @@ export default {
             curPageIndex: 1,
             multipleSelection: [], // 选中记录的数组
             dialog: {
-                addVisible: !1,
-                quitVisible: !1,
                 showVisible: !1,
-                modVisible: !1,
-                outVisible: !1,
-                scoreVisible: !1
+                show2Visible: !1,
+                modVisible: !1
             },
             recordId: ''
         }
@@ -219,7 +196,7 @@ export default {
         async getStuffList(curPage, callback){
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
             this.loading = !0
-            const response = await getStaffInfo({
+            const response = await getNoJobStaffInfo({
                 pageNum: curPage,
                 pageSize: 10,
                 ...this.search
@@ -241,12 +218,15 @@ export default {
                 }
             }
             // console.log(_type, ids)
-            if (_type === 'score'){
-                if (ids.length > 1){
-                    return this.$message.warning('绩效考核只能选则一条记录！')
-                }
-            }
             this.recordHandler(ids.join(','), `${_type}Visible`)
+        },
+        recoverHandler(){
+            const ids = this.multipleSelection.map(item => item.id)
+            if (ids.length == 0){
+                return this.$message.warning('请勾列表记录！')
+            }
+            // ...
+            
         },
         handleSelectionChange(val){
             this.multipleSelection = val
@@ -274,12 +254,9 @@ export default {
     },
     components: {
         AppDialog,
-        AppAddStaff,
-        AppStaffQuit,
         AppModStaff,
         AppShowStaff,
-        AppTransferOut,
-        AppExecScore
+        AppShow2Staff
     }
 }
 </script>

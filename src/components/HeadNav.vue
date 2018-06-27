@@ -41,7 +41,7 @@ export default {
 }
 .head-nav ul li a:hover,
 .head-nav ul li.active a {
-    background-color: #347AC2;
+    background-color: rgba(0, 0, 0, .2);
 }
 .head-nav ul li a i.icon {
     height: 16px;
@@ -54,9 +54,16 @@ export default {
     color: #fff;
 }
 
+
 /* 头部导航分类图标 */
 .head-nav ul li a i.graph-sys_setting {
     background-position: 0 0;
+}
+.head-nav ul li a i.graph-performance {
+    background-position: -16px 0;
+}
+.head-nav ul li a i.graph-train {
+    background-position: -32px 0;
 }
 
 </style>

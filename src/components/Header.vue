@@ -8,7 +8,7 @@
     </div>
     <div class="user-setting fr">
         <app-dropdown-menu placement="right">
-            <span slot="title">管理员</span>
+            <span slot="title">{{ username }}</span>
             <div slot="list" class="user-setting-list">
                 <ul>
                     <li @click.stop.native="">
@@ -25,12 +25,22 @@
 </template>
 
 <script>
+import { getToken } from 'assets/js/auth'
+import { mapState } from 'vuex'
 import AppDropdownMenu from './DropdownMenu.vue'
 
 export default {
     name: 'app-header',
     data(){
-        return {}
+        return {
+            username: ''
+        }
+    },
+    computed: {
+        ...mapState('app', ['loginInfo'])
+    },
+    created(){
+        this.username = this.loginInfo.name || getToken()
     },
     components: {
         AppDropdownMenu

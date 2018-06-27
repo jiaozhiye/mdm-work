@@ -38,7 +38,7 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="所在门店">
-            <el-select v-model="form.dept" clearable placeholder="请选门店">
+            <el-select v-model="form.dept_id" clearable placeholder="请选门店">
                 <el-option v-for="(item, key) in deptList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
@@ -63,8 +63,13 @@
             <el-input v-model="form.id_num" clearable placeholder="请输入身份证号"></el-input>
         </el-form-item>
         <el-form-item label="工作类型">
-            <el-select v-model="form.type" clearable placeholder="请选工作类型">
+            <el-select v-model="form.work_type" clearable placeholder="请选工作类型">
                 <el-option v-for="(item, key) in workTypeList" :key="key" :label="item.name" :value="item.value"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="级别">
+            <el-select v-model="form.level" clearable placeholder="请选级别">
+                <el-option v-for="(item, key) in jobLevelList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="时薪">
@@ -80,20 +85,20 @@
             <el-input v-model="form.bank_card_num" clearable placeholder="请输入银行卡号"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('form')" :loading="btnLoading">提交</el-button>
-            <el-button @click="resetForm('form')">重置</el-button>
+            <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
+            <el-button @click="resetForm">重置</el-button>
         </el-form-item>
     </el-form>
 </div>
 </template>
 
 <script>
-import { addStuffInfo } from 'api'
+import { addStaffInfo } from 'api'
 import { mapState, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
-    name: 'app-add-stuff',
+    name: 'app-add-staff',
     data (){
         return {
             form: {
@@ -104,12 +109,13 @@ export default {
                 address: '',
                 emp_num: '',
                 hiredate: moment().format('YYYY-MM-DD'),
-                dept: '',
+                dept_id: '',
                 job: '',
                 kind: [],
                 status: '',
                 id_num: '',
-                type: '',
+                work_type: '',
+                level: '',
                 hour_wage: '',
                 month_wage: '',
                 bank: '',
@@ -126,24 +132,24 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'jobList', 'kindList', 'workTypeList', 'jobStatusList']),
+        ...mapState('dict', ['deptList', 'jobList', 'kindList', 'workTypeList', 'jobStatusList', 'jobLevelList']),
         ...mapState('stateChange', ['btnLoading']),
         kindListNoAll(){
             return this.kindList.slice(1)
         }
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createJobStatusList']),
+        ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createJobStatusList', 'createWorkTypeList', 'createJobLevelList']),
         async saveRecord(){
-            const response = await addStuffInfo(this.form)
+            const response = await addStaffInfo(this.form)
             if (response.code == 1){
                 this.closePanle()
             } else {
                 this.$message.error(response.message)
             }
         },
-        submitForm(formName){
-            this.$refs[formName].validate(valid => {
+        submitForm(){
+            this.$refs['form'].validate(valid => {
                 if (valid){
                     this.saveRecord()
                 } else {
@@ -151,18 +157,21 @@ export default {
                 }
             })
         },
-        resetForm(formName){
-            this.$refs[formName].resetFields()
+        resetForm(){
+            this.$refs['form'].resetFields()
         },
         closePanle(){
             this.$emit('reloadEvent', 'reload')
+            this.resetForm()
         }
     },
     created(){
         this.createDeptList()
         this.createJobList()
         this.createKindList()
+        this.createWorkTypeList()
         this.createJobStatusList()
+        this.createJobLevelList()
     }
 }
 </script>

@@ -12,7 +12,7 @@ const state = {
 // actions
 const actions = {
     createLoginInfo ({ commit }, params){
-        setToken(params.id)
+        setToken(params.name)
         commit({
             type: types.LOGININFO,
             data: params
@@ -20,11 +20,11 @@ const actions = {
     },
     async createNavList ({ commit, state }, params){
         if (state.navList.length) return
-        // const response = await getNavList()
+        const response = await getNavList()
         commit({
             type: types.NAVLIST,
-            // data: response.data || [],
-            data: params
+            data: response.data || [],
+            // data: params
         })
     }
 }

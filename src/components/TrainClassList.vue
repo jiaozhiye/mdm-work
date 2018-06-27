@@ -2,61 +2,38 @@
 <div>
     <nav class="app-location-wrapper">
         <el-breadcrumb class="fl" separator="/"> 
-            <el-breadcrumb-item :to="{ path: '/sys_setting' }">系统管理</el-breadcrumb-item>
-            <el-breadcrumb-item>门店管理</el-breadcrumb-item>
-            <el-breadcrumb-item>门店列表</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/train' }">培训管理</el-breadcrumb-item>
+            <el-breadcrumb-item>分类管理</el-breadcrumb-item>
+            <el-breadcrumb-item>分类列表</el-breadcrumb-item>
         </el-breadcrumb>
-    </nav>
-    <div class="component-top">
-        <div class="search-title fl">门店名称：</div>
-        <el-input
-            class="fl"
-            style="width: 200px"
-            size="small"
-            placeholder="门店名称/拼音"
-            prefix-icon="el-icon-search"
-            v-model="search.name"
-            @keyup.enter.native="searchHandle"
-            clearable>
-        </el-input>
         <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
-            @click="dialog.addVisible = true">添加门店</el-button>
-    </div>
+            @click="dialog.addVisible = true">新建分类</el-button>
+    </nav>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
-            <el-table-column label="门店名称" min-width="200">
-                <template slot-scope="scope">
-                    <span :style="{color: scope.row.store_color}">{{ scope.row.name }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="address" label="门店地址" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="phone" label="门店电话"></el-table-column>
+            <el-table-column prop="name" label="分类名称" min-width="200"></el-table-column>
+            <el-table-column prop="sort" label="分类排序"></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
-                        查看
-                    </el-button><el-button @click.stop="recordHandler(scope.row.id, 'modVisible')" type="primary" size="mini">
                         修改
-                    </el-button><el-button @click.stop="stopItemHandle(scope.row)" size="mini" type="danger">
-                        {{ scope.row.status == '1' ? '停用' : '启用' }}
+                    </el-button><el-button @click.stop="" type="danger" size="mini">
+                        删除
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
     </div>
-    <app-dialog title="新增门店" :visible.sync="dialog.addVisible">
-        <app-add-store @reloadEvent="reloadGetData"></app-add-store>
+    <app-dialog title="新建分类" :visible.sync="dialog.addVisible">
+        <app-add-class @reloadEvent="reloadGetData"></app-add-class>
     </app-dialog>
-    <app-dialog title="修改门店信息" :visible.sync="dialog.modVisible">
+    <app-dialog title="修改分类" :visible.sync="dialog.modVisible">
         <app-mod-store :record-id="recordId" @reloadEvent="reloadGetData"></app-mod-store>
-    </app-dialog>
-    <app-dialog title="查看门店信息" :visible.sync="dialog.showVisible">
-        <app-show-store :record-id="recordId"></app-show-store>
     </app-dialog>
 </div>
 </template>
@@ -65,9 +42,8 @@
 import { getStoreList, stopStore } from 'api'
 
 import AppDialog from 'components/AppDialog.vue'
-import AppAddStore from 'components/AddStore.vue'
+import AppAddClass from 'components/AddClass.vue'
 import AppModStore from 'components/ModStore.vue'
-import AppShowStore from 'components/ShowStore.vue'
 
 export default {
     name: 'app-store-list',
@@ -132,9 +108,8 @@ export default {
     },
     components: {
         AppDialog,
-        AppAddStore,
-        AppModStore,
-        AppShowStore
+        AppAddClass,
+        AppModStore
     }
 }
 </script>

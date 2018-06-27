@@ -19,8 +19,8 @@
             <el-input v-model="form.desc" type="textarea" :rows="4" clearable placeholder="请输入门店描述..."></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('form')" :loading="btnLoading">提交</el-button>
-            <el-button @click="resetForm('form')">重置</el-button>
+            <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
+            <el-button @click="resetForm">重置</el-button>
         </el-form-item>
     </el-form>
 </div>
@@ -77,8 +77,8 @@ export default {
                 this.$message.error(response.message)
             }
         },
-        submitForm(formName){
-            this.$refs[formName].validate(valid => {
+        submitForm(){
+            this.$refs['form'].validate(valid => {
                 if (valid){
                     this.saveRecord()
                 } else {
@@ -86,8 +86,8 @@ export default {
                 }
             })
         },
-        resetForm(formName){
-            this.$refs[formName].resetFields()
+        resetForm(){
+            this.$refs['form'].resetFields()
         },
         closePanle(){
             this.$emit('reloadEvent', 'reload')

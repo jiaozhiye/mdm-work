@@ -31,7 +31,7 @@ import { addStoreInfo } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-add-store',
+    name: 'app-add-class',
     data (){
         return {
             form: {

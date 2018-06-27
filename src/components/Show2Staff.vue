@@ -1,39 +1,33 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" ref="form" label-width="100px" size="small">
-        <el-form-item label="所在城市：">
-            <span class="form-record-show">{{ form.city_text }}</span>
-        </el-form-item>
-        <el-form-item label="门店名称：">
+        <el-form-item label="姓名">
             <span class="form-record-show">{{ form.name }}</span>
         </el-form-item>
-        <el-form-item label="门店地址：">
-            <span class="form-record-show">{{ form.address }}</span>
+        <el-form-item label="离职日期">
+            <span class="form-record-show">{{ form.hiredate }}</span>
         </el-form-item>
-        <el-form-item label="门店电话：">
-            <span class="form-record-show">{{ form.phone }}</span>
-        </el-form-item>
-        <el-form-item label="门店描述：">
+        <el-form-item label="离职原因">
             <span class="form-record-show">{{ form.desc }}</span>
+        </el-form-item>
+        <el-form-item label="操作人">
+            <span class="form-record-show">{{ form.modifier_id }}</span>
         </el-form-item>
     </el-form>
 </div>
 </template>
 
 <script>
-import { getStoreRecord } from 'api'
+import { getOffJobStaffRecord } from 'api'
 
 export default {
-    name: 'app-show-store',
+    name: 'app-show2-staff',
     props: ['recordId'],
     data (){
         return {
             form: {
-                city_text: '',
                 name: '',
-                address: '',
-                phone: '',
-                desc: ''
+                hiredate: ''
             }
         }
     },
@@ -48,7 +42,7 @@ export default {
         }
     },
     created(){
-        this.getFormInfo(async () => getStoreRecord({ id: this.recordId }), 'form')
+        this.getFormInfo(async () => getOffJobStaffRecord({ id: this.recordId }), 'form')
     }
 }
 </script>

@@ -154,6 +154,16 @@ a:hover {
 }
 
 
+.form-record-show {
+    display: block;
+    min-height: 30px;
+    line-height: 30px;
+    border: 1px dashed #ddd;
+    padding: 0 10px;
+    background: #f2f2f2;
+}
+
+
 /**
  * tags style
  */

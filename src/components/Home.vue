@@ -1,5 +1,5 @@
 <template>
-<div>Hello World！</div>
+    <div class="welcome-text">Hello World！</div>
 </template>
 
 <script>
@@ -12,4 +12,9 @@ export default {
 </script>
 
 <style>
+.welcome-text {
+    text-align: center;
+    font-size: 26px;
+    padding-top: 30vh;
+}
 </style>

@@ -1,19 +1,19 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" ref="form" label-width="100px" size="small">
-        <el-form-item label="所在城市：">
-            <span class="form-record-show">{{ form.city_text }}</span>
+        <el-form-item label="员工：">
+            <span class="form-record-show">{{ form.names }}</span>
         </el-form-item>
-        <el-form-item label="门店名称：">
-            <span class="form-record-show">{{ form.name }}</span>
+        <el-form-item label="日期：">
+            <span class="form-record-show">{{ form.date }}</span>
         </el-form-item>
-        <el-form-item label="门店地址：">
-            <span class="form-record-show">{{ form.address }}</span>
+        <el-form-item label="类别：">
+            <span class="form-record-show">{{ form.type_text }}</span>
         </el-form-item>
-        <el-form-item label="门店电话：">
-            <span class="form-record-show">{{ form.phone }}</span>
+        <el-form-item label="金额：">
+            <span class="form-record-show">{{ form.money }}</span>
         </el-form-item>
-        <el-form-item label="门店描述：">
+        <el-form-item label="说明：">
             <span class="form-record-show">{{ form.desc }}</span>
         </el-form-item>
     </el-form>
@@ -21,18 +21,18 @@
 </template>
 
 <script>
-import { getStoreRecord } from 'api'
+import { getStaffScoreRecord } from 'api'
 
 export default {
-    name: 'app-show-store',
+    name: 'app-show-score',
     props: ['recordId'],
     data (){
         return {
             form: {
-                city_text: '',
-                name: '',
-                address: '',
-                phone: '',
+                names: '',
+                date: '',
+                type_text: '',
+                money: '',
                 desc: ''
             }
         }
@@ -48,7 +48,7 @@ export default {
         }
     },
     created(){
-        this.getFormInfo(async () => getStoreRecord({ id: this.recordId }), 'form')
+        this.getFormInfo(async () => getStaffScoreRecord({ id: this.recordId }), 'form')
     }
 }
 </script>

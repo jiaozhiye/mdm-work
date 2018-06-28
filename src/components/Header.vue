@@ -1,7 +1,7 @@
 <template>
 <el-header class="app-header clearFix">
     <div class="app-head-logo fl">
-        <router-link to="/">ERP管理系统</router-link>
+        <router-link to="/">HRMS管理系统</router-link>
     </div>
     <div class="app-top-nav fl">
         <slot name="topnav"></slot>

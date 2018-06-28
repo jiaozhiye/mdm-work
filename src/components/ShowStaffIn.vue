@@ -16,7 +16,7 @@
             <el-table-column prop="work_type" label="工作类型"></el-table-column>
         </el-table>
     </div>
-    <div style="padding-top: 15px;">
+    <div class="staff-in-desc-box">
         <p>说明：{{ dataInfo.desc }}</p>
     </div>
 </div>
@@ -50,4 +50,9 @@ export default {
 </script>
 
 <style>
+.staff-in-desc-box {
+    padding-top: 15px;
+    line-height: 22px;
+    font-size: 12px;
+}
 </style>

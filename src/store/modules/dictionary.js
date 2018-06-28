@@ -2,6 +2,7 @@ import * as types from '../types'
 
 import {
     getDeptSelect,
+    getClassifySelect,
     getDictSelect
 } from 'api'
 
@@ -30,7 +31,11 @@ const state = {
     // 调入类型列表
     transferInList: [],
     // 奖罚类别
-    scoreTypeList: []
+    scoreTypeList: [],
+    // 分类列表
+    classifyList: [],
+    // 通知类型
+    noticTypeList: []
 }
 
 // actions
@@ -85,7 +90,7 @@ const actions = {
     },
     async createNoticeStateList ({ state, commit }, params){
         if (state.noticStateList.length) return
-        const response = await getDictSelect({ dict: 'notice' })
+        const response = await getDictSelect({ dict: 'notice_status' })
         commit({
             type: types.NOTICE_STATE_SELECT,
             data: response.data || []
@@ -123,6 +128,22 @@ const actions = {
             data: response.data || []
         })
     },
+    async createClassifyList ({ state, commit }, params){
+        if (state.classifyList.length) return
+        const response = await getClassifySelect()
+        commit({
+            type: types.CLASSIFY_SELECT,
+            data: response.data || []
+        })
+    },
+    async createNoticTypeList ({ state, commit }, params){
+        if (state.noticTypeList.length) return
+        const response = await getDictSelect({ dict: 'notice_type' })
+        commit({
+            type: types.NOTICE_TYPE_SELECT,
+            data: response.data || []
+        })
+    }
 }
 
 // mutations
@@ -160,6 +181,12 @@ const mutations = {
     [types.SCORE_TYPE_SELECT](state, { data }){
         state.scoreTypeList = data
     },
+    [types.CLASSIFY_SELECT](state, { data }){
+        state.classifyList = data
+    },
+    [types.NOTICE_TYPE_SELECT](state, { data }){
+        state.noticTypeList = data
+    }
 }
 
 export default {

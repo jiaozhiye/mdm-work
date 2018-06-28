@@ -1,17 +1,23 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" ref="form" label-width="100px" size="small">
-        <el-form-item label="上岗日期">
-            <el-input v-model="form.work_date" disabled clearable placeholder="请输入上岗日期"></el-input>
+        <el-form-item label="姓名">
+            <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="类别">
-            <el-input v-model="form.type_text" disabled clearable placeholder="请输入类别"></el-input>
+        <el-form-item label="日期">
+            <el-date-picker
+                v-model="form.date"
+                type="date"
+                disabled
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd">
+            </el-date-picker>
         </el-form-item>
-        <el-form-item label="调入门店">
-            <el-input v-model="form.from_store_name" disabled clearable placeholder="请输入调入门店"></el-input>
+        <el-form-item label="操作人">
+            <el-input v-model="form.user" disabled></el-input>
         </el-form-item>
         <el-form-item label="说明">
-            <el-input v-model="form.remark" type="textarea" disabled :rows="3" clearable placeholder="请输入说明..."></el-input>
+            <el-input v-model="form.remark" type="textarea" :rows="3" disabled clearable></el-input>
         </el-form-item>
         <el-form-item label="拒绝原因">
             <el-input v-model="form.desc" type="textarea" :rows="3" clearable placeholder="请输入拒绝原因..."></el-input>
@@ -25,18 +31,18 @@
 </template>
 
 <script>
-import { getNoticeApplyById, execApplyIn } from 'api'
+import { getNoticeFireById, execApplyIn } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-transfer-in',
+    name: 'app-notice-quit',
     props: ['recordId'],
     data (){
         return {
             form: {
-                work_date: '',
-                type_text: '',
-                from_store_name: '',
+                name: '',
+                date: '',
+                user: '',
                 remark: '',
                 desc: ''
             }
@@ -69,7 +75,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid){
                     if (_type === 'refuse'){
-                        this.$confirm(`确认拒绝此次调出吗?`, '提示', {
+                        this.$confirm(`确认拒绝此次辞退吗?`, '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'warning'
@@ -92,7 +98,7 @@ export default {
         }
     },
     created(){
-        this.getFormInfo(async () => getNoticeApplyById({ id: this.recordId }), 'form')
+        this.getFormInfo(async () => getNoticeFireById({ id: this.recordId }), 'form')
     }
 }
 </script>

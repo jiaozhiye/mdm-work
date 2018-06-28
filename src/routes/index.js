@@ -14,6 +14,9 @@ const AppStaffOutList = () => import('components/StaffOutList.vue')
 const AppScoreList = () => import('components/ScoreList.vue')
 const AppTrainClassList = () => import('components/TrainClassList.vue')
 const AppArticleList = () => import('components/ArticleList.vue')
+const AppQuestionList = () => import('components/QuestionList.vue')
+const AppAssessList = () => import('components/AssessList.vue')
+const AppJobList = () => import('components/JobList.vue')
 
 export const allRoutesMap = [
     {
@@ -50,6 +53,11 @@ export const allRoutesMap = [
                 path: 'staff_out',
                 name: '调出员工列表',
                 component: AppStaffOutList
+            },
+            {
+                path: 'job',
+                name: '职务管理',
+                component: AppJobList
             }
         ]
     },
@@ -89,6 +97,45 @@ export const allRoutesMap = [
                 path: 'article_list',
                 name: '文章列表',
                 component: AppArticleList
+            }
+        ]
+    },
+    {
+        path: '/assessment',
+        name: '考核管理',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: '考核管理-欢迎',
+                component: AppQuestionList
+            },
+            {
+                path: 'question',
+                name: '考题列表',
+                component: AppQuestionList
+            },
+            {
+                path: 'exam',
+                name: '成绩列表',
+                component: AppAssessList
+            }
+        ]
+    },
+    {
+        path: '/notice',
+        name: '消息管理',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: '消息管理-欢迎',
+                component: AppNoticeList
+            },
+            {
+                path: 'list',
+                name: '通知列表',
+                component: AppNoticeList
             }
         ]
     }

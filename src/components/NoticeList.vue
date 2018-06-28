@@ -2,7 +2,7 @@
 <div>
     <nav class="app-location-wrapper">
         <el-breadcrumb class="fl" separator="/"> 
-            <el-breadcrumb-item :to="{ path: '/sys_setting' }">系统管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/notice' }">消息管理</el-breadcrumb-item>
             <el-breadcrumb-item>通知管理</el-breadcrumb-item>
             <el-breadcrumb-item>通知列表</el-breadcrumb-item>
         </el-breadcrumb>
@@ -12,7 +12,7 @@
         <el-select 
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.dept" 
             clearable 
             @change="searchHandle" 
@@ -28,7 +28,7 @@
         <el-date-picker
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.date" 
             type="date" 
             placeholder="选择日期" 
@@ -39,7 +39,7 @@
         <el-select 
             class="fl" 
             size="small"
-            style="width: 80px; margin-right: 10px;"
+            style="width: 120px; margin-right: 10px;"
             v-model="search.status" 
             clearable 
             @change="searchHandle" 
@@ -51,30 +51,36 @@
                 :value="item.value">
             </el-option>
         </el-select>
+        <div class="search-title fl">类型：</div>
+        <el-select 
+            class="fl" 
+            size="small"
+            style="width: 120px; margin-right: 10px;"
+            v-model="search.type" 
+            clearable 
+            @change="searchHandle" 
+            placeholder="类型">
+            <el-option
+                v-for="(item, key) in noticTypeList"
+                :key="key"
+                :label="item.name"
+                :value="item.value">
+            </el-option>
+        </el-select>
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
-            <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column label="门店名称" min-width="200">
-                <template slot-scope="scope">
-                    <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="name" label="姓名"></el-table-column>
-            <el-table-column prop="gender" label="性别"></el-table-column>
-            <el-table-column prop="phone" label="电话"></el-table-column>
-            <el-table-column prop="job" label="职位"></el-table-column>
-            <el-table-column prop="kind" label="岗位"></el-table-column>
-            <el-table-column prop="wage" label="薪资"></el-table-column>
-            <el-table-column prop="type" label="工作类型"></el-table-column>
+            <el-table-column prop="content" label="内容简介" min-width="200" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="sender_name" label="发送者"></el-table-column>
+            <el-table-column prop="datetime" label="日期"></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作" width="90">
                 <template slot-scope="scope">
-                    <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
+                    <el-button @click.stop="recordHandler(scope.row.id, scope.row.type)" size="mini">
                         查看
                     </el-button>
                 </template>
@@ -84,19 +90,21 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
-    <app-dialog title="处理申请" :visible.sync="dialog.showVisible">
-        <app-show-store :record-id="dialog.recordId"></app-show-store>
+    <app-dialog title="查看通知" :visible.sync="dialog.showVisible">
+        <component v-bind:is="currentComponent" :record-id="recordId" @reloadEvent="reloadGetData"></component>
     </app-dialog>
 </div>
 </template>
 
 <script>
-import { getStuffInfo } from 'api'
+import { getNoticeInfo } from 'api'
 
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppTransferIn from 'components/TransferIn.vue'
+import AppNoticeIn from 'components/NoticeIn.vue'
+import AppNoticeQuit from 'components/NoticeQuit.vue'
 
 export default {
     name: 'app-notice-list',
@@ -105,30 +113,43 @@ export default {
             search: {
                 dept: '',
                 date: '',
-                status: ''
+                status: '',
+                type: ''
             },
-            list: [{}],
+            list: [],
             loading: !1,
             curPageIndex: 1,
             dialog: {
-                showVisible: !1,
-                recordId: ''
-            }
+                showVisible: !1
+            },
+            recordId: '',
+            currentComponent: ''
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'noticStateList'])
+        ...mapState('dict', ['deptList', 'noticStateList', 'noticTypeList'])
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createNoticeStateList']),
+        ...mapActions('dict', ['createDeptList', 'createNoticeStateList', 'createNoticTypeList']),
         recordHandler(_id, _type){
-            this.dialog[_type] = !0
-            this.dialog.recordId = _id
+            switch (_type.toString()){
+                case '1':
+                    this.currentComponent = 'app-transfer-in'
+                    break;
+                case '2':
+                    this.currentComponent = 'app-notice-in'
+                    break;
+                case '3':
+                    this.currentComponent = 'app-notice-quit'
+                    break;
+            }
+            this.dialog.showVisible = !0
+            this.recordId = _id
         },
         async getNoticeList(curPage, callback){
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
             // this.loading = !0
-            const response = await getStuffInfo({
+            const response = await getNoticeInfo({
                 pageNum: curPage,
                 pageSize: 10,
                 ...this.search
@@ -151,7 +172,7 @@ export default {
         },
         reloadGetData(res){
             if (res == 'reload'){
-                this.dialog.showVisible = !1
+                for (let attr in this.dialog) this.dialog[attr] = !1
                 this.getNoticeList(this.curPageIndex)
             }
         }
@@ -160,10 +181,13 @@ export default {
         this.getNoticeList()
         this.createDeptList()
         this.createNoticeStateList()
+        this.createNoticTypeList()
     },
     components: {
         AppDialog,
-        AppTransferIn
+        AppTransferIn,
+        AppNoticeIn,
+        AppNoticeQuit
     }
 }
 </script>

@@ -15,6 +15,6 @@ export default {
 .welcome-text {
     text-align: center;
     font-size: 26px;
-    padding-top: 30vh;
+    padding: 30vh 0;
 }
 </style>

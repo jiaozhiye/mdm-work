@@ -167,3 +167,64 @@ export const delArticleRecord = params => instance.get('/mgr/train/article/delet
 // 添加文章
 export const addArticleRecord = params => instance.post('/mgr/train/article/add', params)
 
+// 获取分类列表 select
+export const getClassifySelect = () => instance.get('mgr/train/type/getTypeDict')
+
+// 查看文章信息
+export const getArticleRecord = params => instance.get('/mgr/train/article/showById', {params})
+
+// 修改文章记录
+export const modArticleRecord = params => instance.post('/mgr/train/article/updateById', params)
+
+// 获取员工考核列表
+export const getAssessList = params => instance.get('/mgr/exam/list', {params})
+
+// 获取考题列表
+export const getQuestionList = params => instance.get('/mgr/question/list', {params})
+
+// 删除考题记录
+export const delQuestionRecord = params => instance.get('/mgr/question/deleteById', {params})
+
+// 添加考题
+export const addQuestionRecord = params => instance.post('/mgr/question/add', params)
+
+// 获取考题记录
+export const getQuestionRecord = params => instance.get('/mgr/question/showById', {params})
+
+// 修改考题记录
+export const modQuestionRecord = params => instance.post('/mgr/question/updateById', params)
+
+// 获取通知列表
+export const getNoticeInfo = params => instance.get('/mgr/notice/list', {params})
+
+// 查看通知 type 1
+export const getNoticeApplyById = params => instance.get('/mgr/notice/showApplyById', {params})
+
+// 查看通知 type 2
+export const getNoticeMoveInById = params => instance.get('/mgr/notice/showMoveInById', {params})
+
+// 查看通知 type 3
+export const getNoticeFireById = params => instance.get('/mgr/notice/showStaffFireById', {params})
+
+// 获取职务列表
+export const getJobList = () => instance.get('/mgr/job/list')
+
+// 获取权限树
+export const getJobTree = () => instance.get('/mgr/job/showResource')
+
+// 新建职务
+export const addJobRecord = params => instance.post('/mgr/job/add', params)
+
+// 获取职务记录
+export const getJobRecord = params => instance.get('/mgr/job/showById', {params})
+
+// 修改职务权限
+export const modJobRecord = params => instance.post('/mgr/job/updateById', params)
+
+// 删除职务权限
+export const delJobRecord = params => instance.get('/mgr/job/deleteById', {params})
+
+
+
+
+

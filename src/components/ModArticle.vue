@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { addArticleRecord } from 'api'
+import { modArticleRecord, getArticleRecord } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 import 'quill/dist/quill.core.css'
@@ -32,7 +32,8 @@ import ImageResize from 'quill-image-resize-module'
 Quill.register('modules/imageResize', ImageResize)
 
 export default {
-    name: 'app-add-article',
+    name: 'app-mod-article',
+    props: ['recordId'],
     data (){
         return {
             form: {
@@ -89,8 +90,16 @@ export default {
     },
     methods: {
         ...mapActions('dict', ['createClassifyList']),
+        async getFormInfo(request, attrName){
+            const response = await request()
+            if (response.code == 1){
+                this[attrName] = response.data || []
+            } else {
+                this.$message.error(response.message)
+            }
+        },
         async saveRecord(){
-            const response = await addArticleRecord(this.form)
+            const response = await modArticleRecord(this.form)
             if (response.code == 1){
                 this.closePanle()
             } else {
@@ -114,6 +123,7 @@ export default {
         }
     },
     created(){
+        this.getFormInfo(async () => getArticleRecord({ id: this.recordId }), 'form')
         this.createClassifyList()
     },
     components: {

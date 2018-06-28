@@ -2,7 +2,7 @@
 <div style="width: 70%;">
     <el-form :model="form" ref="form" label-width="100px" size="small">
         <el-form-item label="调出员工">
-            <span>{{ form.name }}</span>
+            <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
         <el-form-item label="调出日期">
             <el-date-picker

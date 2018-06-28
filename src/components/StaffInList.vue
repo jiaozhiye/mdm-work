@@ -44,23 +44,25 @@
         <el-date-picker
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.start_date"
             type="date"
             placeholder="开始日期"
             format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd"
+            @change="searchHandle">
         </el-date-picker>
         <div class="search-title fl">结束日期：</div>
         <el-date-picker
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.end_date"
             type="date"
             placeholder="结束日期"
             format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd"
+            @change="searchHandle">
         </el-date-picker>
         <div class="search-title fl">类型：</div>
         <el-select 

@@ -12,7 +12,7 @@
         <el-select 
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.store_id" 
             clearable 
             @change="searchHandle" 
@@ -28,23 +28,25 @@
         <el-date-picker
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.start_date"
             type="date"
             placeholder="开始日期"
             format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd"
+            @change="searchHandle">
         </el-date-picker>
         <div class="search-title fl">结束日期：</div>
         <el-date-picker
             class="fl" 
             size="small"
-            style="width: 120px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="search.end_date"
             type="date"
             placeholder="结束日期"
             format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
+            value-format="yyyy-MM-dd"
+            @change="searchHandle">
         </el-date-picker>
         <el-input
             class="fl"
@@ -68,7 +70,7 @@
             <el-table-column prop="type" label="奖罚"></el-table-column>
             <el-table-column prop="name" label="姓名"></el-table-column>
             <el-table-column prop="money" label="金额"></el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" width="230">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
                         查看

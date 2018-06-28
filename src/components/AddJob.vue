@@ -1,19 +1,21 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
-        <el-form-item label="分类名称" prop="name">
-            <el-input v-model="form.name" clearable placeholder="请输入分类名称"></el-input>
+        <el-form-item label="职务名称" prop="name">
+            <el-input v-model="form.name" clearable placeholder="请输入职务名称"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" prop="parent_id">
-            <el-select v-model="form.parent_id" clearable placeholder="上级分类">
-                <el-option v-for="(item, key) in classifyList" :key="key" :label="item.name" :value="item.value"></el-option>
-            </el-select>
+        <el-form-item label="职务描述" prop="desc">
+            <el-input v-model="form.desc" type="textarea" :rows="3" clearable placeholder="请输入职务描述..."></el-input>
         </el-form-item>
-        <el-form-item label="排序">
-            <el-input type="number" v-model="form.sort" placeholder="输入数字"></el-input>
-        </el-form-item>
-        <el-form-item label="分类描述">
-            <el-input v-model="form.desc" type="textarea" :rows="4" clearable placeholder="请输入分类描述..."></el-input>
+        <el-form-item label="权限分配">
+            <el-tree
+                ref="tree"
+                :data="tree"
+                show-checkbox
+                default-expand-all
+                node-key="id"
+                @check-change="getCheckedKeys">
+            </el-tree>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
@@ -24,36 +26,30 @@
 </template>
 
 <script>
-import { modTrainClass, getTrainClass } from 'api'
+import { addJobRecord, getJobTree } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-mod-class',
-    props: ['recordId'],
+    name: 'app-add-job',
     data (){
         return {
+            tree: [],
+            checkedKeys: [], // 树结构选中的ID数组
             form: {
                 name: '',
-                parent_id: '',
-                sort: '',
                 desc: ''
             },
             rules: {
                 name: [
-                    { required: true, message: '请输入分类名称', trigger: 'blur' }
-                ],
-                parent_id: [
-                    { required: true, message: '请选上级分类', trigger: 'change' }
+                    { required: true, message: '请输入职务名称', trigger: 'blur' }
                 ]
             }
         }
     },
     computed: {
-        ...mapState('stateChange', ['btnLoading']),
-        ...mapState('dict', ['classifyList'])
+        ...mapState('stateChange', ['btnLoading'])
     },
     methods: {
-        ...mapActions('dict', ['createClassifyList']),
         async getFormInfo(request, attrName){
             const response = await request()
             if (response.code == 1){
@@ -63,7 +59,10 @@ export default {
             }
         },
         async saveRecord(){
-            const response = await modTrainClass(this.form)
+            const response = await addJobRecord({
+                ...this.form,
+                menuIds: this.checkedKeys.join(',')
+            })
             if (response.code == 1){
                 this.closePanle()
             } else {
@@ -79,6 +78,12 @@ export default {
                 }
             })
         },
+        getCheckedKeys(){
+            let _arr1 = this.$refs.tree.getHalfCheckedKeys()
+            let _arr2 = this.$refs.tree.getCheckedKeys()
+            this.checkedKeys = [..._arr1, ..._arr2]
+            // console.log(this.checkedKeys)
+        },
         resetForm(){
             this.$refs['form'].resetFields()
         },
@@ -87,8 +92,7 @@ export default {
         }
     },
     created(){
-        this.getFormInfo(async () => getTrainClass({ id: this.recordId }), 'form')
-        this.createClassifyList()
+        this.getFormInfo(async () => getJobTree(), 'tree')
     }
 }
 </script>

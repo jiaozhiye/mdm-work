@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const utils = require('./utils')
+const webpack = require('webpack')
 const config = require('./webpack.conf')
 
 const env = process.env.NODE_ENV
@@ -65,5 +66,11 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        // custom for vue-quill-editor 
+        new webpack.ProvidePlugin({
+            'window.Quill': 'quill'
+        })
+    ]
 }

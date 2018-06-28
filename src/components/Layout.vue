@@ -110,7 +110,7 @@ export default {
     position: absolute;
     left: 10px;
     right: 10px;
-    min-height: calc(100vh - 70px);
+    /* min-height: calc(100vh - 70px); */
     background-color: #fff;
 }
 

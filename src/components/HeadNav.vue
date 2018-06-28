@@ -60,10 +60,15 @@ export default {
     background-position: 0 0;
 }
 .head-nav ul li a i.graph-performance {
-    background-position: -16px 0;
+    background-position: -144px 0;
 }
 .head-nav ul li a i.graph-train {
-    background-position: -32px 0;
+    background-position: -16px 0;
 }
-
+.head-nav ul li a i.graph-assessment {
+    background-position: -128px 0;
+}
+.head-nav ul li a i.graph-notice {
+    background-position: -16px -32px;
+}
 </style>

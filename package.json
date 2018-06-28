@@ -21,7 +21,9 @@
     "lodash": "^4.17.4",
     "moment": "^2.22.2",
     "nprogress": "^0.2.0",
+    "quill-image-resize-module": "^3.0.0",
     "vue": "^2.5.13",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

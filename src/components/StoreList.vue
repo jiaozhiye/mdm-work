@@ -6,6 +6,8 @@
             <el-breadcrumb-item>门店管理</el-breadcrumb-item>
             <el-breadcrumb-item>门店列表</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
+            @click="dialog.addVisible = true">添加门店</el-button>
     </nav>
     <div class="component-top">
         <div class="search-title fl">门店名称：</div>
@@ -19,8 +21,6 @@
             @keyup.enter.native="searchHandle"
             clearable>
         </el-input>
-        <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
-            @click="dialog.addVisible = true">添加门店</el-button>
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
@@ -36,7 +36,7 @@
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作" width="230">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
                         查看

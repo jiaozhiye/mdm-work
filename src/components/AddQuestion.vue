@@ -1,19 +1,11 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
-        <el-form-item label="分类名称" prop="name">
-            <el-input v-model="form.name" clearable placeholder="请输入门店名称"></el-input>
+        <el-form-item label="标题" prop="title">
+            <el-input v-model="form.title" clearable placeholder="请输入考题名称"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" prop="parent_id">
-            <el-select v-model="form.parent_id" clearable placeholder="上级分类">
-                <el-option v-for="(item, key) in classifyList" :key="key" :label="item.name" :value="item.value"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="排序">
-            <el-input type="number" v-model="form.sort" placeholder="输入数字"></el-input>
-        </el-form-item>
-        <el-form-item label="分类描述">
-            <el-input v-model="form.desc" type="textarea" :rows="4" clearable placeholder="请输入分类描述..."></el-input>
+        <el-form-item label="内容" prop="content">
+            <el-input v-model="form.content" type="textarea" :rows="6" clearable placeholder="请输入考题内容..."></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
@@ -24,37 +16,33 @@
 </template>
 
 <script>
-import { addTrainClass } from 'api'
+import { addQuestionRecord } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-add-class',
+    name: 'app-add-question',
     data (){
         return {
             form: {
-                name: '',
-                parent_id: '',
-                sort: '',
-                desc: ''
+                title: '',
+                content: ''
             },
             rules: {
-                name: [
+                title: [
                     { required: true, message: '请输入分类名称', trigger: 'blur' }
                 ],
-                parent_id: [
-                    { required: true, message: '请选上级分类', trigger: 'change' }
+                content: [
+                    { required: true, message: '请输入考题内容', trigger: 'blur' }
                 ]
             }
         }
     },
     computed: {
-        ...mapState('stateChange', ['btnLoading']),
-        ...mapState('dict', ['classifyList'])
+        ...mapState('stateChange', ['btnLoading'])
     },
     methods: {
-        ...mapActions('dict', ['createClassifyList']),
         async saveRecord(){
-            const response = await addTrainClass(this.form)
+            const response = await addQuestionRecord(this.form)
             if (response.code == 1){
                 this.closePanle()
             } else {
@@ -76,9 +64,6 @@ export default {
         closePanle(){
             this.$emit('reloadEvent', 'reload')
         }
-    },
-    created(){
-        this.createClassifyList()
     }
 }
 </script>

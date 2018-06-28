@@ -1,18 +1,25 @@
 <template>
-<div style="width: 70%;">
-    <el-form :model="form" ref="form" label-width="100px" size="small">
-        <el-form-item label="上岗日期">
-            <el-input v-model="form.work_date" disabled clearable placeholder="请输入上岗日期"></el-input>
-        </el-form-item>
-        <el-form-item label="类别">
-            <el-input v-model="form.type_text" disabled clearable placeholder="请输入类别"></el-input>
-        </el-form-item>
-        <el-form-item label="调入门店">
-            <el-input v-model="form.from_store_name" disabled clearable placeholder="请输入调入门店"></el-input>
-        </el-form-item>
-        <el-form-item label="说明">
-            <el-input v-model="form.remark" type="textarea" disabled :rows="3" clearable placeholder="请输入说明..."></el-input>
-        </el-form-item>
+<div>
+    <div style="padding-bottom: 10px;">
+        来源门店：<span style="margin-right: 20px;">{{ dataInfo.out_store_name }}</span>
+        调入日期：<span style="margin-right: 20px;">{{ dataInfo.date }}</span>
+        类别：<span>{{ dataInfo.type_text }}</span>
+    </div>
+    <div class="component-main">
+        <el-table :data="dataInfo.staffList" stripe border size="mini">
+            <el-table-column prop="name" label="姓名"></el-table-column>
+            <el-table-column prop="gender" label="性别"></el-table-column>
+            <el-table-column prop="phone" label="电话"></el-table-column>
+            <el-table-column prop="job" label="职位"></el-table-column>
+            <el-table-column prop="kind" label="岗位"></el-table-column>
+            <el-table-column prop="money" label="薪资"></el-table-column>
+            <el-table-column prop="work_type" label="工作类型"></el-table-column>
+        </el-table>
+    </div>
+    <div class="transfer-desc-box">
+        <p>说明：{{ dataInfo.remark }}</p>
+    </div>
+    <el-form :model="form" ref="form" label-width="70px" size="small">
         <el-form-item label="拒绝原因">
             <el-input v-model="form.desc" type="textarea" :rows="3" clearable placeholder="请输入拒绝原因..."></el-input>
         </el-form-item>
@@ -25,19 +32,16 @@
 </template>
 
 <script>
-import { getNoticeApplyById, execApplyIn } from 'api'
+import { getNoticeMoveInById, execApplyIn } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-transfer-in',
+    name: 'app-notice-in',
     props: ['recordId'],
     data (){
         return {
+            dataInfo: {},
             form: {
-                work_date: '',
-                type_text: '',
-                from_store_name: '',
-                remark: '',
                 desc: ''
             }
         }
@@ -57,7 +61,8 @@ export default {
         async saveRecord(status_num){
             const response = await execApplyIn({
                 status: status_num,
-                ...this.form
+                ...this.form,
+                ...this.dataInfo
             })
             if (response.code == 1){
                 this.closePanle()
@@ -69,7 +74,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid){
                     if (_type === 'refuse'){
-                        this.$confirm(`确认拒绝此次调出吗?`, '提示', {
+                        this.$confirm(`确认拒绝此次调入吗?`, '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'warning'
@@ -92,10 +97,15 @@ export default {
         }
     },
     created(){
-        this.getFormInfo(async () => getNoticeApplyById({ id: this.recordId }), 'form')
+        this.getFormInfo(async () => getNoticeMoveInById({ id: this.recordId }), 'dataInfo')
     }
 }
 </script>
 
 <style>
+.transfer-desc-box {
+    padding: 15px 0 20px;
+    line-height: 22px;
+    font-size: 12px;
+}
 </style>

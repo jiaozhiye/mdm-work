@@ -6,6 +6,12 @@
             <el-breadcrumb-item>员工管理</el-breadcrumb-item>
             <el-breadcrumb-item>调入员工列表</el-breadcrumb-item>
         </el-breadcrumb>
+        <el-dropdown class="fr" style="margin-left: 10px;" size="small" placement="bottom-start" split-button type="primary">
+            操作
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.stop.native=" dialog.addVisible = true ">调入员工</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
     </nav>
     <div class="component-top">
         <div class="search-title fl">调出门店：</div>
@@ -118,6 +124,9 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
+    <app-dialog title="调入员工" :visible.sync="dialog.addVisible">
+        <app-transfer-in @reloadEvent="reloadGetData"></app-transfer-in>
+    </app-dialog>
     <app-dialog title="查看调入信息" :visible.sync="dialog.showVisible">
         <app-show-staff-in :record-id="recordId"></app-show-staff-in>
     </app-dialog>
@@ -130,6 +139,7 @@ import { getStaffInList } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
+import AppTransferIn from 'components/TransferIn.vue'
 import AppShowStaffIn from 'components/ShowStaffIn.vue'
 
 export default {
@@ -148,6 +158,7 @@ export default {
             loading: !1,
             curPageIndex: 1,
             dialog: {
+                addVisible: !1,
                 showVisible: !1
             },
             recordId: ''
@@ -200,6 +211,7 @@ export default {
     },
     components: {
         AppDialog,
+        AppTransferIn,
         AppShowStaffIn
     }
 }

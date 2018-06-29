@@ -11,7 +11,7 @@ export default (function (env){
 	} else if (env == 'development'){
 		envObj.env = '当前工程环境：development'
 		// envObj.serverUrl = 'http://192.168.1.202:8081/'
-		envObj.serverUrl = 'http://192.168.1.112:8080/'
+		envObj.serverUrl = 'http://192.168.1.107:8080/'
 	}
 	return envObj
 })(process.env.NODE_ENV === 'production' ? 'production' : 'development')

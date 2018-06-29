@@ -43,6 +43,12 @@ export default {
 .head-nav ul li.active a {
     background-color: rgba(0, 0, 0, .2);
 }
+.icon {
+    background-image: url(../assets/img/icons.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+}
 .head-nav ul li a i.icon {
     height: 16px;
     width: 16px;

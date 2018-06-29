@@ -73,12 +73,6 @@ a:hover {
 .clearFix {
     zoom: 1;
 }
-.icon {
-    background-image: url(../img/icons.png);
-    background-repeat: no-repeat;
-    display: inline-block;
-    vertical-align: middle;
-}
 
 /**
  * scrollbar style
@@ -164,6 +158,22 @@ a:hover {
     border: 1px dashed #ddd;
     padding: 0 10px;
     background: rgba(0, 0, 0, .02);
+}
+.form-part-line {
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 18px;
+    margin-left: 20px;
+}
+.form-part-line::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 18px;
+    margin-right: 6px;
+    background-color: #409EFF;
+    position: relative;
+    top: 4px;
 }
 
 

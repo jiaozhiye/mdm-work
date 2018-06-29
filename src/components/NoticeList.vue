@@ -71,6 +71,7 @@
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
             <el-table-column prop="content" label="内容简介" min-width="200" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="type_text" label="消息类型"></el-table-column>
             <el-table-column prop="sender_name" label="发送者"></el-table-column>
             <el-table-column prop="datetime" label="日期"></el-table-column>
             <el-table-column label="状态" width="120">
@@ -102,7 +103,7 @@ import { getNoticeInfo } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
-import AppTransferIn from 'components/TransferIn.vue'
+import AppNoticeOut from 'components/NoticeOut.vue'
 import AppNoticeIn from 'components/NoticeIn.vue'
 import AppNoticeQuit from 'components/NoticeQuit.vue'
 
@@ -134,7 +135,7 @@ export default {
         recordHandler(_id, _type){
             switch (_type.toString()){
                 case '1':
-                    this.currentComponent = 'app-transfer-in'
+                    this.currentComponent = 'app-notice-out'
                     break;
                 case '2':
                     this.currentComponent = 'app-notice-in'
@@ -185,7 +186,7 @@ export default {
     },
     components: {
         AppDialog,
-        AppTransferIn,
+        AppNoticeOut,
         AppNoticeIn,
         AppNoticeQuit
     }

@@ -122,12 +122,10 @@
             <el-table-column prop="kind" label="岗位"></el-table-column>
             <el-table-column prop="wage" label="薪资"></el-table-column>
             <el-table-column prop="type" label="工作类型"></el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
                         查看
-                    </el-button><el-button @click.stop="recordHandler(scope.row.id, 'modVisible')" type="primary" size="mini">
-                        修改
                     </el-button><el-button @click.stop="recordHandler(scope.row.id, 'show2Visible')" type="success" size="mini">
                         离职信息
                     </el-button>
@@ -138,9 +136,6 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
-    <app-dialog title="修改员工信息" :visible.sync="dialog.modVisible" top="0" custom-class="dialog-full-height">
-        <app-mod-staff :record-id="recordId" type="offjob" @reloadEvent="reloadGetData"></app-mod-staff>
-    </app-dialog>
     <app-dialog title="显示员工信息" :visible.sync="dialog.showVisible" top="0" custom-class="dialog-full-height">
         <app-show-staff :record-id="recordId" type="offjob"></app-show-staff>
     </app-dialog>
@@ -156,7 +151,6 @@ import { getNoJobStaffInfo, recoverStaffOnJob } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
-import AppModStaff from 'components/ModStaff.vue'
 import AppShowStaff from 'components/ShowStaff.vue'
 import AppShow2Staff from 'components/Show2Staff.vue'
 
@@ -178,8 +172,7 @@ export default {
             multipleSelection: [], // 选中记录的数组
             dialog: {
                 showVisible: !1,
-                show2Visible: !1,
-                modVisible: !1
+                show2Visible: !1
             },
             recordId: ''
         }
@@ -225,8 +218,19 @@ export default {
             if (ids.length == 0){
                 return this.$message.warning('请勾列表记录！')
             }
-            // ...
-            
+            this.$confirm(`确认恢复员工在职吗?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                const response = await recoverStaffOnJob({ ids: ids.join(',')})
+                if (response.code == 1){
+                    this.getStuffList(this.curPageIndex)
+                    this.$message.success(response.message)
+                } else {
+                    this.$message.error(response.message)
+                }
+            }).catch(() => {})
         },
         handleSelectionChange(val){
             this.multipleSelection = val
@@ -254,7 +258,6 @@ export default {
     },
     components: {
         AppDialog,
-        AppModStaff,
         AppShowStaff,
         AppShow2Staff
     }

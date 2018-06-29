@@ -1,6 +1,7 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" ref="form" label-width="100px" size="small">
+        <h5 class="form-part-line">员工基本信息</h5>
         <el-form-item label="姓名" prop="name">
             <span class="form-record-show">{{ form.name }}</span>
         </el-form-item>
@@ -13,9 +14,13 @@
         <el-form-item label="电话号码" prop="name">
             <span class="form-record-show">{{ form.phone }}</span>
         </el-form-item>
+        <el-form-item label="身份证号" prop="name">
+            <span class="form-record-show">{{ form.id_num }}</span>
+        </el-form-item>
         <el-form-item label="住址" prop="name">
             <span class="form-record-show">{{ form.address }}</span>
         </el-form-item>
+        <h5 class="form-part-line">员工入职信息</h5>
         <el-form-item label="工号" prop="name">
             <span class="form-record-show">{{ form.emp_num }}</span>
         </el-form-item>
@@ -34,15 +39,13 @@
         <el-form-item label="在职状态" prop="name">
             <span class="form-record-show">{{ form.status_text }}</span>
         </el-form-item>
-        <el-form-item label="身份证号" prop="name">
-            <span class="form-record-show">{{ form.id_num }}</span>
-        </el-form-item>
         <el-form-item label="工作类型" prop="name">
             <span class="form-record-show">{{ form.work_type_text }}</span>
         </el-form-item>
         <el-form-item label="级别" prop="name">
             <span class="form-record-show">{{ form.level_text }}</span>
         </el-form-item>
+        <h5 class="form-part-line">员工其他信息</h5>
         <el-form-item label="时薪" prop="name">
             <span class="form-record-show">{{ form.hour_wage }}</span>
         </el-form-item>

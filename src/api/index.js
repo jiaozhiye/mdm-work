@@ -83,9 +83,6 @@ export const getStaffInfo = params => instance.get('/mgr/staff/list', {params})
 // 新增员工
 export const addStaffInfo = params => instance.post('/mgr/staff/add', params)
 
-// 获取通知的状态列表
-export const getNoticeStateSelect = params => instance.get('', {params})
-
 // 获取通知信息
 export const getNoticeRecord = params => instance.get('/mgr/notice/showApplyById', {params})
 
@@ -111,7 +108,7 @@ export const getNoJobStaffInfo = params => instance.get('/mgr/staffNotOnJob/list
 export const getOffJobStaffRecord = params => instance.get('/mgr/staffNotOnJob/showById', {params})
 
 // 恢复员工在职
-export const recoverStaffOnJob = params => instance.get('', {params})
+export const recoverStaffOnJob = params => instance.get('mgr/staffNotOnJob/recovery', {params})
 
 // 获取调入员工列表
 export const getStaffInList = params => instance.get('/mgr/moveIn/list', {params})
@@ -224,7 +221,8 @@ export const modJobRecord = params => instance.post('/mgr/job/updateById', param
 // 删除职务权限
 export const delJobRecord = params => instance.get('/mgr/job/deleteById', {params})
 
-
+// 处理员工调入
+export const staffApplyIn = params => instance.post('/mgr/apply/moveIn', params)
 
 
 

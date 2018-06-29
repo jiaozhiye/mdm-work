@@ -1,6 +1,7 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
+        <h5 class="form-part-line">员工基本信息</h5>
         <el-form-item label="姓名" prop="name">
             <el-input v-model="form.name" clearable placeholder="请输入姓名"></el-input>
         </el-form-item>
@@ -22,9 +23,13 @@
         <el-form-item label="电话号码" prop="phone">
             <el-input v-model="form.phone" clearable placeholder="请输入手机号"></el-input>
         </el-form-item>
+        <el-form-item label="身份证号">
+            <el-input v-model="form.id_num" clearable placeholder="请输入身份证号"></el-input>
+        </el-form-item>
         <el-form-item label="住址">
             <el-input v-model="form.address" type="textarea" :rows="2" clearable placeholder="请输入住址"></el-input>
         </el-form-item>
+        <h5 class="form-part-line">员工入职信息</h5>
         <el-form-item label="工号">
             <el-input v-model="form.emp_num" clearable placeholder="请输入工号"></el-input>
         </el-form-item>
@@ -59,9 +64,7 @@
                 <el-option v-for="(item, key) in jobStatusList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="身份证号">
-            <el-input v-model="form.id_num" clearable placeholder="请输入身份证号"></el-input>
-        </el-form-item>
+        
         <el-form-item label="工作类型" prop="work_type">
             <el-select v-model="form.work_type" clearable placeholder="请选工作类型">
                 <el-option v-for="(item, key) in workTypeList" :key="key" :label="item.name" :value="item.value"></el-option>
@@ -72,6 +75,7 @@
                 <el-option v-for="(item, key) in jobLevelList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
+        <h5 class="form-part-line">员工其他信息</h5>
         <el-form-item label="时薪">
             <el-input type="number" v-model="form.hour_wage" placeholder="保留两位小数"></el-input>
         </el-form-item>
@@ -126,7 +130,7 @@ export default {
                     { required: true, message: '请输入姓名', trigger: 'blur' }
                 ],
                 gender: [
-                    { required: true, message: '请输选择性别', trigger: 'change' }
+                    { required: true, message: '请选择性别', trigger: 'change' }
                 ],
                 birthday: [
                     { required: true, message: '请输入生日', trigger: 'blur' }

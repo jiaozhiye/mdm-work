@@ -111,7 +111,7 @@ export default {
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(async () => {
-                            if (this.form.desc === ''){
+                            if (!this.form.desc){
                                 return this.$message.warning('拒绝原因不能为空！')
                             }
                             this.saveRecord('0')

@@ -12,7 +12,7 @@ function cloneObj (obj){
         str = JSON.stringify(obj) //系列化对象
         newobj = JSON.parse(str)  //还原
     } else {
-        for (var i in obj){
+        for (let i in obj){
             newobj[i] = typeof obj[i] === 'object' ? 
             cloneObj(obj[i]) : obj[i]
         }

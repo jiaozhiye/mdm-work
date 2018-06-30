@@ -6,9 +6,9 @@
   "private": true,
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jiaozhiye/erp-vue-cli/issues"
+    "url": "https://github.com/jiaozhiye/mdm-work/issues"
   },
-  "homepage": "https://github.com/jiaozhiye/erp-vue-cli",
+  "homepage": "https://github.com/jiaozhiye/mdm-work",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.dev.conf.js --open --hot",
     "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.prod.conf.js --progress"

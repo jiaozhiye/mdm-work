@@ -13,7 +13,6 @@ import app from './modules/application'
 import stateChange from './modules/state-change'
 import dict from './modules/dictionary'
 
-
 const store = new Vuex.Store({
     modules: {
         app,

@@ -1,10 +1,10 @@
 <template>
 <div style="width: 70%;">
-    <el-form :model="form" ref="form" label-width="100px" size="small">
-        <el-form-item label="姓名">
+    <el-form :model="form" ref="form" :rules="rules" label-width="100px" size="small">
+        <el-form-item label="姓名" prop="name">
             <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="日期">
+        <el-form-item label="日期" prop="date">
             <el-date-picker
                 v-model="form.date"
                 type="date"
@@ -13,10 +13,20 @@
                 value-format="yyyy-MM-dd">
             </el-date-picker>
         </el-form-item>
-        <el-form-item label="操作人">
+        <el-form-item label="所属门店" prop="from_store">
+            <el-select v-model="form.from_store" clearable disabled placeholder="请选择所属门店">
+                <el-option
+                    v-for="(item, key) in deptList"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="操作人" prop="user">
             <el-input v-model="form.user" disabled></el-input>
         </el-form-item>
-        <el-form-item label="说明">
+        <el-form-item label="说明" prop="remark">
             <el-input v-model="form.remark" type="textarea" :rows="3" disabled clearable></el-input>
         </el-form-item>
         <el-form-item label="拒绝原因">
@@ -42,16 +52,36 @@ export default {
             form: {
                 name: '',
                 date: '',
+                from_store: '',
                 user: '',
                 remark: '',
                 desc: ''
+            },
+            rules: {
+                name: [
+                    { required: true, message: '', trigger: 'blur' }
+                ],
+                date: [
+                    { required: true, message: '请选择日期', trigger: 'change' }
+                ],
+                from_store: [
+                    { required: true, message: '请选择所属门店', trigger: 'change' }
+                ],
+                user: [
+                    { required: true, message: '', trigger: 'blur' }
+                ],
+                remark: [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ]
             }
         }
     },
     computed: {
-        ...mapState('stateChange', ['btnLoading'])
+        ...mapState('stateChange', ['btnLoading']),
+        ...mapState('dict', ['deptList'])
     },
     methods: {
+        ...mapActions('dict', ['createDeptList']),
         async getFormInfo(request, attrName){
             const response = await request()
             if (response.code == 1){
@@ -80,7 +110,7 @@ export default {
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(async () => {
-                            if (this.form.desc === ''){
+                            if (!this.form.desc){
                                 return this.$message.warning('拒绝原因不能为空！')
                             }
                             this.saveRecord('0')
@@ -98,6 +128,7 @@ export default {
         }
     },
     created(){
+        this.createDeptList()
         this.getFormInfo(async () => getNoticeFireById({ id: this.recordId }), 'form')
     }
 }

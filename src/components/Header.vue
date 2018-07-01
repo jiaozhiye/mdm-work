@@ -11,10 +11,10 @@
             <span slot="title">{{ username }}</span>
             <div slot="list" class="user-setting-list">
                 <ul>
-                    <li @click.stop.native="">
+                    <li @click.stop="toPersonal">
                         个人设置
                     </li>
-                    <li @click.stop.native="">
+                    <li @click.stop="logout">
                         安全退出
                     </li>
                 </ul>
@@ -26,8 +26,9 @@
 
 <script>
 import { getToken } from 'assets/js/auth'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import AppDropdownMenu from './DropdownMenu.vue'
+import { doLogout } from  'api'
 
 export default {
     name: 'app-header',
@@ -38,6 +39,21 @@ export default {
     },
     computed: {
         ...mapState('app', ['loginInfo'])
+    },
+    methods: {
+        ...mapActions('app', ['createLogout']),
+        async logout(){
+            const response = await doLogout()
+            if (response.code == 1){
+                this.createLogout()
+                this.$router.push('/login')
+            } else {
+                this.$message.error(response.message)
+            }
+        },
+        toPersonal(){
+            this.$router.push('/setting/personal')
+        }
     },
     created(){
         this.username = this.loginInfo.name || getToken()
@@ -76,7 +92,7 @@ export default {
     cursor: pointer;
 }
 .user-setting-list ul li:hover {
-    background: #2dc3e8;
+    background: #409EFF;
     color: #fff;
 }
 </style>

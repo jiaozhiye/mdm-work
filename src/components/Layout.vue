@@ -57,7 +57,8 @@ export default {
             let _hash = getUrlHash()
             // 获取一级分类索引
             this.curIndex = this.navList.findIndex(item => item.link === '/' + _hash.split('/')[1])
-            if (this.curIndex === -1) return
+            // console.log(this.curIndex)
+            if (this.curIndex === -1) this.curIndex = 0
             // 设置导航菜单信息
             this.sidebarList = _.cloneDeep(this.navList[this.curIndex].list)
             // 获取父元素的深度

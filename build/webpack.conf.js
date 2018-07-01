@@ -9,7 +9,7 @@ module.exports = {
     proxyTable: {},
 
     // Dev Server settings
-    host: '192.168.1.103',
+    host: '127.0.0.1',
     port: 8080,
 
     // Source Maps

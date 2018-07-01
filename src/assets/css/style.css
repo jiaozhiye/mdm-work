@@ -176,6 +176,14 @@ a:hover {
     top: 4px;
 }
 
+.message-prompt {
+    line-height: 32px;
+}
+.message-prompt i {
+    color: #409EFF;
+    margin-right: 5px;
+}
+
 
 /**
  * tags style

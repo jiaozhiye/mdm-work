@@ -1,5 +1,5 @@
 import * as types from '../types'
-import { setToken } from 'assets/js/auth'
+import { setToken, removeToken } from 'assets/js/auth'
 
 import { getNavList } from 'api'
 
@@ -18,6 +18,13 @@ const actions = {
             data: params
         })
     },
+    createLogout ({ commit }){
+        removeToken()
+        commit({
+            type: types.LOGOUT,
+            data: null
+        })
+    },
     async createNavList ({ commit, state }, params){
         if (state.navList.length) return
         const response = await getNavList()
@@ -32,6 +39,9 @@ const actions = {
 // mutations
 const mutations = {
     [types.LOGININFO](state, { data }){
+        state.loginInfo = data
+    },
+    [types.LOGOUT](state, { data }){
         state.loginInfo = data
     },
     [types.NAVLIST](state, { data }){

@@ -17,6 +17,10 @@ const AppArticleList = () => import('components/ArticleList.vue')
 const AppQuestionList = () => import('components/QuestionList.vue')
 const AppAssessList = () => import('components/AssessList.vue')
 const AppJobList = () => import('components/JobList.vue')
+const AppPersonalSetting = () => import('components/PersonalSetting.vue')
+const AppTurnoverList = () => import('components/TurnoverList.vue')
+
+const AppPlanJob = () => import('components/PlanJob.vue')
 
 export const allRoutesMap = [
     {
@@ -138,6 +142,28 @@ export const allRoutesMap = [
                 component: AppNoticeList
             }
         ]
+    },
+    {
+        path: '/scheduling',
+        name: '排班管理',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: '可变工时-欢迎',
+                component: Home
+            },
+            {
+                path: 'variable_time_guide',
+                name: '可变工时',
+                component: AppPlanJob
+            },
+            {
+                path: 'store_forecast_turnover',
+                name: '预估营业额',
+                component: AppTurnoverList
+            }
+        ]
     }
 ]
 
@@ -146,6 +172,18 @@ export const constantRouterMap = [
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: Layout,
+        children: [
+            {
+                path: 'personal',
+                name: '个人设置',
+                component: AppPersonalSetting
+            }
+        ]
     }
 ]
 

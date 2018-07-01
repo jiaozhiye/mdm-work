@@ -12,10 +12,12 @@ const instance = axios.create({
     // withCredentials: true, // 跨域请求时是否需要使用凭证
     paramsSerializer: params => {
         // 序列化 GET 请求参数 -> a: [1, 2] => a=1&a=2
+        // 返回值必须是字符串类型
         return qs.stringify(params, { arrayFormat: 'repeat' })
     },
     transformRequest: [data => {
         // 在向服务器发送前修改请求数据，只适用于 POST
+        // 返回值必须是字符串类型
         return qs.stringify(data, { arrayFormat: 'repeat' })
     }],
     headers: {
@@ -51,7 +53,13 @@ instance.interceptors.response.use(response => {
 export const doLogin = params => instance.post('/login', params)
 
 // 退出登录接口
-export const doLogout = () => instance.get('/logout')
+export const doLogout = () => instance.get('/mgr/user/loginout')
+
+// 获取用户全部信息
+export const getUserAllInfo = () => instance.get('/mgr/user/showMyDetail')
+
+// 更改用户密码
+export const updateUserInfo = params => instance.post('/mgr/user/modifyMyPwd', params)
 
 // 获取应用导航接口
 export const getNavList = () => instance.get('/mgr/menu')
@@ -224,5 +232,11 @@ export const delJobRecord = params => instance.get('/mgr/job/deleteById', {param
 // 处理员工调入
 export const staffApplyIn = params => instance.post('/mgr/apply/moveIn', params)
 
-
+// 添加预估营业额
+export const addEstimateTurnover = params => instance.post('/mgr/storeForecastTurnoverCtrl/add', params, {
+    headers: {
+        post: { 'Content-Type': 'application/json' }
+    },
+    transformRequest: [ data => JSON.stringify(data) ]
+})
 

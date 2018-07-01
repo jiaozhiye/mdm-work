@@ -77,4 +77,7 @@ export default {
 .head-nav ul li a i.graph-notice {
     background-position: -16px -32px;
 }
+.head-nav ul li a i.graph-scheduling {
+    background-position: -112px 0;
+}
 </style>

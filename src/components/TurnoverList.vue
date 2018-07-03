@@ -144,10 +144,12 @@ export default {
     border: 1px solid #dcdfe6;
     border-collapse: collapse;
     border-spacing: 0;
+    margin-bottom: 10px;
 }
 .turnover-list thead th {
     padding: 10px 0;
     border: 1px solid #dcdfe6;
+    background-color: #f5f7fa;
 }
 .turnover-list thead th:not(:nth-of-type(1)) {
     width: 13%;

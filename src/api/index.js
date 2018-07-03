@@ -240,3 +240,25 @@ export const addEstimateTurnover = params => instance.post('/mgr/storeForecastTu
     transformRequest: [ data => JSON.stringify(data) ]
 })
 
+// 添加可变工时
+export const addTimeGuide = params => instance.post('/mgr/variableTimeGuideCtrl/add', params, {
+    headers: {
+        post: { 'Content-Type': 'application/json' }
+    },
+    transformRequest: [ data => JSON.stringify(data) ]
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -19,7 +19,7 @@ const AppAssessList = () => import('components/AssessList.vue')
 const AppJobList = () => import('components/JobList.vue')
 const AppPersonalSetting = () => import('components/PersonalSetting.vue')
 const AppTurnoverList = () => import('components/TurnoverList.vue')
-
+const AppTimeGuide = () => import('components/TimeGuide.vue')
 const AppPlanJob = () => import('components/PlanJob.vue')
 
 export const allRoutesMap = [
@@ -151,12 +151,12 @@ export const allRoutesMap = [
             {
                 path: '',
                 name: '可变工时-欢迎',
-                component: Home
+                component: AppPlanJob
             },
             {
                 path: 'variable_time_guide',
                 name: '可变工时',
-                component: AppPlanJob
+                component: AppTimeGuide
             },
             {
                 path: 'store_forecast_turnover',

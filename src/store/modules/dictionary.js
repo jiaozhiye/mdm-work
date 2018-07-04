@@ -3,7 +3,8 @@ import * as types from '../types'
 import {
     getDeptSelect,
     getClassifySelect,
-    getDictSelect
+    getDictSelect,
+    getPlanThead
 } from 'api'
 
 // state
@@ -35,7 +36,9 @@ const state = {
     // 分类列表
     classifyList: [],
     // 通知类型
-    noticTypeList: []
+    noticTypeList: [],
+    // 排班表头列表
+    planTheadList: []
 }
 
 // actions
@@ -143,6 +146,14 @@ const actions = {
             type: types.NOTICE_TYPE_SELECT,
             data: response.data || []
         })
+    },
+    async createPlanTheadList ({ state, commit }, params){
+        if (state.planTheadList.length) return
+        const response = await getPlanThead()
+        commit({
+            type: types.PLAN_THEAD,
+            data: response.data || []
+        })
     }
 }
 
@@ -186,6 +197,9 @@ const mutations = {
     },
     [types.NOTICE_TYPE_SELECT](state, { data }){
         state.noticTypeList = data
+    },
+    [types.PLAN_THEAD](state, { data }){
+        state.planTheadList = data
     }
 }
 

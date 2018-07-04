@@ -248,13 +248,22 @@ export const addTimeGuide = params => instance.post('/mgr/variableTimeGuideCtrl/
     transformRequest: [ data => JSON.stringify(data) ]
 })
 
+// 获取排班的表头数据列表
+export const getPlanThead = () => instance.get('/mgr/schedulingCtrl/getThead')
 
+// 获取员工排班数据列表
+export const getPlanStaffInfo = params => instance.get('/mgr/schedulingCtrl/createSchedulingTable', {params})
 
+// 获取单元格可添加的员工列表
+export const getCellStaffInfo = params => instance.get('/mgr/schedulingCtrl/getStaff', {params})
 
-
-
-
-
+// 保存员工排班数据
+export const savePlanStaff = params => instance.post('/mgr/schedulingCtrl/save', params, {
+    headers: {
+        post: { 'Content-Type': 'application/json' }
+    },
+    transformRequest: [ data => JSON.stringify(data) ]
+})
 
 
 

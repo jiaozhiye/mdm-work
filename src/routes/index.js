@@ -150,8 +150,8 @@ export const allRoutesMap = [
         children: [
             {
                 path: '',
-                name: '可变工时-欢迎',
-                component: AppPlanJob
+                name: '排班管理-欢迎',
+                component: AppTimeGuide
             },
             {
                 path: 'variable_time_guide',
@@ -162,6 +162,11 @@ export const allRoutesMap = [
                 path: 'store_forecast_turnover',
                 name: '预估营业额',
                 component: AppTurnoverList
+            },
+            {
+                path: 'table',
+                name: '排班表',
+                component: AppPlanJob
             }
         ]
     }

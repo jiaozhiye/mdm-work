@@ -17,27 +17,19 @@
             <thead>
                 <tr>
                     <th rowspan="2" colspan="1"><i>营业额</i></th>
-                    <th colspan="6">前　　厅</th>
-                    <th colspan="4">菜　　房</th>
-                    <th colspan="4">面　　房</th>
-                    <th colspan="1"></th>
+                    <th 
+                        v-for="(item, key) in tHeadData.big" 
+                        :key="key"
+                        :colspan="item.col_num">
+                        {{ item.name }}
+                    </th>
                 </tr>
                 <tr>
-                    <th width="6.3%">服务员</th>
-                    <th width="6.3%">传菜员</th>
-                    <th width="6.3%">带位员</th>
-                    <th width="6.3%">清理员</th>
-                    <th width="6.3%">输单员</th>
-                    <th width="6.3%">收银员</th>
-                    <th width="6.3%">备料(熏酱)</th>
-                    <th width="6.3%">备料(凉拌)</th>
-                    <th width="6.3%">拌菜(熏酱)</th>
-                    <th width="6.3%">拌菜(凉拌)</th>
-                    <th width="6.3%">煮面</th>
-                    <th width="6.3%">摆面</th>
-                    <th width="6.3%">备料</th>
-                    <th width="6.3%">炒面/炸酱</th>
-                    <th width="6.3%">酒水/饮料</th>
+                    <th width="6.3%" 
+                        v-for="(item, key) in tHeadData.small" 
+                        :key="key">
+                        {{ item.name }}
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -55,12 +47,17 @@
 
 <script>
 import { addTimeGuide } from 'api'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'app-time-guide',
     data (){
         return {
             list: [],
+            tHeadData: {
+                big: [],
+                small: []
+            },
             timePart: [
                 '0-500',
                 '501-1000',
@@ -74,11 +71,34 @@ export default {
             ]
         }
     },
+    computed: {
+        ...mapState('dict', ['planTheadList'])
+    },
+    watch: {
+        planTheadList(val){
+            this.initialTHeadHandle(this.planTheadList)
+            this.initialListHandle()
+        }
+    },
     methods: {
+        ...mapActions('dict', ['createPlanTheadList']),
+        initialTHeadHandle(arr){
+            arr.forEach(item => {
+                // 处理一级表头
+                this.tHeadData.big.push({
+                    name: item.name,
+                    key: item.key,
+                    col_num: item.children.length || 1
+                })
+                // 处理二级表头
+                this.tHeadData.small = this.tHeadData.small.concat(item.children)
+            })
+            this.tHeadData.small.sort((a, b) => a.key - b.key)
+        },
         initialListHandle(){
             this.timePart.forEach(() => {
                 let _arr = []
-                for (let i = 0; i < 15; i++){
+                for (let i = 0; i < this.tHeadData.small.length; i++){
                     _arr.push({ input: '' })
                 }
                 this.list.push(_arr)
@@ -103,7 +123,11 @@ export default {
         }
     },
     created (){
-        this.initialListHandle()
+        this.createPlanTheadList()
+        if (this.planTheadList.length > 0){
+            this.initialTHeadHandle(this.planTheadList)
+            this.initialListHandle()
+        }
     }
 }
 </script>

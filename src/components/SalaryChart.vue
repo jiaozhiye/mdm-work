@@ -9,7 +9,7 @@ Exporting(Highcharts)
 
 export default {
     name: 'app-salary-chart',
-    props: ['dataList', 'title', 'subtitle', 'yAxisName'],
+    props: ['dataList', 'title', 'subtitle', 'xAxisList', 'yAxisName'],
     data(){
         return {
             chart: null
@@ -32,6 +32,9 @@ export default {
                 exporting: {   
                     enabled: false  // 设置导出按钮不可用    
                 },
+                chart: {
+                    type: 'column'
+                },
                 title: {
                     text: this.title
                 },
@@ -39,24 +42,24 @@ export default {
                     text: this.subtitle
                 },
                 xAxis: {
-                    categories: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+                    categories: this.xAxisList
                 },
-                yAxis: {
-                    title: {
-                        text: this.yAxisName
-                    }
-                },
+                yAxis: [
+                    { title: {text: '日工资(元)'} },
+                    { title: {text: '工时(小时)'}, opposite: true }
+                ],
                 legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle'
+                    shadow: false
+                },
+                tooltip: {
+                    shared: true
                 },
                 plotOptions: {
-                    line: {
-                        dataLabels: {
-                            enabled: true // 开启数据标签
-                        }
-                    }
+                    column: {
+						grouping: false,
+						shadow: false,
+						borderWidth: 0
+				    }
                 },
                 series: this.dataList
             })

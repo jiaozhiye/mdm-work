@@ -68,7 +68,7 @@
             size="small"
             multiple
             collapse-tags
-            style="width: 140px; margin-right: 10px;"
+            style="width: 120px; margin-right: 10px;"
             v-model="search.kind" 
             clearable 
             @change="searchHandle" 
@@ -84,7 +84,7 @@
         <el-select 
             class="fl" 
             size="small"
-            style="width: 80px; margin-right: 10px;"
+            style="width: 90px; margin-right: 10px;"
             v-model="search.type" 
             clearable 
             @change="searchHandle" 

@@ -11,6 +11,16 @@ import {
 const state = {
     // 性别列表
     sexList: [{name: '全部', value: '-1'}, {name: '男', value: '1'}, {name: '女', value: '0'}],
+    // 星期列表
+    weekList: [
+        {name: '星期一', value: '0'},
+        {name: '星期二', value: '1'},
+        {name: '星期三', value: '2'},
+        {name: '星期四', value: '3'},
+        {name: '星期五', value: '4'},
+        {name: '星期六', value: '5'},
+        {name: '星期日', value: '6'}
+    ],
     // 门店(部门)列表
     deptList: [],
     // 职位列表

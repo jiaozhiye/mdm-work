@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { getUrlHash } from 'assets/js/util'
 import { doLogin } from 'api'
 
@@ -36,6 +36,7 @@ export default {
     },
     computed: {
         ...mapState('app', ['navList']),
+        ...mapState('dict', ['planTheadList']),
         key (){
             return this.$route.name !== undefined ? this.$route.name + +new Date() : 'view-' + +new Date()
         }
@@ -50,8 +51,10 @@ export default {
     created(){
         this.iterFunc(this.navList, '')
         this.setNavInfo()
+        this.createPlanTheadList()
     },
     methods: {
+        ...mapActions('dict', ['createPlanTheadList']),
         setNavInfo(){
             // 处理 hash 值
             let _hash = getUrlHash()

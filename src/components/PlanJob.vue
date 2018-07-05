@@ -47,7 +47,9 @@
         </el-dropdown>
         <el-button class="fl" style="margin-left: 10px;" size="small" @click.stop="showChartHandle">图表</el-button>
         <ul class="fr">
-            <el-button class="fl" size="small" @click.stop="editHandle">编辑</el-button>
+            <el-button class="fl" size="small" :disabled="isDisabled" @click.stop="editHandle">
+                {{ isEdit ? '完成编辑' : '编辑' }}
+            </el-button>
             <el-button class="fl" size="small" type="primary" @click="saveHandle">保存</el-button>
         </ul>
     </div>
@@ -73,19 +75,14 @@
             </thead>
             <tbody>
                 <tr v-for="(item1, key1) in list" :key="key1">
-                    <td>{{ timePart[key1] }}</td>
+                    <td class="thead-y">{{ timePart[key1] }}</td>
                     <td v-for="(item2, key2) in item1" :key="key2" :data-index="key1 + ',' + key2">
-                        <i v-if="item2.point" class="cell-point"></i>
-                        <em v-for="(item3, key3) in item2" :key="key3" :style="{'color': item3.color}">
-                            {{ item3.name }},
-                        </em>
-                        <el-dropdown v-if="isEdit" class="addWorkerBtn" size="mini" placement="bottom-start" trigger="click">
-                            <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right"></i></span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="addWorkerHandle(item2, [key1, key2])">新增</el-dropdown-item>
-                                <el-dropdown-item @click.native="removeWorkerHandle([key1, key2])">删除</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <strong v-if="item2.point" class="cell-point"></strong>
+                        <em v-for="(item3, key3) in item2" :key="key3" :style="{'color': item3.color}">{{ item3.name }},</em>
+                        <span v-if="isEdit">
+                            <i class="handle-cell-btn el-icon-plus" @click.stop="addWorkerHandle(item2, [key1, key2])"></i>
+                            <i class="handle-cell-btn el-icon-delete" @click.stop="removeWorkerHandle([key1, key2])"></i>
+                        </span>
                     </td>
                 </tr>
             </tbody>
@@ -140,45 +137,45 @@ import { getPlanStaffInfo, getCellStaffInfo, savePlanStaff } from 'api'
 import AppDialog from 'components/AppDialog.vue'
 import SalaryChart from './SalaryChart.vue'
 
-const workers = [
-    {
-        id: '1',
-        name: '张三',
-        color: '#FF5722',
-        work: [
-            { pos: [0, 1], kind: '岗位', salary: 5 },
-            { pos: [0, 3], kind: '岗位', salary: 6 },
-            { pos: [1, 2], kind: '岗位', salary: 5 },
-            { pos: [2, 4], kind: '岗位', salary: 4 },
-            { pos: [3, 0], kind: '岗位', salary: 5 },
-            { pos: [1, 6], kind: '岗位', salary: 7 }
-        ]
-    },
-    {
-        id: '2',
-        name: '李四',
-        color: '#448AFF',
-        work: [
-            { pos: [0, 3], kind: '岗位', salary: 5 },
-            { pos: [0, 5], kind: '岗位', salary: 6 },
-            { pos: [1, 2], kind: '岗位', salary: 5 },
-            { pos: [1, 4], kind: '岗位', salary: 4 },
-            { pos: [3, 5], kind: '岗位', salary: 5 },
-            { pos: [3, 6], kind: '岗位', salary: 7 }
-        ]
-    },
-    {
-        id: '3',
-        name: '王五',
-        color: '#AFB42B',
-        work: [
-            { pos: [1, 2], kind: '岗位', salary: 5 },
-            { pos: [2, 1], kind: '岗位', salary: 4 },
-            { pos: [2, 2], kind: '岗位', salary: 5 },
-            { pos: [3, 2], kind: '岗位', salary: 7 }
-        ]
-    }
-]
+// const workers = [
+//     {
+//         id: '1',
+//         name: '张三',
+//         color: '#FF5722',
+//         work: [
+//             { pos: [0, 1], kind: '岗位', salary: 5 },
+//             { pos: [0, 3], kind: '岗位', salary: 6 },
+//             { pos: [1, 2], kind: '岗位', salary: 5 },
+//             { pos: [2, 4], kind: '岗位', salary: 4 },
+//             { pos: [3, 0], kind: '岗位', salary: 5 },
+//             { pos: [1, 6], kind: '岗位', salary: 7 }
+//         ]
+//     },
+//     {
+//         id: '2',
+//         name: '李四',
+//         color: '#448AFF',
+//         work: [
+//             { pos: [0, 3], kind: '岗位', salary: 5 },
+//             { pos: [0, 5], kind: '岗位', salary: 6 },
+//             { pos: [1, 2], kind: '岗位', salary: 5 },
+//             { pos: [1, 4], kind: '岗位', salary: 4 },
+//             { pos: [3, 5], kind: '岗位', salary: 5 },
+//             { pos: [3, 6], kind: '岗位', salary: 7 }
+//         ]
+//     },
+//     {
+//         id: '3',
+//         name: '王五',
+//         color: '#AFB42B',
+//         work: [
+//             { pos: [1, 2], kind: '岗位', salary: 5 },
+//             { pos: [2, 1], kind: '岗位', salary: 4 },
+//             { pos: [2, 2], kind: '岗位', salary: 5 },
+//             { pos: [3, 2], kind: '岗位', salary: 7 }
+//         ]
+//     }
+// ]
 
 export default {
     name: 'app-plan-job',
@@ -190,21 +187,13 @@ export default {
                 date: [],
                 day: ''
             },
-            dayList: [
-                '星期一',
-                '星期二',
-                '星期三',
-                '星期四',
-                '星期五',
-                '星期六',
-                '星期日'
-            ],
-            cloneDayList: [],  // 克隆 dayList 原始数据
             workers: [],
             list: [],
             cloneList: [],
+            dayList: [],
+            cloneDayList: [],  // 克隆 dayList 原始数据
             timePart: [],
-            tHeadData: {
+            tHeadData: { // 表头数据
                 big: [],
                 small: []
             },
@@ -215,7 +204,6 @@ export default {
                 delVisible: false,
                 showVisible: false
             },
-            dialogVisible: false,
             checkes: {
                 showList: [],  // 列表的数组数据
                 checkList: [], // 选中的数组
@@ -250,7 +238,10 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['planTheadList', 'deptList'])
+        ...mapState('dict', ['planTheadList', 'deptList', 'weekList']),
+        isDisabled(){
+            return !this.workers.length
+        }
     },
     watch: {
         planTheadList(val){
@@ -283,7 +274,8 @@ export default {
             })
             this.cloneList = _.cloneDeep(this.list)
         },
-        initialDayListHandle(){
+        initialDayListHandle(){ // 初始化星期
+            this.dayList = this.weekList.map(item => item.name)
             this.cloneDayList = _.cloneDeep(this.dayList)
         },
         dateChangeHandle(val){ // 日期控件
@@ -300,22 +292,20 @@ export default {
             this.search.date = [weekStart.format('YYYY-MM-DD'), weekStart.add('days', 6).format('YYYY-MM-DD')]
         },
         searchHandle(day_key){ // 搜索功能
-            if (typeof day_key === 'number'){
-                this.search.day = day_key.toString()
-            }
-            // console.log(this.search)
+            this.search.day = day_key.toString()
             this.getDataList(() => this.coreHandler())
         },
         createTimePart(){ // 创建时间段的方法
-            const start_time = moment('7:30', 'HH:mm')
+            let start_time = moment('7:30', 'HH:mm')
             for (let i = 0; i < 66; i++){
                 let start = moment(start_time).add(i*15, 'minutes')
                 let end   = moment(start).add(15, 'minutes')
                 this.timePart[i] = `${start.format('HH:mm')}-${end.format('HH:mm')}`
             }
+            start_time = null
         },
         editHandle (){ // 编辑按钮
-            this.isEdit = !0
+            this.isEdit = !this.isEdit
         },
         async saveHandle (){ // 保存按钮
             this.isEdit = !1
@@ -357,6 +347,9 @@ export default {
             this.coreHandler()
         },
         removeWorkerHandle (cellPos){ // 显示删除员工面板
+            if (this.list[cellPos[0]][cellPos[1]].length == 0){
+                return this.$message.warning('该单元格中没有员工，不能执行删除操作！')
+            }
             this.dialog.delVisible = !0
             this.checkes.showList = _.cloneDeep(this.list[cellPos[0]][cellPos[1]])
             this.checkes.cellPos = cellPos
@@ -459,7 +452,6 @@ export default {
     created (){
         this.createTimePart()
         this.createDeptList()
-        this.createPlanTheadList()
         this.initialDayListHandle()
         if (this.planTheadList.length > 0){
             this.initialTHeadHandle(this.planTheadList)
@@ -478,7 +470,6 @@ export default {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    margin: 0 -1px;
 }
 .plan-list thead th {
     padding: 10px 0;
@@ -489,13 +480,19 @@ export default {
     position: relative;
     top: 20px;
 }
+.plan-list tbody tr {
+    margin-top: -1px;
+}
+.plan-list tbody td.thead-y {
+    background-color: #f5f7fa;
+}
 .plan-list tbody td {
     padding: 5px;
     vertical-align: middle;
     border: 1px solid #ddd;
     position: relative;
 }
-.plan-list tbody td > i.cell-point {
+.plan-list tbody td > strong.cell-point {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -517,19 +514,26 @@ export default {
 .plan-list thead,
 .plan-list tbody tr {
     display: table;
-    width: 100%;
+    width: calc(100% - 1px);
     table-layout: fixed;
-    margin-bottom: -1px;
 }
 
-
-.plan-list tbody td .addWorkerBtn {
+/* 单元格中的 新增 删除 按钮 */
+.plan-list tbody td .handle-cell-btn {
     /* display: none; */
-    opacity: 0;
-    transition: all .3s ease;
+    visibility: hidden;
+    pointer-events: none;
+    cursor: pointer;
 }
-.plan-list tbody td:hover .addWorkerBtn {
+.plan-list tbody td .handle-cell-btn:first-of-type {
+    padding: 2px 0 2px 2px;
+}
+.plan-list tbody td .handle-cell-btn:last-of-type {
+    padding: 2px 2px 2px 0;
+}
+.plan-list tbody td:hover .handle-cell-btn {
     /* display: block; */
-    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 </style>

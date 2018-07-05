@@ -88,9 +88,9 @@
         </el-select>
         <el-input
             class="fl"
-            style="width: 160px"
+            style="width: 150px"
             size="small"
-            placeholder="姓名/电话号/拼音"
+            placeholder="姓名/电话/拼音"
             prefix-icon="el-icon-search"
             v-model="search.keyword"
             @keyup.enter.native="searchHandle"

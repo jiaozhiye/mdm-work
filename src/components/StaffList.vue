@@ -71,7 +71,7 @@
             size="small"
             multiple
             collapse-tags
-            style="width: 140px; margin-right: 10px;"
+            style="width: 120px; margin-right: 10px;"
             v-model="search.kind" 
             clearable 
             @change="searchHandle" 
@@ -87,7 +87,7 @@
         <el-select 
             class="fl" 
             size="small"
-            style="width: 80px; margin-right: 10px;"
+            style="width: 90px; margin-right: 10px;"
             v-model="search.type" 
             clearable 
             @change="searchHandle" 
@@ -136,7 +136,7 @@
                         查看
                     </el-button><el-button @click.stop="recordHandler(scope.row.id, 'modVisible')" type="primary" size="mini">
                         修改
-                    </el-button><el-button @click.stop="" type="success" size="mini">
+                    </el-button><el-button @click.stop="recordHandler(scope.row.id, 'freeVisible')" type="success" size="mini">
                         下周闲时
                     </el-button>
                 </template>
@@ -164,6 +164,9 @@
     <app-dialog title="绩效考核" :visible.sync="dialog.scoreVisible">
         <app-exec-score :record-id="recordId" :params="multipleSelection" @reloadEvent="reloadGetData"></app-exec-score>
     </app-dialog>
+    <app-dialog title="添加员工闲时" :visible.sync="dialog.freeVisible" top="0" custom-class="dialog-full-height">
+        <app-free-time :record-id="recordId" @reloadEvent="reloadGetData"></app-free-time>
+    </app-dialog>
 </div>
 </template>
 
@@ -179,6 +182,7 @@ import AppModStaff from 'components/ModStaff.vue'
 import AppShowStaff from 'components/ShowStaff.vue'
 import AppTransferOut from 'components/TransferOut.vue'
 import AppExecScore from 'components/ExecScore.vue'
+import AppFreeTime from 'components/FreeTime.vue'
 
 export default {
     name: 'app-staff-list',
@@ -202,7 +206,8 @@ export default {
                 showVisible: !1,
                 modVisible: !1,
                 outVisible: !1,
-                scoreVisible: !1
+                scoreVisible: !1,
+                freeVisible: !1
             },
             recordId: ''
         }
@@ -212,7 +217,7 @@ export default {
     },
     methods: {
         ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createWorkTypeList']),
-        recordHandler(_id, _type){
+        recordHandler(_id, _type, record){
             this.dialog[_type] = !0
             this.recordId = _id
         },
@@ -279,7 +284,8 @@ export default {
         AppModStaff,
         AppShowStaff,
         AppTransferOut,
-        AppExecScore
+        AppExecScore,
+        AppFreeTime
     }
 }
 </script>

@@ -265,8 +265,11 @@ export const savePlanStaff = params => instance.post('/mgr/schedulingCtrl/save',
     transformRequest: [ data => JSON.stringify(data) ]
 })
 
+// 员工添加闲时
+export const addFreeTime = params => instance.post('/mgr/staffIdleTimeCtrl/saveTime', params)
 
-
+// 获取员工闲时
+export const getFreeTime = params => instance.get('/mgr/staffIdleTimeCtrl/getStaffIdleTime', {params})
 
 
 

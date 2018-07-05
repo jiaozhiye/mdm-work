@@ -10,7 +10,7 @@
             @click="dialog.addVisible = true">添加门店</el-button>
     </nav>
     <div class="component-top">
-        <div class="search-title fl">门店名称：</div>
+        <div class="search-title fl">搜索条件：</div>
         <el-input
             class="fl"
             style="width: 200px"

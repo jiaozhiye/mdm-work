@@ -109,7 +109,7 @@ a:hover {
 
 
 .component-top {
-    height: 32px;
+    min-height: 32px;
     padding: 10px;
     overflow: hidden;
 }

@@ -116,14 +116,13 @@ export default {
         async saveHandle(){
             const response = await addTimeGuide(this.list)
             if (response.code == 1){
-                
+                this.$message.success(response.message)
             } else {
                 this.$message.error(response.message)
             }
         }
     },
     created (){
-        this.createPlanTheadList()
         if (this.planTheadList.length > 0){
             this.initialTHeadHandle(this.planTheadList)
             this.initialListHandle()

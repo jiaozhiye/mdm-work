@@ -46,6 +46,7 @@
 
 <script>
 import { addEstimateTurnover } from 'api'
+import { mapState, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -56,15 +57,7 @@ export default {
                 date: ''
             },
             list: [],
-            tableHeaders: [
-                '星期一',
-                '星期二',
-                '星期三',
-                '星期四',
-                '星期五',
-                '星期六',
-                '星期日'
-            ],
+            tableHeaders: [],
             cloneHeaders: [],  // 克隆 tableHeaders 原始数据
             timePart: [
                 '8:00 - 9:00',
@@ -103,6 +96,9 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapState('dict', ['weekList'])
+    },
     methods: {
         dateChangeHandle(val){ // 日期控件
             if (!val) return
@@ -115,6 +111,10 @@ export default {
             }
             this.tableHeaders = _arr
         },
+        initialTHead(){
+            this.tableHeaders = this.weekList.map(item => item.name)
+            this.cloneHeaders = _.cloneDeep(this.tableHeaders)
+        },
         initialListHandle(){
             this.timePart.forEach(() => {
                 let _arr = []
@@ -125,14 +125,14 @@ export default {
         async saveHandle(){
             const response = await addEstimateTurnover(this.list)
             if (response.code == 1){
-                
+                this.$message.success(response.message)
             } else {
                 this.$message.error(response.message)
             }
         }
     },
     created (){
-        this.cloneHeaders = _.cloneDeep(this.tableHeaders)
+        this.initialTHead()
         this.initialListHandle()
     },
 }

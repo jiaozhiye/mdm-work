@@ -28,29 +28,41 @@
         <el-date-picker
             class="fl"
             size="small"
-            style="width: 150px; margin-right: 10px;"
+            style="width: 160px; margin-right: 10px;"
             v-model="planDate"
             type="week"
             format="yyyy 第 WW 周"
             placeholder="选择周"
+            :clearable="false"
             :picker-options="pickerOptions"
             @change="dateChangeHandle">
         </el-date-picker>
-        <el-dropdown class="fl" size="small" placement="bottom-start" split-button>
+        <el-dropdown 
+            class="fl" 
+            style="margin-right: 10px;" 
+            size="small" 
+            placement="bottom-start" 
+            split-button>
             排班
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item 
                     v-for="(item, key) in dayList" 
                     :key="key"
-                    @click.native="searchHandle(key)">{{ item }}</el-dropdown-item>
+                    :disabled="planWorkState"
+                    @click.native="searchHandle(key)">
+                    {{ item }}
+                </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <el-button class="fl" style="margin-left: 10px;" size="small" @click.stop="showChartHandle">图表</el-button>
+        <el-button class="fl" size="small" @click.stop="showChartHandle">图表</el-button>
         <ul class="fr">
-            <el-button class="fl" size="small" :disabled="isDisabled" @click.stop="editHandle">
+            <el-button class="fl" size="small" :disabled="editBtnState" @click.stop="editHandle">
                 {{ isEdit ? '完成编辑' : '编辑' }}
             </el-button>
-            <el-button class="fl" size="small" type="primary" @click="saveHandle">保存</el-button>
+            <el-button class="fl" size="small" type="primary" 
+                :disabled="editBtnState" 
+                :loading="btnLoading" 
+                @click="saveHandle">保存</el-button>
         </ul>
     </div>
     <div class="component-main">
@@ -137,46 +149,6 @@ import { getPlanStaffInfo, getCellStaffInfo, savePlanStaff } from 'api'
 import AppDialog from 'components/AppDialog.vue'
 import SalaryChart from './SalaryChart.vue'
 
-// const workers = [
-//     {
-//         id: '1',
-//         name: '张三',
-//         color: '#FF5722',
-//         work: [
-//             { pos: [0, 1], kind: '岗位', salary: 5 },
-//             { pos: [0, 3], kind: '岗位', salary: 6 },
-//             { pos: [1, 2], kind: '岗位', salary: 5 },
-//             { pos: [2, 4], kind: '岗位', salary: 4 },
-//             { pos: [3, 0], kind: '岗位', salary: 5 },
-//             { pos: [1, 6], kind: '岗位', salary: 7 }
-//         ]
-//     },
-//     {
-//         id: '2',
-//         name: '李四',
-//         color: '#448AFF',
-//         work: [
-//             { pos: [0, 3], kind: '岗位', salary: 5 },
-//             { pos: [0, 5], kind: '岗位', salary: 6 },
-//             { pos: [1, 2], kind: '岗位', salary: 5 },
-//             { pos: [1, 4], kind: '岗位', salary: 4 },
-//             { pos: [3, 5], kind: '岗位', salary: 5 },
-//             { pos: [3, 6], kind: '岗位', salary: 7 }
-//         ]
-//     },
-//     {
-//         id: '3',
-//         name: '王五',
-//         color: '#AFB42B',
-//         work: [
-//             { pos: [1, 2], kind: '岗位', salary: 5 },
-//             { pos: [2, 1], kind: '岗位', salary: 4 },
-//             { pos: [2, 2], kind: '岗位', salary: 5 },
-//             { pos: [3, 2], kind: '岗位', salary: 7 }
-//         ]
-//     }
-// ]
-
 export default {
     name: 'app-plan-job',
     data (){
@@ -187,11 +159,10 @@ export default {
                 date: [],
                 day: ''
             },
-            workers: [],
+            workers: [], // 员工数组
             list: [],
             cloneList: [],
-            dayList: [],
-            cloneDayList: [],  // 克隆 dayList 原始数据
+            dayList: [], // 星期列表
             timePart: [],
             tHeadData: { // 表头数据
                 big: [],
@@ -210,7 +181,7 @@ export default {
                 existList: [], // 单元格中已经存在的职工数组
                 cellPos: []    // 单元格对应的索引
             },
-            chart: { // 图标数据
+            chart: { // 图表数据
                 data: [],
                 title: '',
                 subtitle: '',
@@ -239,7 +210,14 @@ export default {
     },
     computed: {
         ...mapState('dict', ['planTheadList', 'deptList', 'weekList']),
-        isDisabled(){
+        ...mapState('stateChange', ['btnLoading']),
+        weeksArr(){
+            return this.weekList.map(item => item.name)
+        },
+        planWorkState(){
+            return !(this.search.dept && this.planDate)
+        },
+        editBtnState(){
             return !this.workers.length
         }
     },
@@ -275,20 +253,17 @@ export default {
             this.cloneList = _.cloneDeep(this.list)
         },
         initialDayListHandle(){ // 初始化星期
-            this.dayList = this.weekList.map(item => item.name)
-            this.cloneDayList = _.cloneDeep(this.dayList)
+            this.dayList = _.cloneDeep(this.weeksArr)
         },
         dateChangeHandle(val){ // 日期控件
             if (!val) return
             const weekOfday = moment(val).format('E') // 计算今天是这周第几天  
             const weekStart = moment(val).subtract(Number(weekOfday) - 1, 'days') // 周一日期  
             // console.log(weekStart.format('YYYY-MM-DD'))
-            let _arr = []
-            for (let i = 0; i < this.dayList.length; i++){
-                _arr[i] = this.cloneDayList[i] + ' ' + moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')
+            for (let i = 0; i < this.weeksArr.length; i++){
+                this.$set(this.dayList, i, `${this.weeksArr[i]} ${moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')}`)
             }
-            this.dayList = _arr
-            // 执行搜索
+            // 设置搜索条件
             this.search.date = [weekStart.format('YYYY-MM-DD'), weekStart.add('days', 6).format('YYYY-MM-DD')]
         },
         searchHandle(day_key){ // 搜索功能
@@ -309,7 +284,11 @@ export default {
         },
         async saveHandle (){ // 保存按钮
             this.isEdit = !1
-            const response = await savePlanStaff(this.list)
+            const response = await savePlanStaff({
+                dept: this.search.dept,
+                date: this.search.date[0],
+                workers: this.workers
+            })
             if (response.code == 1){
                 this.$message.success(response.message)
             } else {
@@ -463,6 +442,47 @@ export default {
         SalaryChart
     }
 }
+
+// const workers = [
+//     {
+//         id: '1',
+//         name: '张三',
+//         color: '#FF5722',
+//         work: [
+//             { pos: [0, 1], kind: '岗位', salary: 5 },
+//             { pos: [0, 3], kind: '岗位', salary: 6 },
+//             { pos: [1, 2], kind: '岗位', salary: 5 },
+//             { pos: [2, 4], kind: '岗位', salary: 4 },
+//             { pos: [3, 0], kind: '岗位', salary: 5 },
+//             { pos: [1, 6], kind: '岗位', salary: 7 }
+//         ]
+//     },
+//     {
+//         id: '2',
+//         name: '李四',
+//         color: '#448AFF',
+//         work: [
+//             { pos: [0, 3], kind: '岗位', salary: 5 },
+//             { pos: [0, 5], kind: '岗位', salary: 6 },
+//             { pos: [1, 2], kind: '岗位', salary: 5 },
+//             { pos: [1, 4], kind: '岗位', salary: 4 },
+//             { pos: [3, 5], kind: '岗位', salary: 5 },
+//             { pos: [3, 6], kind: '岗位', salary: 7 }
+//         ]
+//     },
+//     {
+//         id: '3',
+//         name: '王五',
+//         color: '#AFB42B',
+//         work: [
+//             { pos: [1, 2], kind: '岗位', salary: 5 },
+//             { pos: [2, 1], kind: '岗位', salary: 4 },
+//             { pos: [2, 2], kind: '岗位', salary: 5 },
+//             { pos: [3, 2], kind: '岗位', salary: 7 }
+//         ]
+//     }
+// ]
+
 </script>
 
 <style>

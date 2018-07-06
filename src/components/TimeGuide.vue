@@ -9,8 +9,8 @@
         <div class="message-prompt fr"><i class="el-icon-info"></i>注意：输入可变工时的格式为单个数字（1）或区间（1-3）</div>
     </nav>
     <div class="component-top">
-        <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
-            @click="saveHandle">保存</el-button>
+        <el-button class="fr" size="small" icon="el-icon-plus" type="primary"
+            :loading="btnLoading" @click="saveHandle">保存</el-button>
     </div>
     <div class="component-main">
         <table class="guide-list">
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { addTimeGuide } from 'api'
+import { getDefaultTime, addTimeGuide } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -72,7 +72,8 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['planTheadList'])
+        ...mapState('dict', ['planTheadList']),
+        ...mapState('stateChange', ['btnLoading']),
     },
     watch: {
         planTheadList(val){
@@ -114,15 +115,37 @@ export default {
             }
         },
         async saveHandle(){
+            // console.log(JSON.stringify(this.list))
             const response = await addTimeGuide(this.list)
             if (response.code == 1){
                 this.$message.success(response.message)
             } else {
                 this.$message.error(response.message)
             }
+        },
+        async getTimeGuideList(){
+            const response = await getDefaultTime()
+            if (response.code == 1){
+                const respLen = this.getArrayTotal(response.data)
+                const listLen = this.getArrayTotal(this.list)
+                if (respLen !== listLen){
+                    this.$message.error('数据有误！')
+                } else {
+                    this.list = response.data
+                }
+            } else {
+                this.$message.error(response.message)
+            }
+        },
+        getArrayTotal(arr){
+            return arr.reduce((sum, cur) => {
+                if ( Array.isArray(sum) ) sum = sum.length
+                return sum + cur.length
+            })
         }
     },
     created (){
+        this.getTimeGuideList()
         if (this.planTheadList.length > 0){
             this.initialTHeadHandle(this.planTheadList)
             this.initialListHandle()

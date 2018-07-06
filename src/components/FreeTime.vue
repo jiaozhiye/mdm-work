@@ -3,7 +3,7 @@
     <h5 class="form-part-line" style="margin-left: 0;">选择空闲时间</h5>
     <el-form ref="form" label-width="67px" size="small">
         <el-form-item label="选择周">
-            <el-select v-model="week" clearable placeholder="请选择周" @change="changeHandle">
+            <el-select v-model="week" placeholder="请选择周" @change="changeHandle">
                 <el-option v-for="(item, key) in weekList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
@@ -43,6 +43,7 @@
         </el-table>
     </div>
     <div class="tr" style="margin-top: 15px;">
+        <el-button size="small" @click.stop="closePanle">取消</el-button>
         <el-button size="small" type="primary"
             @click.stop="saveRecord" :loading="btnLoading">保存</el-button>
     </div>
@@ -84,11 +85,9 @@ export default {
         async getStaffFreeTime(){
             const response = await getFreeTime({ id: this.recordId })
             if (response.code == 1){
-                this.week = response.data.week
+                this.week = response.data.week || this.week
                 this.staff = response.data.staff
-                this.allDataList = response.data.list.map(arr => {
-                    return arr.map(item => ({ ...this.staff, free_time: item }))
-                })
+                this.allDataList = response.data.list.map(arr => arr.map(item => ({ ...this.staff, free_time: item })))
                 this.changeHandle()
             } else {
                 this.$message.error(response.message)

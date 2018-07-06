@@ -13,21 +13,22 @@
         <el-date-picker
             class="fl"
             size="small"
-            v-model="form.date"
+            v-model="weekDay"
             type="week"
             format="yyyy 第 WW 周"
             placeholder="选择周"
+            :clearable="false"
             :picker-options="pickerOptions"
             @change="dateChangeHandle">
         </el-date-picker>
-        <el-button class="fr" size="small" icon="el-icon-plus" type="primary" plain
-            @click="saveHandle">保存</el-button>
+        <el-button class="fr" size="small" icon="el-icon-plus" type="primary"
+            :loading="btnLoading" @click="saveHandle">保存</el-button>
     </div>
     <div class="component-main">
         <table class="turnover-list">
             <thead>
                 <tr>
-                    <th>排班时间段</th>
+                    <th>时间段</th>
                     <th v-for="(item, key) in tableHeaders" :key="key">{{ item }}</th>
                 </tr>
             </thead>
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import { addEstimateTurnover } from 'api'
+import { getDefaultTurnover, addEstimateTurnover } from 'api'
 import { mapState, mapActions } from 'vuex'
 import moment from 'moment'
 
@@ -53,12 +54,12 @@ export default {
     name: 'app-turnover-list',
     data (){
         return {
+            weekDay: null,
             form: {
                 date: ''
             },
             list: [],
             tableHeaders: [],
-            cloneHeaders: [],  // 克隆 tableHeaders 原始数据
             timePart: [
                 '8:00 - 9:00',
                 '9:00 - 10:00',
@@ -97,7 +98,11 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['weekList'])
+        ...mapState('dict', ['weekList']),
+        ...mapState('stateChange', ['btnLoading']),
+        dayList(){
+            return this.weekList.map(item => item.name)
+        }
     },
     methods: {
         dateChangeHandle(val){ // 日期控件
@@ -105,36 +110,62 @@ export default {
             const weekOfday = moment(val).format('E') // 计算今天是这周第几天  
             const weekStart = moment(val).subtract(Number(weekOfday) - 1, 'days') // 周一日期  
             // console.log(weekStart.format('YYYY-MM-DD'))
-            let _arr = []
-            for (let i = 0; i < this.tableHeaders.length; i++){
-                _arr[i] = this.cloneHeaders[i] + ' ' + moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')
+            for (let i = 0; i < this.dayList.length; i++){
+                this.$set(this.tableHeaders, i, `${this.dayList[i]} ${moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')}`)
             }
-            this.tableHeaders = _arr
+            this.form.date = weekStart.format('MM-DD')
         },
         initialTHead(){
-            this.tableHeaders = this.weekList.map(item => item.name)
-            this.cloneHeaders = _.cloneDeep(this.tableHeaders)
+            this.tableHeaders = _.cloneDeep(this.dayList)
         },
         initialListHandle(){
             this.timePart.forEach(() => {
                 let _arr = []
-                this.tableHeaders.forEach(() => _arr.push({ input: '' }) )
+                this.dayList.forEach(() => _arr.push({ input: '' }) )
                 this.list.push(_arr)
             })
         },
+        async getTurnoverList(){
+            const response = await getDefaultTurnover()
+            if (response.code == 1){
+                const respLen = this.getArrayTotal(response.data)
+                const listLen = this.getArrayTotal(this.list)
+                if (respLen !== listLen){
+                    this.$message.error('数据有误！')
+                } else {
+                    this.list = response.data
+                }
+            } else {
+                this.$message.error(response.message)
+            }
+        },
         async saveHandle(){
-            const response = await addEstimateTurnover(this.list)
+            // console.log(JSON.stringify(this.list))
+            if (!this.weekDay){
+                return this.$message.warning('请选择周，再进行提交！')
+            }
+            const response = await addEstimateTurnover({
+                date: this.form.date,
+                list: this.list
+            })
             if (response.code == 1){
                 this.$message.success(response.message)
             } else {
                 this.$message.error(response.message)
             }
+        },
+        getArrayTotal(arr){
+            return arr.reduce((sum, cur) => {
+                if ( Array.isArray(sum) ) sum = sum.length
+                return sum + cur.length
+            })
         }
     },
     created (){
         this.initialTHead()
         this.initialListHandle()
-    },
+        this.getTurnoverList()
+    }
 }
 </script>
 

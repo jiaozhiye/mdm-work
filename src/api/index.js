@@ -271,6 +271,31 @@ export const addFreeTime = params => instance.post('/mgr/staffIdleTimeCtrl/saveT
 // 获取员工闲时
 export const getFreeTime = params => instance.get('/mgr/staffIdleTimeCtrl/getStaffIdleTime', {params})
 
+// 获取默认的预估营业额
+export const getDefaultTurnover = () => instance.get('/mgr/storeForecastTurnoverCtrl/getForecastTurnover')
+
+// 获取默认的可变工时
+export const getDefaultTime = () => instance.get('/mgr/variableTimeGuideCtrl/getVariableTimeGuide')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

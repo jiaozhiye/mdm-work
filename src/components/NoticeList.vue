@@ -169,7 +169,7 @@ export default {
         },
         handleCurrentChange(index){
             this.curPageIndex = index
-            this.getArticleList(index)
+            this.getNoticeList(index)
         },
         reloadGetData(res){
             if (res == 'reload'){

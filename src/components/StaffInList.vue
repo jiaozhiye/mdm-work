@@ -195,7 +195,7 @@ export default {
         },
         handleCurrentChange(index){
             this.curPageIndex = index
-            this.getArticleList(index)
+            this.getStuffList(index)
         },
         reloadGetData(res){
             if (res == 'reload'){

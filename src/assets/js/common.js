@@ -7,7 +7,7 @@ export default (function (env){
 		// 使控制台 console 输出失效
 		console.log = console.warn = console.error = console.info = function(){}
 		envObj.env = '当前工程环境：production'
-		envObj.serverUrl = '/'
+		envObj.serverUrl = '/hrms/'
 	} else if (env == 'development'){
 		envObj.env = '当前工程环境：development'
 		// envObj.serverUrl = 'http://192.168.1.202:8081/'

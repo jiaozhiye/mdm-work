@@ -54,19 +54,19 @@
                 </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <el-button class="fl" size="small" @click.stop="showChartHandle">图表</el-button>
+        <el-button class="fl" size="small" :disabled="buttonStatus" @click.stop="showChartHandle">图表</el-button>
         <ul class="fr">
-            <el-button class="fl" size="small" :disabled="editBtnState" @click.stop="editHandle">
+            <el-button class="fl" size="small" :disabled="buttonStatus" @click.stop="editHandle">
                 {{ isEdit ? '完成编辑' : '编辑' }}
             </el-button>
             <el-button class="fl" size="small" type="primary" 
-                :disabled="editBtnState" 
+                :disabled="buttonStatus" 
                 :loading="btnLoading" 
                 @click="saveHandle">保存</el-button>
         </ul>
     </div>
     <div class="component-main">
-        <table class="plan-list">
+        <table class="plan-list" ref="table">
             <thead>
                 <tr>
                     <th rowspan="2" colspan="1"><i>排班表</i></th>
@@ -146,6 +146,8 @@ import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
 import { getPlanStaffInfo, getCellStaffInfo, savePlanStaff } from 'api'
 
+import TableCell from 'assets/js/table-cell'
+
 import AppDialog from 'components/AppDialog.vue'
 import SalaryChart from './SalaryChart.vue'
 
@@ -217,7 +219,7 @@ export default {
         planWorkState(){
             return !(this.search.dept && this.planDate)
         },
-        editBtnState(){
+        buttonStatus(){
             return !this.workers.length
         }
     },
@@ -437,6 +439,16 @@ export default {
             this.initialListHandle()
         }
     },
+    mounted(){
+        const oTable = new TableCell({
+            tbodyWrapper: this.$refs.table.children[1],
+            exceptCellIndexs: [0],
+            callback(x, y){
+                // console.log(x, y)
+            }
+        })
+        oTable.install()
+    },
     components: {
         AppDialog,
         SalaryChart
@@ -521,6 +533,13 @@ export default {
     right: 2px;
     top: 2px;
     z-index: 1;
+}
+
+.plan-list tbody > tr:hover {
+    background-color: #f5f7fa;
+}
+.plan-list tbody > tr > td.ctd {
+    background-color: #f5f7fa;
 }
 
 /* 固定表头 */

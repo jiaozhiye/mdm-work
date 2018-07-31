@@ -6,17 +6,18 @@
             <el-breadcrumb-item>排班管理</el-breadcrumb-item>
             <el-breadcrumb-item>可变工时</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="message-prompt fr"><i class="el-icon-info"></i>注意：输入可变工时的格式为单个数字（1）或区间（1-3）</div>
+        <div class="message-prompt fr"><i class="el-icon-info"></i>注意：输入数据的格式为单个数字（1）或区间（1-3）</div>
     </nav>
     <div class="component-top">
-        <el-button class="fr" size="small" icon="el-icon-plus" type="primary"
+        <el-button class="fr" size="small" type="primary"
             :loading="btnLoading" @click="saveHandle">保存</el-button>
+        <el-button class="fr" style="margin-right: 10px;" size="small"
+            :loading="btnLoading" @click="addRecordHandle">新增</el-button>
     </div>
     <div class="component-main">
-        <table class="guide-list">
+        <table class="guide-list" ref="table">
             <thead>
                 <tr>
-                    <th rowspan="2" colspan="1"><i>营业额</i></th>
                     <th 
                         v-for="(item, key) in tHeadData.big" 
                         :key="key"
@@ -25,7 +26,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <th width="6.3%" 
+                    <th width="5%" 
                         v-for="(item, key) in tHeadData.small" 
                         :key="key">
                         {{ item.name }}
@@ -34,9 +35,8 @@
             </thead>
             <tbody>
                 <tr v-for="(item1, key1) in list" :key="key1">
-                    <td>{{ timePart[key1] }}</td>
                     <td v-for="(item2, key2) in item1" :key="key2" :data-index="key1 + ',' + key2">
-                        <el-input v-model="item2.input" size="mini" clearable @blur="checkInputHandle"></el-input>
+                        <el-input v-model="item2.input" size="mini" @blur="checkInputHandle"></el-input>
                     </td>
                 </tr>
             </tbody>
@@ -49,6 +49,8 @@
 import { getDefaultTime, addTimeGuide } from 'api'
 import { mapState, mapActions } from 'vuex'
 
+import TableCell from 'assets/js/table-cell'
+
 export default {
     name: 'app-time-guide',
     data (){
@@ -58,16 +60,23 @@ export default {
                 big: [],
                 small: []
             },
-            timePart: [
-                '0-500',
-                '501-1000',
-                '1001-1500',
-                '1501-2000',
-                '2001-2500',
-                '2501-3000',
-                '3001-3500',
-                '3501-4000',
-                '4000以上'
+            fixedThead: [
+                {
+                    key: -2,
+                    name: '',
+                    children: [{
+                        key: -2,
+                        name: '营业额'
+                    }]
+                },
+                {
+                    key: -1,
+                    name: '',
+                    children: [{
+                        key: -1,
+                        name: '顾客数'
+                    }]
+                }
             ]
         }
     },
@@ -84,7 +93,7 @@ export default {
     methods: {
         ...mapActions('dict', ['createPlanTheadList']),
         initialTHeadHandle(arr){
-            arr.forEach(item => {
+            this.fixedThead.concat(arr).forEach(item => {
                 // 处理一级表头
                 this.tHeadData.big.push({
                     name: item.name,
@@ -97,13 +106,10 @@ export default {
             this.tHeadData.small.sort((a, b) => a.key - b.key)
         },
         initialListHandle(){
-            this.timePart.forEach(() => {
-                let _arr = []
-                for (let i = 0; i < this.tHeadData.small.length; i++){
-                    _arr.push({ input: '' })
-                }
-                this.list.push(_arr)
-            })
+            this.createRecord()
+        },
+        addRecordHandle(){
+            this.createRecord()
         },
         checkInputHandle(event){
             const regExp = /^\d|(\d-\d)$/
@@ -126,16 +132,23 @@ export default {
         async getTimeGuideList(){
             const response = await getDefaultTime()
             if (response.code == 1){
-                const respLen = this.getArrayTotal(response.data)
-                const listLen = this.getArrayTotal(this.list)
-                if (respLen !== listLen){
-                    this.$message.error('数据有误！')
-                } else {
-                    this.list = response.data
-                }
+                // const respLen = this.getArrayTotal(response.data)
+                // const listLen = this.getArrayTotal(this.list)
+                // if (respLen !== listLen){
+                //     this.$message.error('数据有误！')
+                // } else {
+                   this.list = response.data
+                // }
             } else {
                 this.$message.error(response.message)
             }
+        },
+        createRecord(){
+            let _arr = []
+            for (let i = 0; i < this.tHeadData.small.length; i++){
+                _arr.push({ input: '' })
+            }
+            this.list.push(_arr)
         },
         getArrayTotal(arr){
             return arr.reduce((sum, cur) => {
@@ -150,6 +163,16 @@ export default {
             this.initialTHeadHandle(this.planTheadList)
             this.initialListHandle()
         }
+    },
+    mounted(){
+        const oTable = new TableCell({
+            tbodyWrapper: this.$refs.table.children[1],
+            exceptCellIndexs: [],
+            callback(x, y){
+                // console.log(x, y)
+            }
+        })
+        oTable.install()
     }
 }
 </script>
@@ -180,5 +203,12 @@ export default {
 }
 .guide-list tbody td .danger {
     border-color: red;
+}
+
+.guide-list tbody > tr:hover {
+    background-color: #f5f7fa;
+}
+.guide-list tbody > tr > td.ctd {
+    background-color: #f5f7fa;
 }
 </style>

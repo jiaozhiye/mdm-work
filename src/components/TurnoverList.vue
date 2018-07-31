@@ -25,7 +25,7 @@
             :loading="btnLoading" @click="saveHandle">保存</el-button>
     </div>
     <div class="component-main">
-        <table class="turnover-list">
+        <table class="turnover-list" ref="table">
             <thead>
                 <tr>
                     <th>时间段</th>
@@ -49,6 +49,8 @@
 import { getDefaultTurnover, addEstimateTurnover } from 'api'
 import { mapState, mapActions } from 'vuex'
 import moment from 'moment'
+
+import TableCell from 'assets/js/table-cell'
 
 export default {
     name: 'app-turnover-list',
@@ -115,6 +117,10 @@ export default {
             }
             this.form.date = weekStart.format('MM-DD')
         },
+        initialWeek(){  
+            const weekStart = moment().subtract(Number(moment().format('E')) - 1, 'days') // 周一日期
+            this.weekDay = weekStart.toDate()
+        },
         initialTHead(){
             this.tableHeaders = _.cloneDeep(this.dayList)
         },
@@ -162,9 +168,20 @@ export default {
         }
     },
     created (){
+        this.initialWeek()
         this.initialTHead()
         this.initialListHandle()
         this.getTurnoverList()
+    },
+    mounted(){
+        const oTable = new TableCell({
+            tbodyWrapper: this.$refs.table.children[1],
+            exceptCellIndexs: [0],
+            callback(x, y){
+                // console.log(x, y)
+            }
+        })
+        oTable.install()
     }
 }
 </script>
@@ -190,5 +207,12 @@ export default {
     padding: 5px;
     vertical-align: middle;
     border: 1px solid #dcdfe6;
+}
+
+.turnover-list tbody > tr:hover {
+    background-color: #f5f7fa;
+}
+.turnover-list tbody > tr > td.ctd {
+    background-color: #f5f7fa;
 }
 </style>

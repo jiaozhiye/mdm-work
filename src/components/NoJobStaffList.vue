@@ -110,7 +110,7 @@
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column label="门店名称" min-width="200">
+            <el-table-column label="门店名称" min-width="150">
                 <template slot-scope="scope">
                     <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
                 </template>
@@ -119,7 +119,17 @@
             <el-table-column prop="gender" label="性别"></el-table-column>
             <el-table-column prop="phone" label="电话"></el-table-column>
             <el-table-column prop="job" label="职位"></el-table-column>
-            <el-table-column prop="kind" label="岗位"></el-table-column>
+            <el-table-column label="岗位">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>{{ scope.row.kind }}</p>
+                        <div slot="reference" class="text_overflow_cut">
+                            {{ scope.row.kind }}
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column prop="quit_time" label="离职日期"></el-table-column>
             <el-table-column prop="wage" label="薪资"></el-table-column>
             <el-table-column prop="type" label="工作类型"></el-table-column>
             <el-table-column label="操作" width="180">

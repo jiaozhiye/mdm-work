@@ -62,6 +62,7 @@
             placeholder="结束日期"
             format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
             @change="searchHandle">
         </el-date-picker>
         <div class="search-title fl">类型：</div>
@@ -151,6 +152,7 @@
 import { getStaffOutList, cancleStaffOut } from 'api'
 
 import { mapState, mapActions } from 'vuex'
+import moment from 'moment'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppShowStaffOut from 'components/ShowStaffOut.vue'
@@ -174,7 +176,14 @@ export default {
             dialog: {
                 showVisible: !1
             },
-            recordId: ''
+            recordId: '',
+            pickerOptions: {
+                disabledDate: time => {
+                    if (this.search.start_date !== ''){
+                        return time.getTime() < moment(this.search.start_date)
+                    }
+                }
+            }
         }
     },
     computed: {
@@ -218,6 +227,10 @@ export default {
             this.loading = !1
         },
         searchHandle(){
+            if (moment(this.search.end_date) < moment(this.search.start_date)){
+                this.$message.warning('结束日期不能小于开始日期')
+                return this.search.end_date = ''
+            }
             this.getStuffList(1)
         },
         handleCurrentChange(index){

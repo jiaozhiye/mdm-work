@@ -7,8 +7,8 @@
         </el-form-item>
         <el-form-item label="性别" prop="gender">
             <el-radio-group v-model="form.gender">
-                <el-radio label="0">男</el-radio>
-                <el-radio label="1">女</el-radio>
+                <el-radio label="1">男</el-radio>
+                <el-radio label="0">女</el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item label="生日" prop="birthday">
@@ -108,7 +108,7 @@ export default {
         return {
             form: {
                 name: '',
-                gender: '0',
+                gender: '1',
                 birthday: '1990-01-01',
                 phone: '',
                 address: '',

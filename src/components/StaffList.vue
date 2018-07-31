@@ -112,7 +112,7 @@
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="50"></el-table-column>
+            <el-table-column type="selection" width="50" fixed="left"></el-table-column>
             <el-table-column label="门店名称" min-width="200">
                 <template slot-scope="scope">
                     <span :style="{color: scope.row.store_color}">{{ scope.row.store_name }}</span>
@@ -122,7 +122,16 @@
             <el-table-column prop="gender" label="性别"></el-table-column>
             <el-table-column prop="phone" label="电话"></el-table-column>
             <el-table-column prop="job" label="职位"></el-table-column>
-            <el-table-column prop="kind" label="岗位"></el-table-column>
+            <el-table-column label="岗位">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>{{ scope.row.kind }}</p>
+                        <div slot="reference" class="text_overflow_cut">
+                            {{ scope.row.kind }}
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
             <el-table-column prop="wage" label="薪资"></el-table-column>
             <el-table-column prop="type" label="工作类型"></el-table-column>
             <el-table-column label="状态" width="120">
@@ -130,7 +139,7 @@
                     <el-tag :type="scope.row.status_color" size="medium">{{ scope.row.status_text }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" width="350" fixed="right">
                 <template slot-scope="scope">
                     <el-button @click.stop="recordHandler(scope.row.id, 'showVisible')" size="mini">
                         查看
@@ -138,6 +147,9 @@
                         修改
                     </el-button><el-button @click.stop="recordHandler(scope.row.id, 'freeVisible')" type="success" size="mini">
                         下周闲时
+                    </el-button>
+                    <el-button @click.stop="recordHandler(scope.row.id, 'showFreeVisible')" size="mini">
+                        查看闲时
                     </el-button>
                 </template>
             </el-table-column>
@@ -167,6 +179,9 @@
     <app-dialog title="添加员工闲时" :visible.sync="dialog.freeVisible" top="0" custom-class="dialog-full-height">
         <app-free-time :record-id="recordId" @reloadEvent="reloadGetData"></app-free-time>
     </app-dialog>
+    <app-dialog title="查看员工闲时" :visible.sync="dialog.showFreeVisible" top="0" custom-class="dialog-full-height">
+        <app-show-free-time :record-id="recordId"></app-show-free-time>
+    </app-dialog>
 </div>
 </template>
 
@@ -183,6 +198,7 @@ import AppShowStaff from 'components/ShowStaff.vue'
 import AppTransferOut from 'components/TransferOut.vue'
 import AppExecScore from 'components/ExecScore.vue'
 import AppFreeTime from 'components/FreeTime.vue'
+import AppShowFreeTime from 'components/ShowFreeTime.vue'
 
 export default {
     name: 'app-staff-list',
@@ -207,7 +223,8 @@ export default {
                 modVisible: !1,
                 outVisible: !1,
                 scoreVisible: !1,
-                freeVisible: !1
+                freeVisible: !1,
+                showFreeVisible: !1
             },
             recordId: ''
         }
@@ -285,7 +302,8 @@ export default {
         AppShowStaff,
         AppTransferOut,
         AppExecScore,
-        AppFreeTime
+        AppFreeTime,
+        AppShowFreeTime
     }
 }
 </script>

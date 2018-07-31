@@ -271,6 +271,9 @@ export const addFreeTime = params => instance.post('/mgr/staffIdleTimeCtrl/saveT
 // 获取员工闲时
 export const getFreeTime = params => instance.get('/mgr/staffIdleTimeCtrl/getStaffIdleTime', {params})
 
+// 获取员工显示
+export const getAllFreeTime = params => instance.get('/mgr/staffIdleTimeCtrl/getStaffIdleTimeById', {params})
+
 // 获取默认的预估营业额
 export const getDefaultTurnover = () => instance.get('/mgr/storeForecastTurnoverCtrl/getForecastTurnover')
 

@@ -45,13 +45,24 @@ function recursionTree(arr, callback){
     }
 }
 
-// 函数节流
-function debounce(func, delay){
-    let timer = null
+// 函数防抖
+function debounce(fn, delay){
     return function(...args){
-        timer && clearTimeout(timer)
-        timer = setTimeout(() => func.apply(this, args), delay)
+        fn.timer && clearTimeout(fn.timer)
+        fn.timer = setTimeout(() => fn.apply(this, args), delay)
     }
 }
 
-export { cloneObj, getRandom, prefixCss, getUrlHash, recursionTree, debounce }
+// 函数节流
+function throttle(fn, delay){
+    return function (...args){
+        let _nowTime = + new Date()
+        if (!fn._lastTime || _nowTime - fn._lastTime > delay){
+            fn.apply(this, args)
+            fn._lastTime = _nowTime
+        }
+    }
+}
+
+
+export { cloneObj, getRandom, prefixCss, getUrlHash, recursionTree, debounce, throttle }

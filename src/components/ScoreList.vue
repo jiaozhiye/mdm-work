@@ -46,6 +46,7 @@
             placeholder="结束日期"
             format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
             @change="searchHandle">
         </el-date-picker>
         <el-input
@@ -90,7 +91,7 @@
         <app-show-score :record-id="recordId"></app-show-score>
     </app-dialog>
     <app-dialog title="修改奖罚信息" :visible.sync="dialog.modVisible">
-        <app-mod-score :record-id="recordId"></app-mod-score>
+        <app-mod-score :record-id="recordId" @reloadEvent="reloadGetData"></app-mod-score>
     </app-dialog>
 </div>
 </template>
@@ -99,6 +100,7 @@
 import { getStaffScoreList, delStaffScoreRecord } from 'api'
 
 import { mapState, mapActions } from 'vuex'
+import moment from 'moment'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppShowScore from 'components/ShowScore.vue'
@@ -121,7 +123,14 @@ export default {
                 showVisible: !1,
                 modVisible: !1
             },
-            recordId: ''
+            recordId: '',
+            pickerOptions: {
+                disabledDate: time => {
+                    if (this.search.start_date !== ''){
+                        return time.getTime() < moment(this.search.start_date)
+                    }
+                }
+            }
         }
     },
     computed: {
@@ -166,6 +175,10 @@ export default {
             }).catch(() => {})
         },
         searchHandle(){
+            if (moment(this.search.end_date) < moment(this.search.start_date)){
+                this.$message.warning('结束日期不能小于开始日期')
+                return this.search.end_date = ''
+            }
             this.getStaffScoreInfo(1)
         },
         handleCurrentChange(index){

@@ -36,7 +36,16 @@
             <el-table-column prop="datetime" label="考核日期"></el-table-column>
             <el-table-column prop="name" label="员工姓名"></el-table-column>
             <el-table-column prop="hiredate" label="入职时间"></el-table-column>
-            <el-table-column prop="kind" label="岗位"></el-table-column>
+            <el-table-column label="岗位">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>{{ scope.row.kind }}</p>
+                        <div slot="reference" class="text_overflow_cut">
+                            {{ scope.row.kind }}
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
             <el-table-column prop="examiner" label="考核人"></el-table-column>
             <el-table-column label="结果" width="150">
                 <template slot-scope="scope">

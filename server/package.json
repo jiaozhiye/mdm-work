@@ -1,0 +1,35 @@
+{
+    "name": "node-server-demo",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "start": "pm2 start process.prod.json --no-daemon",
+        "dev": "nodemon --config nodemon.json app.js"
+    },
+    "author": "jzy",
+    "license": "MIT",
+    "dependencies": {
+        "@koa/cors": "2",
+        "axios": "^0.15.3",
+        "knex": "^0.13.0",
+        "koa": "^2.0.0",
+        "koa-bodyparser": "^3.2.0",
+        "koa-proxies": "^0.7.0",
+        "koa-router": "^7.0.1",
+        "koa-session": "^5.8.1",
+        "koa-static": "^4.0.3",
+        "lodash": "^4.17.4",
+        "mysql": "^2.14.1",
+        "mysql-tran": "^1.0.3",
+        "nodemon": "^1.17.5"
+    },
+    "devDependencies": {
+        "babel-eslint": "^7.1.0",
+        "debug": "^2.6.8",
+        "eslint": "^3.9.1",
+        "eslint-config-standard": "^6.2.1",
+        "eslint-plugin-promise": "^3.3.1",
+        "eslint-plugin-standard": "^2.0.1"
+    }
+}

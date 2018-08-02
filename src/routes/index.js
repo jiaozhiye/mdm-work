@@ -169,6 +169,28 @@ export const allRoutesMap = [
                 component: AppPlanJob
             }
         ]
+    },
+    {
+        path: '/editer',
+        name: '海报管理',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: '海报管理-欢迎',
+                component: Home
+            },
+            {
+                path: 'list',
+                name: '海报列表',
+                component: Home
+            },
+            {
+                path: 'create',
+                name: '海报制作',
+                component: Home
+            }
+        ]
     }
 ]
 

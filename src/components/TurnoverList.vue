@@ -112,17 +112,13 @@ export default {
             const weekOfday = moment(val).format('E') // 计算今天是这周第几天  
             const weekStart = moment(val).subtract(Number(weekOfday) - 1, 'days') // 周一日期  
             // console.log(weekStart.format('YYYY-MM-DD'))
-            for (let i = 0; i < this.dayList.length; i++){
-                this.$set(this.tableHeaders, i, `${this.dayList[i]} ${moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')}`)
-            }
-            this.form.date = weekStart.format('MM-DD')
-        },
-        initialWeek(){  
-            const weekStart = moment().subtract(Number(moment().format('E')) - 1, 'days') // 周一日期
-            this.weekDay = weekStart.toDate()
+            this.setDateHandler(weekStart)
         },
         initialTHead(){
             this.tableHeaders = _.cloneDeep(this.dayList)
+        },
+        initialWeek(){
+            this.dateChangeHandle(new Date())
         },
         initialListHandle(){
             this.timePart.forEach(() => {
@@ -130,6 +126,13 @@ export default {
                 this.dayList.forEach(() => _arr.push({ input: '' }) )
                 this.list.push(_arr)
             })
+        },
+        setDateHandler(weekStart){
+            this.weekDay   = weekStart.toDate()
+            this.form.date = weekStart.format('MM-DD')
+            for (let i = 0; i < this.dayList.length; i++){
+                this.$set(this.tableHeaders, i, `${this.dayList[i]} ${moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')}`)
+            }
         },
         async getTurnoverList(){
             const response = await getDefaultTurnover()
@@ -168,8 +171,8 @@ export default {
         }
     },
     created (){
-        this.initialWeek()
         this.initialTHead()
+        this.initialWeek()
         this.initialListHandle()
         this.getTurnoverList()
     },

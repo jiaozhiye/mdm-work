@@ -80,4 +80,7 @@ export default {
 .head-nav ul li a i.graph-scheduling {
     background-position: -112px 0;
 }
+.head-nav ul li a i.graph-editer {
+    background-position: -320px 0;
+}
 </style>

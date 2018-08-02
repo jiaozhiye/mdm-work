@@ -12,12 +12,14 @@ Vue.use(Vuex)
 import app from './modules/application'
 import stateChange from './modules/state-change'
 import dict from './modules/dictionary'
+import editer from './modules/editer'
 
 const store = new Vuex.Store({
     modules: {
         app,
         stateChange,
-        dict
+        dict,
+        editer
     }
 })
 

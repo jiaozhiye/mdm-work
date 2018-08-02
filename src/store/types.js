@@ -25,4 +25,7 @@ export const CLASSIFY_SELECT = 'CLASSIFY_SELECT'
 export const NOTICE_TYPE_SELECT = 'NOTICE_TYPE_SELECT'
 export const PLAN_THEAD = 'PLAN_THEAD'
 
+export const POSTER_NAME = 'POSTER_NAME'
+export const POSTER_SCALE = 'POSTER_SCALE'
+
 

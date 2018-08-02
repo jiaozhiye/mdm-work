@@ -3,7 +3,7 @@
    <ul class="clearFix">
         <li v-for="(item, key) in navList" :key="key" :class="{active: key == curIndex}">
             <router-link :to="item.link">
-                <i class="icon" :class="'graph-' + item.iconName"></i>
+                <i class="app-icon" :class="'graph-' + item.iconName"></i>
                 <span>{{ item.title }}</span>
             </router-link>
         </li>
@@ -43,13 +43,13 @@ export default {
 .head-nav ul li.active a {
     background-color: rgba(0, 0, 0, .2);
 }
-.icon {
+.app-icon {
     background-image: url(../assets/img/icons.png);
     background-repeat: no-repeat;
     display: inline-block;
     vertical-align: middle;
 }
-.head-nav ul li a i.icon {
+.head-nav ul li a i.app-icon {
     height: 16px;
     width: 16px;
     margin-top: -3px;

@@ -1,0 +1,321 @@
+/**
+ * mdm poster editer
+ */
+.editer-main {
+    display: flex;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+}
+.editer-main * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.mdm-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: none;
+    width: 68px;
+    height: 100%;
+    color: #76838f;
+    background: #1d2024;
+}
+.mdm-nav .list {
+    position: relative;
+}
+.mdm-nav .list .logo.left .icon {
+    transform: rotate(-180deg);
+}
+.mdm-nav .list .logo .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.mdm-nav .list .item .icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+.mdm-nav .list .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 68px;
+    font-size: 12px;
+    z-index: 1;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.mdm-nav .list .item:hover:nth-child(2)~.slide {
+    transform: translateY(0)!important;
+}
+.mdm-nav .list .item.active:nth-child(2)~.slide {
+    transform: translateY(0);
+}
+.mdm-nav .list .item:hover:nth-child(3)~.slide {
+    transform: translateY(68px)!important;
+}
+.mdm-nav .list .item.active:nth-child(3)~.slide {
+    transform: translateY(68px);
+}
+.mdm-nav .list .item:hover:nth-child(4)~.slide {
+    transform: translateY(136px)!important;
+}
+.mdm-nav .list .item.active:nth-child(4)~.slide {
+    transform: translateY(136px);
+}
+
+.mdm-nav .list .slide {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 68px;
+    height: 68px;
+    background: #1593ff;
+    transition: all .3s;
+}
+.mdm-nav .list .item.active,
+.mdm-nav .list .item:hover {
+    color: #fff;
+}
+
+
+.mdm-nav-panel {
+    position: relative;
+    flex: none;
+    width: 0;
+    height: 100%;
+    background: #f7f8f9;
+    opacity: 0;
+    transition: all .3s;
+    z-index: 2;
+    overflow: hidden;
+}
+.mdm-nav-panel.show {
+    width: 270px;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,.16);
+    opacity: 1;
+}
+.mdm-nav-panel .panel {
+    width: 270px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.mdm-right {
+    flex: 1;
+}
+.mdm-nav-template {
+    height: 100%;
+}
+.panel-top {
+    height: 49px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    line-height: 49px;
+    text-align: center;
+    font-size: 14px;
+}
+.mdm-nav-template > .list {
+    height: calc(100% - 50px);
+    overflow-y: auto;
+}
+.mdm-nav-template > .list ul {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-bottom: 10px;
+}
+.mdm-nav-template > .list ul li {
+    width: 124px;
+    height: 195px;
+    margin-top: 6px;
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    cursor: pointer;
+}
+.mdm-nav-template > .list ul li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .3);
+    transition: all .3s ease;
+}
+.mdm-nav-template > .list ul li:hover::after {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.mdm-nav-text {
+    padding: 15px;
+}
+.mdm-nav-text > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s;
+    cursor: pointer;
+}
+.mdm-nav-text > div:hover {
+    background: #eceef0;
+}
+.mdm-nav-text .title {
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    height: 60px;
+}
+.mdm-nav-text .content {
+    font-size: 16px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    height: 36px;
+}
+
+.mdm-nav-upload {
+    
+}
+
+
+.mdm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 48px;
+    color: #4f5d69;
+    background: #fff;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,.16);
+    z-index: 1;
+}
+.mdm-header .info {
+    font-size: 14px;
+    padding-left: 24px;
+    display: flex;
+    align-items: center;
+}
+.mdm-header .info .size {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 20px;
+    background: #f7f8f9;
+    border-radius: 3px;
+}
+.mdm-header .info .icon {
+    font-size: 14px;
+    margin: 0 6px;
+}
+.mdm-header .list {
+    display: flex;
+    align-items: center;
+}
+.mdm-header .list .item {
+    width: 65px;
+    height: 48px;
+}
+.mdm-header .list .item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all .3s;
+}
+.mdm-header .list .item:hover {
+    color: #1593ff;
+}
+
+.mdm-right > .content {
+    display: flex;
+    position: relative;
+    height: calc(100% - 48px);
+}
+.mdm-right > .content .workspace {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 0;
+    height: 100%;
+    background: #eceef0;
+    overflow: hidden;
+}
+.mdm-right > .content .sidebar {
+    width: 50px;
+    height: 100%;
+    border-right: 1px solid #ddd;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, .16);
+    background-color: #fff;
+}
+.mdm-right > .content .sidebar .item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+.mdm-right > .content .sidebar .item .icon {
+    font-size: 20px;
+    color: #76838f;
+    transition: all .3s ease;
+}
+.mdm-right > .content .sidebar .item:hover .icon {
+    color: #1593ff;
+}
+
+
+.workspace .mdm-editor {
+    position: absolute;
+    background-color: #fff;
+    z-index: 0;
+}
+.workspace .mdm-mask {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    outline: rgba(236, 238, 240, 0.9) solid 10000px;
+    z-index: 1000;
+    pointer-events: none;
+}
+.workspace .mdm-mask .shadow {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    box-shadow: rgba(0, 0, 0, .2) 0px 0px 5px 0px;
+}
+
+.workspace .mdm-elements {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 0;
+    transform-origin: left top 0px;
+}
+.workspace .mdm-element-boxs {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+

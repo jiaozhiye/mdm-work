@@ -21,6 +21,7 @@ const AppPersonalSetting = () => import('components/PersonalSetting.vue')
 const AppTurnoverList = () => import('components/TurnoverList.vue')
 const AppTimeGuide = () => import('components/TimeGuide.vue')
 const AppPlanJob = () => import('components/PlanJob.vue')
+const AppEditer = () => import('components/Editer.vue')
 
 export const allRoutesMap = [
     {
@@ -188,7 +189,7 @@ export const allRoutesMap = [
             {
                 path: 'create',
                 name: '海报制作',
-                component: Home
+                component: AppEditer
             }
         ]
     }

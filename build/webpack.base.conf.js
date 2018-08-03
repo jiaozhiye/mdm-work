@@ -34,7 +34,12 @@ module.exports = {
     module: {
         rules: [{
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                      'scss': 'vue-style-loader!css-loader!sass-loader'
+                    }
+                }
             },
             {
                 test: /\.js$/,
@@ -42,7 +47,7 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/
             },
             {
-                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                test: /\.(png|jpe?g|gif|svg|ico)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
                     limit: 10000,

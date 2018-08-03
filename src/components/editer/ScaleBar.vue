@@ -36,7 +36,7 @@ export default {
             this.createPosterScale(val)
         },
         adaptHandler(){ // 适配
-            this.createPosterScale((document.getElementById('workspace').clientHeight - 40) / this.poster.size[1])
+            this.createPosterScale((this.element.clientHeight - 40) / this.poster.size[1])
         },
         bindWheelEvent(){
             this.element.addEventListener('mousewheel', this.scrollFunc, false)
@@ -63,6 +63,7 @@ export default {
     },
     mounted(){
         this.element = document.getElementById('workspace')
+        this.adaptHandler()
         this.bindWheelEvent()
     }
 }

@@ -27,5 +27,9 @@ export const PLAN_THEAD = 'PLAN_THEAD'
 
 export const POSTER_NAME = 'POSTER_NAME'
 export const POSTER_SCALE = 'POSTER_SCALE'
+export const POSTER_IMGS = 'POSTER_IMGS'
+export const POSTER_RESIZE = 'POSTER_RESIZE'
+export const POSTER_TEXT_ADD = 'POSTER_TEXT_ADD'
+export const POSTER_EDIT_STATE = 'POSTER_EDIT_STATE'
 
 

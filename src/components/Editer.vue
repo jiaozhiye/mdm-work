@@ -1,92 +1,59 @@
 <template>
     <section class="editer-main" ref="editer">
-        <div class="mdm-nav">
-            <ul class="list">
-                <li class="logo" :class="{ left: isShowNavPanel }" @click=" isShowNavPanel = !isShowNavPanel ">
-                    <i class="icon eqf-arrow-right"></i>
-                </li>
-                <li class="item" :class="{ active: item.active }" v-for="item in navList" :key="item.id"
-                    @click="tabPandelHandler(item)">
-                    <i class="icon" :class="item.icon"></i> <span>{{ item.name }}</span>
-                </li>            
-                <li class="slide"></li>
-            </ul>
-        </div>
-        <div class="mdm-nav-panel" :class="{ show: isShowNavPanel }">
-            <div class="panel">
-                <nav-panel-item v-model="currentNav" name="template" title="模版库">
-                    <div class="list">
-                        <ul>
-                            <li v-for="item in templateList" :key="item.id"
-                                :tracker_data="item.img_url"
-                                :style="{ backgroundImage: `url(${item.img_url})` }">
-                            </li>
-                        </ul>
-                    </div>
-                </nav-panel-item>
-                <nav-panel-item v-model="currentNav" name="text" title="文字">
-                    <div class="mdm-nav-text">
-                        <div class="title">点击添加标题</div>
-                        <div class="content">点击添加正文</div>
-                    </div>
-                </nav-panel-item>
-                <nav-panel-item v-model="currentNav" name="upload" title="上传图片">
-                    <div class="mdm-nav-upload">
-                        
-                    </div>
-                </nav-panel-item>
-            </div>
-        </div>
-        <div class="mdm-right">
-            <div class="mdm-header">
-                <div class="info">
-                    <span class="size">{{ poster.size[0] }}</span>
-                    <i class="icon eqf-link"></i>
-                    <span class="size">{{ poster.size[1] }}</span>
-                    <i class="icon eqf-layout-l" style="margin-left: 20px;"></i>
-                    <span>{{ poster.type }}</span>
+        <nav-list v-model="currentNav" :panel-state="isShowNavPanel" @change="toggleNavPanelHandler"></nav-list>
+        <nav-panel :panel-state="isShowNavPanel">
+            <nav-panel-item v-model="currentNav" name="template" title="模版库">
+                <div class="mdm-nav-template">
+                    <ul>
+                        <li v-for="item in templateList" :key="item.id"
+                            :style="{ backgroundImage: `url(${item.img_url})` }"
+                            @click="changeTemplateHandler(item.img_url)">
+                        </li>
+                    </ul>
                 </div>
-                <ul class="list">
-                    <li class="item" @click="dialogVisible = true">
-                        <i class="icon eqf-setting-l"></i> <span>设置</span>
-                    </li>
-                    <li class="item" @click="saveHandler">
-                        <i class="icon eqf-save-l"></i> <span>保存</span>
-                    </li>
-                    <el-button size="small" type="primary" style="margin: 0 20px;">导出</el-button>
-                </ul>
-            </div>
+            </nav-panel-item>
+            <nav-panel-item v-model="currentNav" name="text" title="文字">
+                <div class="mdm-nav-text">
+                    <div class="title" @click="addNewPosterText('title')">点击添加标题</div>
+                    <div class="content" @click="addNewPosterText('content')">点击添加正文</div>
+                </div>
+            </nav-panel-item>
+            <nav-panel-item v-model="currentNav" name="upload" title="上传图片">
+                <div class="mdm-nav-upload">
+                    
+                </div>
+            </nav-panel-item>
+        </nav-panel>
+        <div class="mdm-right">
+            <editer-header></editer-header>
             <div class="content">
                 <div class="workspace" id="workspace">
                     <div class="mdm-editor" :style="{width:`${poster.size[0]*poster.scale}px`,height:`${poster.size[1]*poster.scale}px`}">
                         <div class="mdm-range mdm-mask"><div class="shadow"></div></div>
                         <div class="mdm-elements" :style="{width:`${poster.size[0]}px`,height:`${poster.size[1]}px`,transform:`scale(${poster.scale})`}">
                             <div v-for="(item, key) in elements" :key="key" :style="item.outer_style">
-                                <img v-if="!!item.url" :src="item.url" :style="item.inner_style">
-                                <div v-else :style="item.inner_style">{{ item.content }}</div>
+                                <div class="edit-text" v-if="!item.url" :index="item.zIndex" :style="item.inner_style" :contenteditable="item.isEdit">{{ item.content }}</div>
+                                <img v-else :src="item.url" :style="item.inner_style">
                             </div>
                         </div>
-                        <div class="mdm-element-boxs"></div>
+                        <div class="mdm-element-boxs">
+                            <vue-drr 
+                                v-for="(item, key) in elements" :key="key"
+                                :x="item.box_style.left" 
+                                :y="item.box_style.top" 
+                                :w="item.box_style.width" 
+                                :h="item.box_style.height" 
+                                :angle="item.box_style.rotateZ" 
+                                :z="item.box_style.zIndex" 
+                                @dragging="handleDragging" 
+                                @resizing="handleResizing" 
+                                @rotating="handleRotating">
+                            </vue-drr>
+                        </div>
                     </div>
-                    <app-scale-bar></app-scale-bar>
+                    <scale-bar></scale-bar>
                 </div>
-                <ul class="sidebar">
-                    <el-tooltip class="item" effect="dark" content="撤销(Ctrl+Z)" placement="left">
-                        <li class="item hint--left hint--rounded">
-                            <i class="icon eqf-back"></i>
-                        </li>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="恢复(Ctrl+Y)" placement="left">
-                        <li class="item hint--left hint--rounded">
-                            <i class="icon eqf-rework"></i>
-                        </li>
-                    </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="预览" placement="left">
-                        <li class="item hint--left hint--rounded">
-                            <i class="icon eqf-ppt-l"></i>
-                        </li>
-                    </el-tooltip>
-                </ul>
+                <editer-sidebar></editer-sidebar>
                 <editer-panel v-if=" true ">
                     <editer-panel-item title="文字" name="text" state="on">
                         <div>asdsad</div>
@@ -97,24 +64,24 @@
                 </editer-panel>
             </div>
         </div>
-        <app-dialog title="作品设置" :visible.sync="dialogVisible">
-            <app-set-poster @reloadEvent="reloadData"></app-set-poster>
-        </app-dialog>
     </section>
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from 'vuex'
+
 import 'assets/css/iconfonts.css'
 import 'assets/css/editer.css'
 
-import { mapState, mapActions, mapGetters } from 'vuex'
-
-import NavPanelItem from 'components/NavPanelItem'
-import EditerPanel from 'components/EditerPanel'
-import EditerPanelItem from 'components/EditerPanelItem'
-import AppDialog from 'components/AppDialog'
-import AppSetPoster from 'components/SetPoster'
-import AppScaleBar from 'components/ScaleBar'
+import NavList from 'components/editer/NavList'
+import NavPanel from 'components/editer/NavPanel'
+import NavPanelItem from 'components/editer/NavPanelItem'
+import EditerHeader from 'components/editer/EditerHeader'
+import EditerPanel from 'components/editer/EditerPanel'
+import EditerPanelItem from 'components/editer/EditerPanelItem'
+import ScaleBar from 'components/editer/ScaleBar'
+import EditerSidebar from 'components/editer/EditerSidebar'
+import VueDrr from 'components/editer/vue-drr'
 
 export default {
     name: 'app-editer',
@@ -122,36 +89,37 @@ export default {
         return {
             isShowNavPanel: !1, // 默认显示模版对应的面板
             currentNav: '', // 当前选中(操作中)的导航
-            dialogVisible: !1
         }
     },
     computed: {
-        ...mapState('editer', ['poster', 'navList', 'templateList']),
-        ...mapGetters('editer', ['scalePercent', 'elementsList']),
+        ...mapState('editer', ['poster', 'templateList']),
+        ...mapGetters('editer', ['scalePercent', 'elementsList', 'currentIndex']),
         elements(){
-            return this.elementsList.map(item => this.createElementStyleText(item))
+            return this.elementsList.map(item => this.createElementStyle(item))
         }
     },
     methods: {
+        ...mapActions('editer', ['createPosterImgs', 'resizePosterElement', 'addNewPosterText', 'toggleEditState']),
         initial(){ // 初始化方法
-            this.currentNav = this.navList.find(item => item.active).value
+            
         },
-        tabPandelHandler(item){ // 面板选项卡切换
-            // 显示面板
-            this.isShowNavPanel = !0
-            // 切换选中样式
-            this.navList.forEach(item => item.active = !1)
-            item.active = !0
-            // 切换内容
-            this.currentNav = item.value
+        changeTemplateHandler(path){ // 更换模版图片
+            this.createPosterImgs({ path })
         },
-        createElementStyleText(obj){ // 生成元素的style对象
-            let item = _.cloneDeep(obj)
+        toggleNavPanelHandler(res){ // 切换导航面板显示状态
+            this.isShowNavPanel = res
+        },
+        createElementStyle(obj){ // 生成元素的style对象
+            const item = {...obj}
             // 外层div的css样式
-            let outer_style_arr = ['position', 'left', 'top', 'rotateZ', 'zIndex']
+            const outer_style_arr = ['position', 'left', 'top', 'rotateZ', 'zIndex']
             let outer_style = {}
-            let inner_style_arr = ['width', 'height', 'url', 'content', 'color', 'backgroundColor', 'fontSize', 'lineHeight', 'padding', 'textAlign', 'fontWeight']
+            // 内层元素(img/div)的样式
+            const inner_style_arr = ['width', 'height', 'color', 'fontFamily', 'fontSize', 'lineHeight', 'opacity', 'textAlign', 'fontWeight']
             let inner_style = {}
+            // 操作元素的盒子(div)的样式
+            const box_style_arr = ['left', 'top', 'width', 'height', 'rotateZ', 'zIndex']
+            let box_style = {}
             outer_style_arr.forEach(attr => {
                 switch (attr){
                     case 'rotateZ':
@@ -167,51 +135,81 @@ export default {
             })
             inner_style_arr.forEach(attr => {
                 switch (attr){
-                    case 'url':
-                        break;
                     case 'lineHeight':
-                        inner_style[attr] = item[attr]
+                        item[attr] && (inner_style[attr] = item[attr])
                         break;
                     default:
-                        if (item[attr]){
-                            inner_style[attr] = `${typeof item[attr] == 'number' ? (item[attr] + 'px') : item[attr]}`
-                        }
+                        item[attr] && (inner_style[attr] = `${typeof item[attr] == 'number' ? (item[attr] + 'px') : item[attr]}`)
                         break;
+                }
+            })
+            box_style_arr.forEach(attr => {
+                if (attr == 'rotateZ' || attr == 'zIndex'){
+                    box_style[attr] = item[attr]
+                } else {
+                    box_style[attr] = item[attr] * this.poster.scale
                 }
             })
             item.outer_style = outer_style
             item.inner_style = inner_style
+            item.box_style   = box_style
+            // console.log(item)
             return item
         },
-        saveHandler(){ // 保存
-
+        handleResizing(index, x, y, w, h){
+            this.resizePosterElement({ index, left: x, top: y, width: w, height: h })
         },
-        disableRightClick(){ // 禁用右键
+        handleDragging(index, x, y){
+            this.resizePosterElement({ index, left: x, top: y })
+        },
+        handleRotating(index, angle){
+            this.resizePosterElement({ index, rotateZ: angle })
+        },
+        eventHandler(){
+            // 禁用右键
             this.$refs.editer.addEventListener('contextmenu', ev => ev.preventDefault(), false)
+            // 取消文字编辑
+            document.getElementById('workspace').addEventListener('click', this.unlockHandler, true)
         },
-        reloadData(res){ // 关闭dialog面板，重新加载数据
-            if (res == 'reload'){
-                this.dialogVisible = !1
+        unlockHandler(ev){
+            ev.stopPropagation()
+            let target = this.findParent(ev.target, 'edit-text')
+            if (this.currentIndex != -1 && (target && this.currentIndex != target.getAttribute('index') || !target)){
+                this.toggleEditState({ index: this.currentIndex, status: !1 })
+                document.querySelector('.mdm-element-boxs').style.pointerEvents = 'auto'
             }
+            return false
+        },
+        findParent(obj, claname){
+            while (obj && obj != document){
+                if (obj.className == claname){
+                    return obj
+                } else {
+                    obj = obj.parentNode
+                }
+            }
+            return null
         }
     },
     created(){
         this.initial()
     },
     mounted(){
-        this.disableRightClick()
+        this.eventHandler()
     },
     components: {
+        NavList,
+        NavPanel,
         NavPanelItem,
+        EditerHeader,
         EditerPanel,
         EditerPanelItem,
-        AppDialog,
-        AppSetPoster,
-        AppScaleBar
+        ScaleBar,
+        EditerSidebar,
+        VueDrr
     }
 }
 </script>
 
 <style>
-
 </style>

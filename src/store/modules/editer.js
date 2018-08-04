@@ -8,10 +8,76 @@ const state = {
         {id: '3', name: '上传', value: 'upload', icon: 'eqf-cloudupload-l', active: false}
     ],
     templateList: [
-        {id: '1', img_url: '/static/1.png'},
-        {id: '2', img_url: '/static/2.png'},
-        {id: '3', img_url: '/static/1.png'},
-        {id: '4', img_url: '/static/2.png'}
+        {id: '1', img_url: '/static/1.jpg'},
+        {id: '2', img_url: '/static/2.jpg'},
+        {id: '3', img_url: '/static/2.jpg'},
+        {id: '4', img_url: '/static/1.jpg'}
+    ],
+    fontFamilyList: [
+        {
+            value: 'Microsoft YaHei',
+            label: '微软雅黑'
+        },
+        {
+            value: 'fangzheng_ssjt',
+            label: '方正书宋简体'
+        },
+        {
+            value: 'fangzheng_ktjt',
+            label: '方正楷体简体'
+        },
+        {
+            value: 'fangzheng_htjt',
+            label: '方正黑体简体'
+        },
+        {
+            value: 'Zhengqingkehuangyouti',
+            label: '郑庆科黄油体'
+        },
+        {
+            value: 'Zhankukuaileti',
+            label: '站酷快乐体'
+        },
+        {
+            value: 'Zhankugaoduanhei',
+            label: '站酷高端黑'
+        },
+        {
+            value: 'Zhankukuhei',
+            label: '站酷酷黑'
+        },
+        {
+            value: 'Zhankuwenyiti',
+            label: '站酷文艺体'
+        },
+        {
+            value: 'ZhankuxiaoweiLOGOti',
+            label: '站酷小徽LOGI体'
+        },
+        {
+            value: 'Yangrendongzhushiti',
+            label: '杨任东竹石体'
+        },
+        {
+            value: 'Yangrendongzhushiticu',
+            label: '杨任东竹石粗体'
+        },
+        {
+            value: 'Yangrendongzhushitixi',
+            label: '杨任东竹石细体'
+        },
+        {
+            value: 'Pangmenzhengdaobiaotiti',
+            label: '庞门正道标题体'
+        },
+        {
+            value: 'Arual',
+            label: 'Arual'
+        },
+        {
+            value: 'AiDeep',
+            label: 'AiDeep'
+        }
     ],
     textStyle: { // 插入文本样式
         title: {size: 68, weight: 'bold'},
@@ -31,6 +97,8 @@ const state = {
 const getMaxIndex = () => state.poster.elements.length ? 
     (state.poster.elements.sort((a, b) => b.zIndex - a.zIndex)[0].zIndex + 1) 
     : 1
+
+const findElementByIndex = index => state.poster.elements.find(item => item.zIndex == index)
 
 // actions
 const actions = {
@@ -69,6 +137,13 @@ const actions = {
             data: params || {}
         })
     },
+    dirSetPosterElement ({ state, commit }, params){
+        commit({
+            type: types.POSTER_DIR_SET,
+            index: params.index || -1,
+            data: params || {}
+        })
+    },
     addNewPosterText ({ state, commit }, params){
         const __text__ = {
             position: 'absolute',
@@ -76,7 +151,7 @@ const actions = {
             top: 200,
             rotateZ: 0,
             content: '双击后可编辑',
-            color: 'rgb(0, 0, 0)',
+            color: '#000',
             fontFamily: '微软雅黑',
             fontSize: state.textStyle[params].size,
             lineHeight: 1.2,
@@ -85,7 +160,6 @@ const actions = {
             fontWeight: state.textStyle[params].weight,
             width: 540,
             height: state.textStyle[params].size * 1.2,
-            isEdit: false,
             zIndex: getMaxIndex()
         }
         commit({
@@ -93,11 +167,23 @@ const actions = {
             data: __text__
         })
     },
-    toggleEditState ({ state, commit }, params){
+    createEditingIndex ({ state, commit }, params){
         commit({
-            type: types.POSTER_EDIT_STATE,
+            type: types.POSTER_EDITING_INDEX,
+            data: params || -1
+        })
+    },
+    changePosterText ({ state, commit }, params){
+        commit({
+            type: types.POSTER_CHANGE_TEXT,
             index: params.index || -1,
-            data: params.status || !1
+            data: params.text
+        })
+    },
+    clearPosterArea ({ state, commit }, params){
+        commit({
+            type: types.POSTER_CLEAR_AREA,
+            data: params || []
         })
     }
 }
@@ -120,7 +206,7 @@ const mutations = {
         }
     },
     [types.POSTER_RESIZE](state, { index, data }){
-        const __item__ = state.poster.elements.find(item => item.zIndex == index)
+        const __item__ = findElementByIndex(index)
         for (let attr in data){
             if (attr === 'index') continue
             // 旋转角度和 scale 无关
@@ -131,17 +217,30 @@ const mutations = {
             }
         }
     },
+    [types.POSTER_DIR_SET](state, { index, data }){
+        const __item__ = findElementByIndex(index)
+        for (let attr in data){
+            if (attr === 'index') continue
+            __item__[attr] = data[attr]
+        }
+    },
     [types.POSTER_TEXT_ADD](state, { data }){
         state.poster.elements.push(data)
     },
-    [types.POSTER_EDIT_STATE](state, { index, data }){
-        const __item__  = state.poster.elements.find(item => item.zIndex == index)
-        __item__.isEdit = data
-        if (!data){ // 不可编辑
+    [types.POSTER_EDITING_INDEX](state, { data }){
+        const __item__  = findElementByIndex(data)
+        if (!__item__){
             state.poster.current = -1
         } else {
             state.poster.current = __item__.zIndex
         }
+    },
+    [types.POSTER_CHANGE_TEXT](state, { index, data }){
+        const __item__  = findElementByIndex(index)
+        __item__.content = data
+    },
+    [types.POSTER_CLEAR_AREA](state, { index, data }){
+        state.poster.elements = data
     }
 }
 

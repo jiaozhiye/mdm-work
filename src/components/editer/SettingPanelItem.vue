@@ -7,7 +7,7 @@
 
 <script>
 export default {
-    name: 'editer-panel-item',
+    name: 'setting-panel-item',
     props: ['title', 'name', 'state'],
     data(){
         return {

@@ -8,8 +8,8 @@
             <el-input v-model="form.desc" type="textarea" :rows="6" clearable placeholder="请输入海报简介..."></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
-            <el-button @click="resetForm">重置</el-button>
+            <el-button type="primary" @click.stop="submitForm" :loading="btnLoading">提交</el-button>
+            <el-button @click.stop="resetForm">重置</el-button>
         </el-form-item>
     </el-form>
 </div>

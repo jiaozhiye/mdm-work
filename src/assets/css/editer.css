@@ -142,9 +142,17 @@
     box-sizing: unset;
     overflow: hidden;
 }
+.workspace .mdm-elements .edit-text {
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    display: block;
+    resize: none;
+}
 .workspace .mdm-elements .edit-text:focus {
-    outline: 1px dotted #1593ff;
-    box-shadow: 0 0 10px #1593ff;
+    outline: none;
+    box-shadow: 0 0 15px #1593ff;
 }
 
 
@@ -156,3 +164,30 @@
     height: 100%;
 }
 
+
+
+.setting-box .name {
+    height: 36px;
+    line-height: 36px;
+    font-size: 12px;
+    color: #4f5d69;
+}
+.setting-box .mdm-setting-color {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    border: 1px solid #ccd5db;
+    cursor: pointer;
+}
+.setting-box .mdm-setting-color .color {
+    height: 100%;
+}
+.setting-box .mdm-setting-color .color-picker {
+    position: fixed;
+    right: 200px;
+    top: 200px;
+}
+.setting-box .mdm-base-input {
+    position: relative;
+    font-size: 12px;
+}

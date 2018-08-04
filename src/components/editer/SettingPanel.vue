@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: 'editer-panel',
+    name: 'setting-panel',
     
 }
 </script>
@@ -18,7 +18,7 @@ export default {
     width: 190px;
     height: 100%;
     background: #fff;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 /**

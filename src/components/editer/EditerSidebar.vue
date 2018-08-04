@@ -16,7 +16,7 @@
             </li>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="清空画布" placement="left">
-            <li class="item hint--left hint--rounded">
+            <li class="item hint--left hint--rounded" @click.stop="clearHandler">
                 <i class="icon eqf-clear-l"></i>
             </li>
         </el-tooltip>
@@ -24,11 +24,19 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from 'vuex'
+
 export default {
     name: 'editer-sidebar',
     props: [],
     data(){
         return {}
+    },
+    methods: {
+        ...mapActions('editer', ['clearPosterArea']),
+        clearHandler(){
+            this.clearPosterArea()
+        }
     }
 }
 </script>

@@ -9,13 +9,14 @@
                 <span>{{ poster.type }}</span>
             </div>
             <ul class="list">
-                <li class="item" @click="dialogVisible = true">
+                <li class="item" @click.stop="dialogVisible = true">
                     <i class="icon eqf-setting-l"></i> <span>设置</span>
                 </li>
-                <li class="item" @click="saveHandler">
+                <li class="item" @click.stop="saveHandler">
                     <i class="icon eqf-save-l"></i> <span>保存</span>
                 </li>
-                <el-button size="small" type="primary" style="margin: 0 20px;">导出</el-button>
+                <el-button size="small" type="primary" style="margin: 0 20px;"
+                    @click.stop>导出</el-button>
             </ul>
         </div>
         <app-dialog title="作品设置" :visible.sync="dialogVisible">

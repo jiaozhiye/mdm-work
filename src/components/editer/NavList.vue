@@ -1,11 +1,11 @@
 <template>
     <div class="mdm-nav">
         <ul class="list">
-            <li class="logo" :class="{ left: isShowNavPanel }" @click="clickHandler">
+            <li class="logo" :class="{ left: isShowNavPanel }" @click.stop="clickHandler">
                 <i class="icon eqf-arrow-right"></i>
             </li>
             <li class="item" :class="{ active: item.active }" v-for="item in navList" :key="item.id"
-                @click="tabPandelHandler(item)">
+                @click.stop="tabPandelHandler(item)">
                 <i class="icon" :class="item.icon"></i> <span>{{ item.name }}</span>
             </li>            
             <li class="slide"></li>

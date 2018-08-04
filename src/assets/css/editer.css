@@ -172,22 +172,66 @@
     font-size: 12px;
     color: #4f5d69;
 }
-.setting-box .mdm-setting-color {
-    position: relative;
-    width: 100%;
-    height: 30px;
-    border: 1px solid #ccd5db;
-    cursor: pointer;
-}
-.setting-box .mdm-setting-color .color {
-    height: 100%;
-}
-.setting-box .mdm-setting-color .color-picker {
-    position: fixed;
-    right: 200px;
-    top: 200px;
-}
+
 .setting-box .mdm-base-input {
     position: relative;
     font-size: 12px;
+}
+
+/* 加载字体 */
+@font-face {
+    font-family: fangzheng_ssjt;
+    src: url(../fonts/fangzheng_ssjt.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: fangzheng_ktjt;
+    src: url(../fonts/fangzheng_ktjt.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: fangzheng_htjt;
+    src: url(../fonts/fangzheng_htjt.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Zhengqingkehuangyouti;
+    src: url(../fonts/Zhengqingkehuangyouti.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Zhankukuaileti;
+    src: url(../fonts/Zhankukuaileti.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Zhankuwenyiti;
+    src: url(../fonts/Zhankuwenyiti.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Zhankugaoduanhei;
+    src: url(../fonts/Zhankugaoduanhei.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Zhankukuhei;
+    src: url(../fonts/Zhankukuhei.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: ZhankuxiaoweiLOGOti;
+    src: url(../fonts/ZhankuxiaoweiLOGOti.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Yangrendongzhushiticu;
+    src: url(../fonts/Yangrendongzhushiticu.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Yangrendongzhushiti;
+    src: url(../fonts/Yangrendongzhushiti.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Yangrendongzhushitixi;
+    src: url(../fonts/Yangrendongzhushitixi.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Pangmenzhengdaobiaotiti;
+    src: url(../fonts/Pangmenzhengdaobiaotiti.woff?gj9y5y) format("woff");
+}
+@font-face {
+    font-family: Arual;
+    src: url(../fonts/Arual.woff?gj9y5y) format("woff");
 }

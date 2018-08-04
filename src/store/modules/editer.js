@@ -13,6 +13,9 @@ const state = {
         {id: '3', img_url: '/static/2.jpg'},
         {id: '4', img_url: '/static/1.jpg'}
     ],
+    outer_style_arr: ['position', 'left', 'top', 'rotateZ', 'zIndex'],
+    inner_style_arr: ['width', 'height', 'color', 'fontFamily', 'fontSize', 'lineHeight', 'opacity', 'textAlign', 'fontWeight'],
+    box_style_arr: ['left', 'top', 'width', 'height', 'rotateZ', 'zIndex'],
     fontFamilyList: [
         {
             value: 'Microsoft YaHei',
@@ -73,10 +76,6 @@ const state = {
         {
             value: 'Arual',
             label: 'Arual'
-        },
-        {
-            value: 'AiDeep',
-            label: 'AiDeep'
         }
     ],
     textStyle: { // 插入文本样式
@@ -152,7 +151,7 @@ const actions = {
             rotateZ: 0,
             content: '双击后可编辑',
             color: '#000',
-            fontFamily: '微软雅黑',
+            fontFamily: '',
             fontSize: state.textStyle[params].size,
             lineHeight: 1.2,
             opacity: 1,
@@ -250,7 +249,8 @@ const getters = {
         return `${Math.round(poster.scale * 100)}%`
     },
     elementsList({ poster }){
-        return poster.elements.sort((a, b) => a.zIndex - b.zIndex)
+        // poster.elements.sort((a, b) => a.zIndex - b.zIndex)
+        return poster.elements
     },
     currentIndex({ poster }){
         return poster.current

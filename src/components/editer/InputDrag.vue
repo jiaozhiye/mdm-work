@@ -15,7 +15,9 @@ export default {
     name: 'input-drag',
     props: ['value', 'unit', 'minVal', 'maxVal'],
     data(){
-        return {}
+        return {
+            num: this.value
+        }
     },
     directives: {
         drag: {
@@ -24,15 +26,18 @@ export default {
                 const element = new DragElement({
                     el: el,
                     axis: 'x',
+                    dragstart(){
+                        vnode.context.num = vnode.context.value
+                    },
                     dragging(l, t, mouseX, mouseY){
-                        let val = mouseX + vnode.context.value
+                        let val = mouseX / 2 + vnode.context.num
                         if (val < vnode.context.minVal){
                             val = vnode.context.minVal
                         }
                         if (val > vnode.context.maxVal){
                             val = vnode.context.maxVal
                         }
-                        vnode.context.$emit('input', val)
+                        vnode.context.$emit('input', Math.round(val))
                     }
                 })
                 element.install()
@@ -41,7 +46,7 @@ export default {
     },
     methods: {
         changeHandler(){
-            this.$emit('input', Number.parseInt(event.target.value))
+            this.$emit('input', Math.round(event.target.value))
         }
     }
 }

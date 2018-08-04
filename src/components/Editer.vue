@@ -1,7 +1,5 @@
 <template>
-    <section class="editer-main" ref="editer" 
-        @click.stop=" colorOption.isColoPicker = !1 "
-        @contextmenu.stop.prevent>
+    <section class="editer-main" ref="editer" @contextmenu.stop.prevent>
         <nav-list v-model="currentNav" :panel-state="isShowNavPanel" @change="toggleNavPanelHandler"></nav-list>
         <nav-panel :panel-state="isShowNavPanel">
             <nav-panel-item v-model="currentNav" name="template" title="模版库">
@@ -72,91 +70,76 @@
                     <setting-panel-item title="文字" name="text" state="on">
                         <div class="setting-box">
                             <div class="name">文字颜色</div>
-                            <div class="mdm-setting-color">
-                                <div class="color" @click.stop="coloPickerHandler" 
-                                    :style="{ backgroundColor: params.color }">
-                                </div>
-                                <transition name="el-fade-in">
-                                    <div class="color-picker" 
-                                        v-if="colorOption.isColoPicker" 
-                                        :style="{ top: `${colorOption.pos.t}px`, right: `${colorOption.pos.r}px` }"
-                                        @click.stop>
-                                        <sketch :value="colorOption.colors" @input=" val => params.color = val.hex "></sketch>
-                                    </div>
-                                </transition>
-                            </div>
+                            <setting-color v-model="texts.color"></setting-color>
                             <div class="name">字体</div>
                             <div class="mdm-base-input">
-                                <el-select v-model="params.fontFamily" placeholder="默认字体" size="mini">
+                                <el-select v-model="texts.fontFamily" placeholder="默认字体" size="mini">
                                     <el-option
                                         v-for="item in fontFamilyList"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
+                                        <span :style="{fontFamily: item.value}">{{ item.label }}</span>
                                     </el-option>
                                 </el-select>
                             </div>
                             <div class="name">文字大小</div>
                             <input-drag 
-                                v-model="params.fontSize"
+                                v-model="texts.fontSize"
                                 unit="px"
                                 :min-val="12"
                                 :max-val="200">
                             </input-drag>
                             <div class="name">行高</div>
                             <input-drag 
-                                v-model="params.lineHeight"
+                                v-model="texts.lineHeight"
                                 unit="%"
                                 :min-val="100"
                                 :max-val="200">
                             </input-drag>
                             <div class="name">透明度</div>
                             <input-drag 
-                                v-model="params.opacity"
+                                v-model="texts.opacity"
                                 unit="%"
                                 :min-val="0"
                                 :max-val="100">
                             </input-drag>
-                            <!-- <ul class="mdm-setting-text-align">
-                                <li class="icon fl eqf-align-left"></li>
-                                <li class="icon fl eqf-align-center active"></li>
-                                <li class="icon fl eqf-align-right"></li>
-                            </ul> -->
+                            <text-align v-model="texts.textAlign"></text-align>
                         </div>
                     </setting-panel-item>
                     <setting-panel-item title="位置" name="position" state="off">
                         <div class="setting-box">
                             <div class="name">旋转角度</div>
                             <input-drag 
-                                v-model="params.rotateZ"
+                                v-model="texts.rotateZ"
                                 unit="度"
                                 :min-val="0"
                                 :max-val="359">
                             </input-drag>
                             <div class="name">左边距</div>
                             <input-drag 
-                                v-model="params.left"
+                                v-model="texts.left"
                                 unit="px"
                                 :min-val="-1000"
                                 :max-val="1000">
                             </input-drag>
                             <div class="name">上边距</div>
                             <input-drag 
-                                v-model="params.top"
+                                v-model="texts.top"
                                 unit="px"
                                 :min-val="-1000"
                                 :max-val="1000">
                             </input-drag>
                             <div class="name">宽度</div>
                             <input-drag 
-                                v-model="params.width"
+                                v-model="texts.width"
                                 unit="px"
                                 :min-val="50"
                                 :max-val="1000">
                             </input-drag>
                             <div class="name">高度</div>
                             <input-drag 
-                                v-model="params.height"
+                                v-model="texts.height"
                                 unit="px"
                                 :min-val="36"
                                 :max-val="1000">
@@ -186,8 +169,9 @@ import ScaleBar from 'components/editer/ScaleBar'
 import EditerSidebar from 'components/editer/EditerSidebar'
 import VueDrr from 'components/editer/VueDrr'
 import DragPanel from 'components/editer/DragPanel'
-import { Sketch } from 'vue-color'
+import SettingColor from 'components/editer/SettingColor'
 import InputDrag from 'components/editer/InputDrag'
+import TextAlign from 'components/editer/TextAlign'
 
 export default {
     name: 'app-editer',
@@ -195,9 +179,9 @@ export default {
         return {
             isShowNavPanel: !1, // 默认显示模版对应的面板
             currentNav: '', // 当前选中(操作中)的导航
-            params: {
+            texts: {
                 color: '#000',
-                fontFamily: '微软雅黑',
+                fontFamily: '',
                 fontSize: 68,
                 lineHeight: 120,
                 opacity: 100,
@@ -208,19 +192,11 @@ export default {
                 top: 200,
                 width: 540,
                 height: 81
-            },
-            colorOption: {
-                isColoPicker: !1,
-                pos: { r: 200, t: 200 },
-                colors: {
-                    hex: '#4A90E2',
-                    rgba: { r: 74, g: 144, b: 226, a: 1 }
-                }
             }
         }
     },
     computed: {
-        ...mapState('editer', ['poster', 'templateList', 'fontFamilyList']),
+        ...mapState('editer', ['poster', 'templateList', 'fontFamilyList', 'outer_style_arr', 'inner_style_arr', 'box_style_arr']),
         ...mapGetters('editer', ['scalePercent', 'elementsList', 'currentIndex']),
         elements(){
             return this.elementsList.map(item => this.createElementStyle(item))
@@ -229,19 +205,19 @@ export default {
     watch: {
         currentIndex (val){
             if (val == -1) return
-            this.vuexToParmas()
+            this.vuexToTexts()
         },
         elements: {
             handler(val){
                if (this.currentIndex == -1) return
-               this.vuexToParmas()
+               this.vuexToTexts()
             },
             deep: true
         },
-        params: {
+        texts: {
             handler(val){
                 if (this.currentIndex == -1) return
-                this.paramsToVuex(val)
+                this.textsToVuex(val)
             },
             deep: true
         }
@@ -251,24 +227,24 @@ export default {
         initial(){ // 初始化方法
             
         },
-        vuexToParmas(){
+        vuexToTexts(){
             let element = this.findElementByIndex(this.currentIndex)
             // 图片暂时不可编辑
-            if (element && !element.url){
-                for (let attr in this.params){
+            if (element && element.content){
+                for (let attr in this.texts){
                     if (attr == 'lineHeight' || attr == 'opacity'){ // 需要乘以 100
-                        this.params[attr] = Number.parseFloat((element[attr] * 100).toFixed(2))
+                        this.texts[attr] = Number.parseFloat((element[attr] * 100).toFixed(2))
                     } else {
-                        this.params[attr] = typeof element[attr] === 'number' ? 
+                        this.texts[attr] = typeof element[attr] === 'number' ? 
                             Math.floor(element[attr]) : element[attr]
                     }
                 }
             }
         },
-        paramsToVuex(val){
+        textsToVuex(val){
             let element  = this.findElementByIndex(this.currentIndex)
             // 图片暂时不可编辑
-            if (!element.url){
+            if (element && element.content){
                 let __data__ = {}
                 for(let attr in val){
                     if (attr == 'lineHeight' || attr == 'opacity'){ // 需要除以 100
@@ -280,7 +256,7 @@ export default {
                 this.dirSetPosterElement({ index: this.currentIndex, ...__data__ })
             }
         },
-        deactivatedFn(target){ // 单机空白区域，关闭编辑面板
+        deactivatedFn(target){ // 单机空白区域，关闭编辑面板???
             if (target.id == 'workspace'){
                 this.createEditingIndex(-1)
             }
@@ -303,10 +279,6 @@ export default {
             }
             this.createEditingIndex(index)
         },
-        coloPickerHandler(){ // 处理文字颜色功能
-            this.colorOption.pos.t = event.target.getBoundingClientRect().top
-            this.colorOption.isColoPicker = !this.colorOption.isColoPicker
-        },
         changeTemplateHandler(path){ // 更换模版图片
             this.createPosterImgs({ path })
         },
@@ -319,15 +291,12 @@ export default {
         createElementStyle(obj){ // 生成元素的style对象
             const item = {...obj}
             // 外层div的css样式
-            const outer_style_arr = ['position', 'left', 'top', 'rotateZ', 'zIndex']
             let outer_style = {}
             // 内层元素(img/div)的样式
-            const inner_style_arr = ['width', 'height', 'color', 'fontFamily', 'fontSize', 'lineHeight', 'opacity', 'textAlign', 'fontWeight']
             let inner_style = {}
             // 操作元素的盒子(div)的样式
-            const box_style_arr = ['left', 'top', 'width', 'height', 'rotateZ', 'zIndex']
             let box_style = {}
-            outer_style_arr.forEach(attr => {
+            this.outer_style_arr.forEach(attr => {
                 switch (attr){
                     case 'rotateZ':
                         outer_style['transform'] = `rotateZ(${item[attr]}deg)`
@@ -340,14 +309,14 @@ export default {
                         break;
                 }
             })
-            inner_style_arr.forEach(attr => {
+            this.inner_style_arr.forEach(attr => {
                 if (attr == 'lineHeight' || attr == 'opacity'){
                     item[attr] && (inner_style[attr] = item[attr])
                 } else {
                     item[attr] && (inner_style[attr] = `${typeof item[attr] == 'number' ? (item[attr] + 'px') : item[attr]}`)
                 }
             })
-            box_style_arr.forEach(attr => {
+            this.box_style_arr.forEach(attr => {
                 if (attr == 'rotateZ' || attr == 'zIndex'){
                     box_style[attr] = item[attr]
                 } else {
@@ -397,8 +366,9 @@ export default {
         EditerSidebar,
         VueDrr,
         DragPanel,
-        Sketch,
-        InputDrag
+        SettingColor,
+        InputDrag,
+        TextAlign
     }
 }
 </script>

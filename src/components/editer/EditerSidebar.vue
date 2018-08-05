@@ -1,42 +1,98 @@
 <template>
     <div class="mdm-sidebar">
-        <el-tooltip class="item" effect="dark" content="撤销(Ctrl+Z)" placement="left">
-            <li class="item hint--left hint--rounded">
-                <i class="icon eqf-back"></i>
-            </li>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="恢复(Ctrl+Y)" placement="left">
-            <li class="item hint--left hint--rounded">
-                <i class="icon eqf-rework"></i>
-            </li>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="预览" placement="left">
-            <li class="item hint--left hint--rounded">
-                <i class="icon eqf-ppt-l"></i>
-            </li>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="清空画布" placement="left">
-            <li class="item hint--left hint--rounded" @click.stop="clearHandler">
-                <i class="icon eqf-clear-l"></i>
-            </li>
-        </el-tooltip>
+        <ul>
+            <el-tooltip class="item" effect="dark" content="撤销(Ctrl+Z)" placement="left">
+                <li class="item hint--left hint--rounded" @click.stop="cancelHandler">
+                    <i class="icon eqf-back"></i>
+                </li>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="恢复(Ctrl+Y)" placement="left">
+                <li class="item hint--left hint--rounded" @click.stop="recoveryHandler">
+                    <i class="icon eqf-rework"></i>
+                </li>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="预览" placement="left">
+                <li class="item hint--left hint--rounded" @click.stop="dialogVisible = true">
+                    <i class="icon eqf-ppt-l"></i>
+                </li>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="清空画布" placement="left">
+                <li class="item hint--left hint--rounded" @click.stop="clearHandler">
+                    <i class="icon eqf-clear-l"></i>
+                </li>
+            </el-tooltip>
+        </ul>
+        <app-dialog title="作品预览" :visible.sync="dialogVisible" top="0" custom-class="dialog-full-height">
+            <poster-preview></poster-preview>
+        </app-dialog>
     </div>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
+import { debounce } from 'assets/js/util'
+
+import AppDialog from 'components/AppDialog'
+import PosterPreview from 'components/editer/PosterPreview'
 
 export default {
     name: 'editer-sidebar',
     props: [],
     data(){
-        return {}
+        return {
+            currentStep: 4, // 当前索引 -> history
+            dialogVisible: !1
+        }
+    },
+    computed: {
+        ...mapGetters('editer', ['maxHistoryIndex'])
     },
     methods: {
-        ...mapActions('editer', ['clearPosterArea']),
+        ...mapActions('editer', ['clearPosterArea', 'resetPosterByHistory', 'changeHistoryState']),
         clearHandler(){
             this.clearPosterArea()
+        },
+        cancelHandler(){
+            this.stopExecHistory()
+            if (--this.currentStep < 0){
+                this.currentStep = 0
+            }
+            console.log(this.currentStep)
+            this.resetPosterByHistory(this.currentStep)
+            debounce(this.startExecHistory, 550)()
+        },
+        recoveryHandler(){
+            this.stopExecHistory()
+            if (++this.currentStep > this.maxHistoryIndex){
+                this.currentStep = this.maxHistoryIndex
+            }
+            console.log(this.currentStep)
+            this.resetPosterByHistory(this.currentStep)
+            debounce(this.startExecHistory, 550)()
+        },
+        stopExecHistory(){
+            this.changeHistoryState(!1)
+        },
+        startExecHistory(){
+            this.changeHistoryState(!0)
+        },
+        keyboardEventFn(ev){
+            if (ev.ctrlKey && ev.keyCode == 90){ // 撤销
+                ev.preventDefault()
+                this.cancelHandler()
+            }
+            if (ev.ctrlKey && ev.keyCode == 89){ // 恢复
+                ev.preventDefault()
+                this.recoveryHandler()
+            }
         }
+    },
+    mounted(){
+        document.addEventListener('keydown', this.keyboardEventFn, false)
+    },
+    components: {
+        AppDialog,
+        PosterPreview
     }
 }
 </script>

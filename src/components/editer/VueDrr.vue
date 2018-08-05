@@ -146,11 +146,7 @@ export default {
   },
   mounted() {
     document.documentElement.addEventListener('mousedown', this.deselect, true)
-    document.documentElement.addEventListener(
-      'mousemove',
-      this.handleMove,
-      true
-    )
+    document.documentElement.addEventListener('mousemove', this.handleMove, true)
     document.documentElement.addEventListener('mouseup', this.handleUp, true)
 
     this.initial()
@@ -158,21 +154,9 @@ export default {
     this.reviewDimensions()
   },
   beforeDestroy() {
-    document.documentElement.removeEventListener(
-      'mousedown',
-      this.deselect,
-      true
-    )
-    document.documentElement.removeEventListener(
-      'mousemove',
-      this.handleMove,
-      true
-    )
-    document.documentElement.removeEventListener(
-      'mouseup',
-      this.handleUp,
-      true
-    )
+    document.documentElement.removeEventListener('mousedown', this.deselect, true)
+    document.documentElement.removeEventListener('mousemove', this.handleMove, true)
+    document.documentElement.removeEventListener('mouseup', this.handleUp, true)
   },
   data() {
     return {

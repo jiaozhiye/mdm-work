@@ -15,8 +15,11 @@
                 <li class="item" @click.stop="saveHandler">
                     <i class="icon eqf-save-l"></i> <span>保存</span>
                 </li>
+                <li class="item" @click.stop="sharHandler">
+                    <i class="icon eqf-share-l"></i> <span>分享</span>
+                </li>
                 <el-button size="small" type="primary" style="margin: 0 20px;"
-                    @click.stop>导出</el-button>
+                    @click.stop="exportHandler">导出</el-button>
             </ul>
         </div>
         <app-dialog title="作品设置" :visible.sync="dialogVisible">
@@ -43,10 +46,17 @@ export default {
         ...mapState('editer', ['poster'])
     },
     methods: {
-        saveHandler(){ // 保存
+        ...mapActions('stateChange', ['setLeaveRemind']),
+        sharHandler(){
 
         },
-        reloadData(res){ // 关闭dialog面板，重新加载数据
+        exportHandler(){
+
+        },
+        saveHandler(){
+            this.setLeaveRemind(!1)
+        },
+        reloadData(res){ // 关闭 dialog 面板，重新加载数据
             if (res == 'reload'){
                 this.dialogVisible = !1
             }

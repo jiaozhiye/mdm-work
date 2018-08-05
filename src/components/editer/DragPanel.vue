@@ -20,7 +20,7 @@ export default {
                 let tranX = 0 // translateX
                 let tranY = 0 // translateY
                 let oRegExp = /\([^\(\)]+\)/
-                document.documentElement.addEventListener('keydown', function(ev){
+                document.addEventListener('keydown', function(ev){
                     if (ev.keyCode !== 32) return
                     if (!timer){
                         timer = setTimeout(() => {
@@ -47,10 +47,8 @@ export default {
                             element.install()
                         }, 300)
                     }
-                    return false
                 }, false)
-                document.documentElement.addEventListener('keyup', function(ev){
-                    ev.preventDefault()
+                document.addEventListener('keyup', function(ev){
                     el.style.cursor  = 'auto'
                     el.style.display = 'none'
                     clearTimeout(timer)

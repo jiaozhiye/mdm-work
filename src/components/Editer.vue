@@ -29,6 +29,7 @@
             <div class="content">
                 <div class="workspace" id="workspace">
                     <div class="mdm-editor" :style="{width:`${poster.size[0]*poster.scale}px`,height:`${poster.size[1]*poster.scale}px`}">
+                        <div class="mdm-background" :style="{width:`${poster.size[0]}px`,height:`${poster.size[1]}px`,transform:`scale(${poster.scale})`}"></div>
                         <div class="mdm-range mdm-mask"><div class="shadow"></div></div>
                         <div class="mdm-elements" :style="{width:`${poster.size[0]}px`,height:`${poster.size[1]}px`,transform:`scale(${poster.scale})`}">
                             <div v-for="(item, key) in elements" :key="key" :style="item.outer_style">
@@ -37,12 +38,12 @@
                                     :index="item.zIndex" 
                                     :style="item.inner_style" 
                                     :value="item.content"
-                                    @change="changeTextHandler(item.zIndex, $event.target.value)">
+                                    @input.stop="modifyTextHandler(item.zIndex, $event.target.value)">
                                 </textarea>
                                 <img v-else :src="item.url" :style="item.inner_style">
                             </div>
-                        </div> 
-                        <div class="mdm-element-boxs">
+                        </div>
+                        <div class="mdm-element-boxs" id="element-boxs">
                             <vue-drr 
                                 v-for="(item, key) in elements" :key="key"
                                 :active="currentIndex === item.zIndex"
@@ -101,6 +102,13 @@
                             <input-drag 
                                 v-model="texts.opacity"
                                 unit="%"
+                                :min-val="0"
+                                :max-val="100">
+                            </input-drag>
+                            <div class="name">字间距</div>
+                            <input-drag 
+                                v-model="texts.letterSpacing"
+                                unit="px"
                                 :min-val="0"
                                 :max-val="100">
                             </input-drag>
@@ -180,24 +188,33 @@ export default {
             isShowNavPanel: !1, // 默认显示模版对应的面板
             currentNav: '', // 当前选中(操作中)的导航
             texts: {
-                color: '#000',
+                color: '',
                 fontFamily: '',
-                fontSize: 68,
-                lineHeight: 120,
-                opacity: 100,
-                textAlign: 'center',
-                fontWeight: 'bold',
+                fontSize: 0,
+                lineHeight: 0,
+                opacity: 0,
+                letterSpacing: 0,
+                textAlign: '',
+                fontWeight: '',
                 rotateZ: 0,
-                left: 50,
-                top: 200,
-                width: 540,
-                height: 81
+                left: 0,
+                top: 0,
+                width: 0,
+                height: 0
             }
         }
     },
     computed: {
-        ...mapState('editer', ['poster', 'templateList', 'fontFamilyList', 'outer_style_arr', 'inner_style_arr', 'box_style_arr']),
-        ...mapGetters('editer', ['scalePercent', 'elementsList', 'currentIndex']),
+        ...mapState('editer', [
+            'poster', 
+            'templateList', 
+            'fontFamilyList', 
+            'outer_style_arr', 
+            'inner_style_arr', 
+            'box_style_arr',
+            'isChangeHistorys'
+        ]),
+        ...mapGetters('editer', ['elementsList', 'currentIndex']),
         elements(){
             return this.elementsList.map(item => this.createElementStyle(item))
         }
@@ -209,8 +226,12 @@ export default {
         },
         elements: {
             handler(val){
-               if (this.currentIndex == -1) return
-               this.vuexToTexts()
+                // 添加操作历史 - 函数防抖实现，防抖间隔 0.5s
+                debounce(this.addHistoryHandle, 500)(val)
+                // 设置离开页面提醒
+                val.length ? this.setLeaveRemind(!0) : this.setLeaveRemind(!1)
+                if (this.currentIndex == -1) return
+                this.vuexToTexts()
             },
             deep: true
         },
@@ -223,7 +244,16 @@ export default {
         }
     },
     methods: {
-        ...mapActions('editer', ['createPosterImgs', 'resizePosterElement', 'dirSetPosterElement', 'addNewPosterText', 'createEditingIndex', 'changePosterText']),
+        ...mapActions('editer', [
+            'createPosterImgs', 
+            'resizePosterElement', 
+            'dirSetPosterElement', 
+            'addNewPosterText', 
+            'createEditingIndex', 
+            'changePosterText', 
+            'createHistory'
+        ]),
+        ...mapActions('stateChange', ['setLeaveRemind']),
         initial(){ // 初始化方法
             
         },
@@ -256,8 +286,13 @@ export default {
                 this.dirSetPosterElement({ index: this.currentIndex, ...__data__ })
             }
         },
+        addHistoryHandle(els){
+            if (this.isChangeHistorys){ // 当 isChangeHistorys 为真，才可改变 historys
+                this.createHistory(_.cloneDeep(this.elementsList))
+            }
+        },
         deactivatedFn(target){ // 单机空白区域，关闭编辑面板???
-            if (target.id == 'workspace'){
+            if (target.id == 'workspace' || target.id == 'element-boxs'){
                 this.createEditingIndex(-1)
             }
         },
@@ -285,7 +320,7 @@ export default {
         toggleNavPanelHandler(res){ // 切换导航面板显示状态
             this.isShowNavPanel = res
         },
-        changeTextHandler(index, val){ // 编辑文本操作
+        modifyTextHandler(index, val){ // 编辑文本操作
             this.changePosterText({ index, text: val })
         },
         createElementStyle(obj){ // 生成元素的style对象

@@ -14,7 +14,7 @@ const state = {
         {id: '4', img_url: '/static/1.jpg'}
     ],
     outer_style_arr: ['position', 'left', 'top', 'rotateZ', 'zIndex'],
-    inner_style_arr: ['width', 'height', 'color', 'fontFamily', 'fontSize', 'lineHeight', 'opacity', 'textAlign', 'fontWeight'],
+    inner_style_arr: ['width', 'height', 'color', 'fontFamily', 'fontSize', 'lineHeight', 'opacity', 'letterSpacing', 'textAlign', 'fontWeight'],
     box_style_arr: ['left', 'top', 'width', 'height', 'rotateZ', 'zIndex'],
     fontFamilyList: [
         {
@@ -90,7 +90,9 @@ const state = {
         scale: 1,
         current: -1, // 当前操作的元素 -> 与元素的 zIndex 对应
         elements: []
-    }
+    },
+    historys: [[]], // 操作历史，保存 5 步记录
+    isChangeHistorys: true // 是否可操作(改变) historys 数组
 }
 
 const getMaxIndex = () => state.poster.elements.length ? 
@@ -122,7 +124,7 @@ const actions = {
             url: params.path || '',
             width: state.poster.size[0],
             height: state.poster.size[1],
-            zIndex: getMaxIndex()
+            zIndex: getMaxIndex() > 1 ? 1 : getMaxIndex() // 图片作为底图
         }
         commit({
             type: types.POSTER_IMGS,
@@ -155,11 +157,12 @@ const actions = {
             fontSize: state.textStyle[params].size,
             lineHeight: 1.2,
             opacity: 1,
+            letterSpacing: 0,
             textAlign: 'center',
             fontWeight: state.textStyle[params].weight,
             width: 540,
-            height: state.textStyle[params].size * 1.2,
-            zIndex: getMaxIndex()
+            height: state.textStyle[params].size * 1.2 * 2,
+            zIndex: getMaxIndex() < 2 ? 2 : getMaxIndex() // zIndex 大于底图
         }
         commit({
             type: types.POSTER_TEXT_ADD,
@@ -183,6 +186,24 @@ const actions = {
         commit({
             type: types.POSTER_CLEAR_AREA,
             data: params || []
+        })
+    },
+    createHistory ({ state, commit }, params){
+        commit({
+            type: types.POSTER_ADD_HISTORY,
+            data: params || []
+        })
+    },
+    resetPosterByHistory ({ state, commit }, params){
+        commit({
+            type: types.POSTER_RESET_BY_HISTORY,
+            data: typeof params !== 'undefined' ? params : -1
+        })
+    },
+    changeHistoryState ({ state, commit }, params){
+        commit({
+            type: types.POSTER_HISTORY_STATE,
+            data: params
         })
     }
 }
@@ -238,8 +259,22 @@ const mutations = {
         const __item__  = findElementByIndex(index)
         __item__.content = data
     },
-    [types.POSTER_CLEAR_AREA](state, { index, data }){
+    [types.POSTER_CLEAR_AREA](state, { data }){
         state.poster.elements = data
+    },
+    [types.POSTER_ADD_HISTORY](state, { data }){
+        state.historys.push(data)
+        if (state.historys.length > 5){
+            state.historys.shift()
+        }
+    },
+    [types.POSTER_RESET_BY_HISTORY](state, { data }){
+        data = data < 0 ? 0 : data
+        data = data > (state.historys.length - 1) ? (state.historys.length - 1) : data
+        state.poster.elements = state.historys[data]
+    },
+    [types.POSTER_HISTORY_STATE](state, { data }){
+        state.isChangeHistorys = data
     }
 }
 
@@ -254,6 +289,9 @@ const getters = {
     },
     currentIndex({ poster }){
         return poster.current
+    },
+    maxHistoryIndex({ historys }){
+        return historys.length - 1
     }
 }
 

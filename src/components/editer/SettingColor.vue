@@ -25,10 +25,7 @@ export default {
             colorOption: {
                 isColoPicker: !1,
                 pos: { r: 200, t: 200 },
-                colors: {
-                    hex: '#4A90E2',
-                    rgba: { r: 74, g: 144, b: 226, a: 1 }
-                }
+                colors: { hex: '#4A90E2' }
             }
         }
     },
@@ -38,6 +35,7 @@ export default {
             this.colorOption.isColoPicker = !this.colorOption.isColoPicker
         },
         inputHandler(val){
+            this.colorOption.colors.hex = val.hex
             this.$emit('input', val.hex)
         }
     },

@@ -97,7 +97,6 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 0;
     height: 100%;
     background: #eceef0;
     overflow: hidden;
@@ -110,6 +109,14 @@
     background-color: #fff;
     z-index: 0;
 }
+
+.workspace .mdm-background {
+    position: relative;
+    background: rgba(255, 255, 255, 0);
+    overflow: hidden;
+    transform-origin: left top 0px;
+}
+
 .workspace .mdm-mask {
     position: absolute;
     left: 0px;

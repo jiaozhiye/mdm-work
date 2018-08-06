@@ -280,6 +280,53 @@ export const getDefaultTurnover = () => instance.get('/mgr/storeForecastTurnover
 // 获取默认的可变工时
 export const getDefaultTime = () => instance.get('/mgr/variableTimeGuideCtrl/getVariableTimeGuide')
 
+// nodejs 接口
+// 保存海报
+export const savePoster = params => instance.post('/poster/save', params, {
+    withCredentials: true,
+    headers: {
+        post: { 'Content-Type': 'application/json' }
+    },
+    transformRequest: [ data => JSON.stringify(data) ]
+})
+
+// 上传导出的海报图片
+export const uploadPoster = params => instance.post('/poster/upload', params, {
+    withCredentials: true,
+    headers: {
+        post: { 'Content-Type': 'multipart/form-data' }
+    },
+    transformRequest: [ data => data ] // multipart/form-data 文件上传，data 不做处理
+})
+
+// 模版上传
+export const uploadTemplate = params => instance.post('/poster/template', params, {
+    withCredentials: true,
+    headers: {
+        post: { 'Content-Type': 'multipart/form-data' }
+    },
+    transformRequest: [ data => data ] // multipart/form-data 文件上传，data 不做处理
+})
+
+// 获取海报信息 by id
+export const getPosterInfo = params => instance.get('/poster/getone', {params})
+
+// 获取海报列表
+export const getPosterList = params => instance.get('/poster/getlist', {params})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

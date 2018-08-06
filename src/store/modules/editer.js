@@ -91,8 +91,11 @@ const state = {
         current: -1, // 当前操作的元素 -> 与元素的 zIndex 对应
         elements: []
     },
-    historys: [[]], // 操作历史，保存 5 步记录
-    isChangeHistorys: true // 是否可操作(改变) historys 数组
+    historys: { // 操作历史，保存 5 步记录
+        list: [[]],
+        isChange: true, // 是否可操作(改变) historys 数组
+        curStep: -1 // 用于恢复和撤销
+    }
 }
 
 const getMaxIndex = () => state.poster.elements.length ? 
@@ -231,7 +234,7 @@ const mutations = {
             if (attr === 'index') continue
             // 旋转角度和 scale 无关
             if (attr !== 'rotateZ'){
-                __item__[attr] = data[attr] / state.poster.scale
+                __item__[attr] = Math.round(data[attr] / state.poster.scale)
             } else {
                 __item__[attr] = data[attr]
             }
@@ -263,18 +266,22 @@ const mutations = {
         state.poster.elements = data
     },
     [types.POSTER_ADD_HISTORY](state, { data }){
-        state.historys.push(data)
-        if (state.historys.length > 5){
-            state.historys.shift()
+        state.historys.list.push(data)
+        if (state.historys.list.length > 5){
+            state.historys.list.shift()
         }
+        state.historys.curStep = state.historys.list.length - 1
     },
     [types.POSTER_RESET_BY_HISTORY](state, { data }){
+        // 对索引进行越界处理
         data = data < 0 ? 0 : data
-        data = data > (state.historys.length - 1) ? (state.historys.length - 1) : data
-        state.poster.elements = state.historys[data]
+        data = data > (state.historys.list.length - 1) ? (state.historys.list.length - 1) : data
+        state.poster.elements = state.historys.list[data]
+        // 当有恢复和撤销，同步 curStep 的值
+        state.historys.curStep = data
     },
     [types.POSTER_HISTORY_STATE](state, { data }){
-        state.isChangeHistorys = data
+        state.historys.isChange = data
     }
 }
 
@@ -290,8 +297,11 @@ const getters = {
     currentIndex({ poster }){
         return poster.current
     },
-    maxHistoryIndex({ historys }){
-        return historys.length - 1
+    isChangeHistorys({ historys }){
+        return historys.isChange
+    },
+    currentStep({ historys }){
+        return historys.curStep
     }
 }
 

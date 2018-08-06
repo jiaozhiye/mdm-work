@@ -255,6 +255,7 @@ export default {
       // 点击在当前组件外，取消active状态
       if (!this.$el.contains(target) && !regex.test(target.className)) {
         if (this.enabled) {
+          // 在其他场景中建议放开次行代码
           // this.enabled = false
           this.$emit('deactivated', target)
           this.$emit('update:active', false)

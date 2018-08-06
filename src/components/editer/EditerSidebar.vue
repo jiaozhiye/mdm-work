@@ -12,7 +12,7 @@
                 </li>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="预览" placement="left">
-                <li class="item hint--left hint--rounded" @click.stop="dialogVisible = true">
+                <li class="item hint--left hint--rounded" @click.stop="previewHandler">
                     <i class="icon eqf-ppt-l"></i>
                 </li>
             </el-tooltip>
@@ -40,34 +40,38 @@ export default {
     props: [],
     data(){
         return {
-            currentStep: 4, // 当前索引 -> history
+            element: null,
             dialogVisible: !1
         }
     },
     computed: {
-        ...mapGetters('editer', ['maxHistoryIndex'])
+        ...mapState('editer', ['poster']),
+        ...mapGetters('editer', ['currentStep'])
     },
     methods: {
-        ...mapActions('editer', ['clearPosterArea', 'resetPosterByHistory', 'changeHistoryState']),
+        ...mapActions('editer', [
+            'clearPosterArea', 
+            'resetPosterByHistory', 
+            'changeHistoryState',
+            'createEditingIndex',
+            'createPosterScale'
+        ]),
         clearHandler(){
             this.clearPosterArea()
+            this.createEditingIndex(-1)
+        },
+        previewHandler(){
+            this.adaptHandler()
+            this.dialogVisible = !0
         },
         cancelHandler(){
             this.stopExecHistory()
-            if (--this.currentStep < 0){
-                this.currentStep = 0
-            }
-            console.log(this.currentStep)
-            this.resetPosterByHistory(this.currentStep)
+            this.resetPosterByHistory(this.currentStep - 1)
             debounce(this.startExecHistory, 550)()
         },
         recoveryHandler(){
             this.stopExecHistory()
-            if (++this.currentStep > this.maxHistoryIndex){
-                this.currentStep = this.maxHistoryIndex
-            }
-            console.log(this.currentStep)
-            this.resetPosterByHistory(this.currentStep)
+            this.resetPosterByHistory(this.currentStep + 1)
             debounce(this.startExecHistory, 550)()
         },
         stopExecHistory(){
@@ -75,6 +79,9 @@ export default {
         },
         startExecHistory(){
             this.changeHistoryState(!0)
+        },
+        adaptHandler(){ // 适配
+            this.createPosterScale((this.element.clientHeight - 40) / this.poster.size[1])
         },
         keyboardEventFn(ev){
             if (ev.ctrlKey && ev.keyCode == 90){ // 撤销
@@ -88,6 +95,7 @@ export default {
         }
     },
     mounted(){
+        this.element = document.getElementById('workspace')
         document.addEventListener('keydown', this.keyboardEventFn, false)
     },
     components: {

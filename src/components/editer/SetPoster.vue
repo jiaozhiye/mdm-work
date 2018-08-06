@@ -2,10 +2,10 @@
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
         <el-form-item label="标题" prop="name">
-            <el-input v-model="form.name" clearable placeholder="请输入海报名称"></el-input>
+            <el-input v-model="form.name" clearable placeholder="请输入作品名称"></el-input>
         </el-form-item>
-        <el-form-item label="简介" prop="desc">
-            <el-input v-model="form.desc" type="textarea" :rows="6" clearable placeholder="请输入海报简介..."></el-input>
+        <el-form-item label="简介">
+            <el-input v-model="form.desc" type="textarea" :rows="6" clearable placeholder="请输入作品简介..."></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click.stop="submitForm" :loading="btnLoading">提交</el-button>
@@ -28,10 +28,7 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: '请输入海报名称', trigger: 'blur' }
-                ],
-                desc: [
-                    { required: true, message: '请输入海报简介', trigger: 'blur' }
+                    { required: true, message: '请输入作品名称', trigger: 'blur' }
                 ]
             }
         }

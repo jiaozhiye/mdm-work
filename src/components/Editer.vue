@@ -54,12 +54,12 @@
                                 :angle="item.box_style.rotateZ" 
                                 :z="item.box_style.zIndex" 
                                 :index="item.zIndex"
-                                @click.native.stop="elboxHandler(item.zIndex)"
-                                @dblclick.native.stop="dblClickHandler(item.zIndex)"
                                 @dragging="handleDragging" 
                                 @resizing="handleResizing" 
                                 @rotating="handleRotating"
-                                @deactivated="deactivatedFn">
+                                @deactivated="deactivatedFn"
+                                @click.native.stop="elboxHandler(item.zIndex)"
+                                @dblclick.native.stop="dblClickHandler(item.zIndex)">
                             </vue-drr>
                         </div>
                     </div>
@@ -211,10 +211,9 @@ export default {
             'fontFamilyList', 
             'outer_style_arr', 
             'inner_style_arr', 
-            'box_style_arr',
-            'isChangeHistorys'
+            'box_style_arr'
         ]),
-        ...mapGetters('editer', ['elementsList', 'currentIndex']),
+        ...mapGetters('editer', ['elementsList', 'currentIndex', 'isChangeHistorys']),
         elements(){
             return this.elementsList.map(item => this.createElementStyle(item))
         }
@@ -291,7 +290,7 @@ export default {
                 this.createHistory(_.cloneDeep(this.elementsList))
             }
         },
-        deactivatedFn(target){ // 单机空白区域，关闭编辑面板???
+        deactivatedFn(target){ // 单机空白区域，关闭编辑面板
             if (target.id == 'workspace' || target.id == 'element-boxs'){
                 this.createEditingIndex(-1)
             }
@@ -324,7 +323,7 @@ export default {
             this.changePosterText({ index, text: val })
         },
         createElementStyle(obj){ // 生成元素的style对象
-            const item = {...obj}
+            let item = {...obj}
             // 外层div的css样式
             let outer_style = {}
             // 内层元素(img/div)的样式

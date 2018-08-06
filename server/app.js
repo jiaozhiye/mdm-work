@@ -16,7 +16,10 @@ app.keys = ['a newer secret']
 app.use(session(app))
 
 // 使用 cors 中间件处理跨域
-app.use(cors())
+app.use(cors({
+    origin: config.whitelist[0],
+    credentials: true
+}))
 
 // 解析请求体
 app.use(bodyParser())

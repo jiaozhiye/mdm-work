@@ -64,5 +64,18 @@ function throttle(fn, delay){
     }
 }
 
+// base64 转 blob
+function convertBase64UrlToBlob(urlData){
+    // 去掉url的头，并转换为byte
+    let bytes = window.atob(urlData.split(',')[1])
+    // 处理异常，将ascii码小于0的转换为大于0
+    let ab = new ArrayBuffer(bytes.length)
+    let ia = new Uint8Array(ab)
+    for (let i = 0; i < bytes.length; i++){
+        ia[i] = bytes.charCodeAt(i)
+    }
+    return new Blob([ab] , { type: 'image/png' })
+}
 
-export { cloneObj, getRandom, prefixCss, getUrlHash, recursionTree, debounce, throttle }
+
+export { cloneObj, getRandom, prefixCss, getUrlHash, recursionTree, debounce, throttle, convertBase64UrlToBlob }

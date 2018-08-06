@@ -1,6 +1,14 @@
 /**
  * mdm poster editer
  */
+#app .editer-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: auto;
+}
 .editer-main {
     display: flex;
     height: calc(100vh - 70px);
@@ -91,7 +99,7 @@
     position: relative;
     height: calc(100% - 48px);
 }
-.mdm-right > .content .workspace {
+.workspace {
     flex: 1;
     display: flex;
     align-items: center;
@@ -104,20 +112,22 @@
 
 
 
-.workspace .mdm-editor {
+.mdm-editor {
     position: absolute;
     background-color: #fff;
     z-index: 0;
 }
 
-.workspace .mdm-background {
+
+.mdm-background {
     position: relative;
     background: rgba(255, 255, 255, 0);
     overflow: hidden;
     transform-origin: left top 0px;
 }
 
-.workspace .mdm-mask {
+
+.mdm-mask {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -127,7 +137,7 @@
     z-index: 1000;
     pointer-events: none;
 }
-.workspace .mdm-mask .shadow {
+.mdm-mask .shadow {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -137,19 +147,19 @@
 }
 
 
-.workspace .mdm-elements {
+.mdm-elements {
     position: absolute;
     left: 0px;
     top: 0px;
     z-index: 0;
     transform-origin: left top 0px;
 }
-.workspace .mdm-elements > div > * {
+.mdm-elements > div > * {
     word-wrap: break-word;
     box-sizing: unset;
     overflow: hidden;
 }
-.workspace .mdm-elements .edit-text {
+.mdm-elements .edit-text {
     padding: 0;
     margin: 0;
     background: none;
@@ -157,13 +167,14 @@
     display: block;
     resize: none;
 }
-.workspace .mdm-elements .edit-text:focus {
+.mdm-elements .edit-text:focus {
     outline: none;
     box-shadow: 0 0 15px #1593ff;
 }
 
 
-.workspace .mdm-element-boxs {
+
+.mdm-element-boxs {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -179,7 +190,6 @@
     font-size: 12px;
     color: #4f5d69;
 }
-
 .setting-box .mdm-base-input {
     position: relative;
     font-size: 12px;

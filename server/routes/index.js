@@ -25,5 +25,6 @@ router.post('/poster/upload', koaForm(opt_poster), controllers.poster.upload)
 router.post('/poster/template', koaForm(opt_template), controllers.poster.template)
 router.get('/poster/getone', controllers.poster.getone)
 router.get('/poster/getlist', controllers.poster.getlist)
+router.get('/poster/delete', controllers.poster.del)
 
 module.exports = router

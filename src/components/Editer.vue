@@ -20,7 +20,33 @@
             </nav-panel-item>
             <nav-panel-item v-model="currentNav" name="upload" title="上传图片">
                 <div class="mdm-nav-upload">
-                    
+                    <div class="content">
+                        <ul>
+                            <li v-for="item in uploadList" :key="item.id" 
+                                :style="{backgroundImage: `url(${item.img_url})`}">
+                                <span class="icon hint--left hint--rounded" @click.stop="deleteTemplateHandler(item.id)">
+                                    <i class="eqf-delete-l"></i>
+                                </span>
+                            </li>
+                            <div class="mdm-list-status-infinite">
+                                <span class="text">没有更多了</span>
+                            </div>
+                        </ul>
+                    </div>
+                    <div class="tc">
+                        <el-upload
+                            ref="upload"
+                            :action="uploadUrl"
+                            multiple
+                            :limit="1"
+                            :with-credentials="true"
+                            :show-file-list="false"
+                            :auto-upload="false"
+                            :on-success="handleAvatarSuccess">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                        </el-upload>
+                    </div>
                 </div>
             </nav-panel-item>
         </nav-panel>
@@ -162,6 +188,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
+import { uploadUrl } from 'api'
 import { debounce } from 'assets/js/util'
 
 import 'assets/css/iconfonts.css'
@@ -187,6 +214,7 @@ export default {
         return {
             isShowNavPanel: !1, // 默认显示模版对应的面板
             currentNav: '', // 当前选中(操作中)的导航
+            uploadUrl,
             texts: {
                 color: '',
                 fontFamily: '',
@@ -211,7 +239,8 @@ export default {
             'fontFamilyList', 
             'outer_style_arr', 
             'inner_style_arr', 
-            'box_style_arr'
+            'box_style_arr',
+            'uploadList'
         ]),
         ...mapGetters('editer', ['elementsList', 'currentIndex', 'isChangeHistorys']),
         elements(){
@@ -250,11 +279,14 @@ export default {
             'addNewPosterText', 
             'createEditingIndex', 
             'changePosterText', 
-            'createHistory'
+            'createHistory',
+            'requestTemplateList',
+            'createUploadTemplate',
+            'removePosterRecord'
         ]),
         ...mapActions('stateChange', ['setLeaveRemind']),
         initial(){ // 初始化方法
-            
+            this.requestTemplateList()
         },
         vuexToTexts(){
             let element = this.findElementByIndex(this.currentIndex)
@@ -321,6 +353,15 @@ export default {
         },
         modifyTextHandler(index, val){ // 编辑文本操作
             this.changePosterText({ index, text: val })
+        },
+        handleAvatarSuccess(res, file){ // res -> response
+            (res.code == 1) && this.createUploadTemplate({ id: res.data.id, img_url: res.data.img_url })
+        },
+        submitUpload(){ // 模版图片上传
+            this.$refs.upload.submit()
+        },
+        deleteTemplateHandler(_id){
+            this.removePosterRecord(_id)
         },
         createElementStyle(obj){ // 生成元素的style对象
             let item = {...obj}

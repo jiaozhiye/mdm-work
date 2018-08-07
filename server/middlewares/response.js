@@ -1,4 +1,4 @@
-const debug = require('debug')('mdm-server')
+const debug = require('debug')()
 
 /**
  * 响应处理模块

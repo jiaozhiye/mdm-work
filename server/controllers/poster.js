@@ -69,11 +69,37 @@ const upload = async (ctx, next) => {
 
 // /hrms/poster/template -> 上传模版图片
 const template = async (ctx, next) => {
-    // ctx.body = { ...ctx.req.files, ...ctx.req.fields }
+    // console.log(ctx.req.files)
     if (ctx.req.files.file){
         const __path__ = normalize(ctx.req.files.file.path.match(/template[^\s]+/)[0])
-        // const rows = await db.query(`update posters set img_path=? where id=?`, [__path__, ctx.req.fields.id])
-        ctx.body = { code: 1, message: '上传成功', data: `${ctx.origin}/${__path__}` }
+        let uuid = cuid()
+        let rows
+        try {
+            rows = await db.query(`insert into img_template values (?, ?, ?, ?, ?, ?, ?, ?)`, [
+                uuid, 
+                '0',
+                '手机海报模版',
+                __path__,
+                '10',
+                util.createTime(),
+                util.createTime(),
+                '0'
+            ])
+        } catch (err) {
+            console.log(err)
+        }
+        if (rows.affectedRows){
+            ctx.state.code = 1
+            ctx.state.message = '上传成功' 
+            ctx.state.data = {
+                id: uuid,
+                img_url: `${ctx.origin}/${__path__}`
+            }
+        } else {
+            ctx.state.code = 0
+            ctx.state.message = '上传失败' 
+            ctx.state.data = {}
+        }
     } else {
         ctx.body = { code: 0, message: '上传失败', data: '' }
     }
@@ -81,12 +107,36 @@ const template = async (ctx, next) => {
 
 // /hrms/poster/getone -> 获取海报信息
 const getone = async (ctx, next) => {
-    
+    // ctx.query.id
 }
 
 // /hrms/poster/getlist -> 获取海报列表
 const getlist = async (ctx, next) => {
-    
+    try {
+        const rows = await db.query(`select id, img_path img_url from img_template where deleted=? order by create_time desc`, ['0'])
+        for (let i = 0; i < rows.length; i++){
+            rows[i].img_url = `${ctx.origin}/${rows[i].img_url}`
+        }
+        ctx.state.code = 1
+        ctx.state.data = rows
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// /hrms/poster/del -> 获取海报列表
+const del = async (ctx, next) => {
+    try {
+        const rows = await db.query(`update img_template set deleted=? where id=?`, ['1', ctx.query.id])
+        if (rows.affectedRows){
+            ctx.state.code = 1
+            ctx.state.message = '删除成功'
+        } else {
+            ctx.state.message = '删除失败'
+        }
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 module.exports = {
@@ -94,5 +144,6 @@ module.exports = {
     upload,
     template,
     getone,
-    getlist
+    getlist,
+    del
 }

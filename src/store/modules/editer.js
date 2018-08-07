@@ -1,4 +1,6 @@
 import * as types from '../types'
+import { getPosterList, removePoster } from 'api'
+import { Message } from 'element-ui'
 
 // state
 const state = {
@@ -7,12 +9,8 @@ const state = {
         {id: '2', name: '文字', value: 'text', icon: 'eqf-fontmall', active: false},
         {id: '3', name: '上传', value: 'upload', icon: 'eqf-cloudupload-l', active: false}
     ],
-    templateList: [
-        {id: '1', img_url: '/static/1.jpg'},
-        {id: '2', img_url: '/static/2.jpg'},
-        {id: '3', img_url: '/static/2.jpg'},
-        {id: '4', img_url: '/static/1.jpg'}
-    ],
+    templateList: [],
+    uploadList: [],
     outer_style_arr: ['position', 'left', 'top', 'rotateZ', 'zIndex'],
     inner_style_arr: ['width', 'height', 'color', 'fontFamily', 'fontSize', 'lineHeight', 'opacity', 'letterSpacing', 'textAlign', 'fontWeight'],
     box_style_arr: ['left', 'top', 'width', 'height', 'rotateZ', 'zIndex'],
@@ -85,7 +83,7 @@ const state = {
     poster: {
         name: '',
         desc: '',
-        size: [640, 1008],
+        size: [ 640, 1008 ],
         type: '手机海报', // 海报类型
         scale: 1,
         current: -1, // 当前操作的元素 -> 与元素的 zIndex 对应
@@ -208,6 +206,34 @@ const actions = {
             type: types.POSTER_HISTORY_STATE,
             data: params
         })
+    },
+    async requestTemplateList ({ state, commit }, params){
+        const response = await getPosterList()
+        // console.log(response)
+        if (response.code == 1){
+            commit({
+                type: types.POSTER_GET_TEMPLATE,
+                data: response.data || []
+            })
+        }
+    },
+    createUploadTemplate ({ state, commit }, params){
+        commit({
+            type: types.POSTER_UPLOAD_TEMPLATE,
+            data: params
+        })
+    },
+    async removePosterRecord ({ state, commit }, params){
+        const response = await removePoster({ id: params })
+        if (response.code == 1){
+            commit({
+                type: types.POSTER_REMOVE_TEMPLATE,
+                data: params
+            })
+            Message.success(response.message)
+        } else {
+            Message.error(response.message)
+        }
     }
 }
 
@@ -282,6 +308,18 @@ const mutations = {
     },
     [types.POSTER_HISTORY_STATE](state, { data }){
         state.historys.isChange = data
+    },
+    [types.POSTER_GET_TEMPLATE](state, { data }){
+        state.templateList = data
+    },
+    [types.POSTER_UPLOAD_TEMPLATE](state, { data }){
+        state.uploadList.push(data)
+    },
+    [types.POSTER_REMOVE_TEMPLATE](state, { data }){
+        let index = state.uploadList.findIndex(item => item.id === data)
+        if (index != -1){
+            state.uploadList.splice(index, 1)
+        }
     }
 }
 

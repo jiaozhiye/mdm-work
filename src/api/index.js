@@ -5,9 +5,11 @@ import store from 'store'
 import { Message } from 'element-ui'
 
 console.info(common.env)
+const serverUrl = common.serverUrl.charAt(common.serverUrl.length - 1) === '/' 
+    ? common.serverUrl : `${common.serverUrl}/`
 
 const instance = axios.create({
-    baseURL: common.serverUrl,
+    baseURL: serverUrl,
     timeout: 5000,
     // withCredentials: true, // 跨域请求时是否需要使用凭证
     paramsSerializer: params => {
@@ -300,21 +302,16 @@ export const uploadPoster = params => instance.post('/poster/upload', params, {
 })
 
 // 模版上传
-export const uploadTemplate = params => instance.post('/poster/template', params, {
-    withCredentials: true,
-    headers: {
-        post: { 'Content-Type': 'multipart/form-data' }
-    },
-    transformRequest: [ data => data ] // multipart/form-data 文件上传，data 不做处理
-})
+export const uploadUrl = `${serverUrl}poster/template`
 
 // 获取海报信息 by id
 export const getPosterInfo = params => instance.get('/poster/getone', {params})
 
 // 获取海报列表
-export const getPosterList = params => instance.get('/poster/getlist', {params})
+export const getPosterList = () => instance.get('/poster/getlist')
 
-
+// 删除海报记录
+export const removePoster = params => instance.get('/poster/delete', {params})
 
 
 

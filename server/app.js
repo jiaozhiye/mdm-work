@@ -1,6 +1,6 @@
 const path = require('path')
 const Koa = require('koa')
-const debug = require('debug')('mdm-server')
+const debug = require('debug')()
 const response = require('./middlewares/response')
 const request = require('./middlewares/request')
 const proxy = require('koa-proxies')
@@ -11,6 +11,7 @@ const koaStatic = require('koa-static')
 const config = require('./config')
 const app = new Koa()
 
+// use方法 -> 将中间件方法挂载到koa应用, 相应所有http请求
 // 使用 session 中间件
 app.keys = ['a newer secret']
 app.use(session(app))

@@ -30,8 +30,7 @@ const actions = {
         const response = await getNavList()
         commit({
             type: types.NAVLIST,
-            data: response.data || [],
-            // data: params
+            data: response.data || []
         })
     }
 }

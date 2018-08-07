@@ -21,6 +21,8 @@ const AppPersonalSetting = () => import('components/PersonalSetting.vue')
 const AppTurnoverList = () => import('components/TurnoverList.vue')
 const AppTimeGuide = () => import('components/TimeGuide.vue')
 const AppPlanJob = () => import('components/PlanJob.vue')
+const AppStoreReportList = () => import('components/StoreReportList.vue')
+const AppPersonReportList = () => import('components/PersonReportList.vue')
 const AppEditer = () => import('components/Editer.vue')
 
 export const allRoutesMap = [
@@ -190,6 +192,28 @@ export const allRoutesMap = [
                 path: 'create',
                 name: '海报制作',
                 component: AppEditer
+            }
+        ]
+    },
+    {
+        path: '/work_time',
+        name: '工资管理',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: '单店报表-欢迎',
+                component: AppStoreReportList
+            },
+            {
+                path: 'any_store',
+                name: '单店报表',
+                component: AppStoreReportList
+            },
+            {
+                path: 'any_staff',
+                name: '个人报表',
+                component: AppPersonReportList
             }
         ]
     }

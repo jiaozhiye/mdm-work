@@ -8,18 +8,25 @@
             </el-select>
         </el-form-item>
         <el-form-item label="时间段">
-            <el-time-picker
-                class="fl"
-                is-range
-                v-model="time"
-                value-format="HH:mm:ss"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                placeholder="选择时间范围">
-            </el-time-picker>
+            <el-time-select
+                style="width: 150px;"
+                placeholder="起始时间"
+                v-model="start_time"
+                :picker-options="pickerOptions">
+            </el-time-select>
+            到
+            <el-time-select
+                style="width: 150px;"
+                placeholder="结束时间"
+                v-model="end_time"
+                :picker-options="{
+                    minTime: start_time, 
+                    start: '07:30',
+                    step: '00:15',
+                    end: '23:45'
+                }">
+            </el-time-select>
             <el-button 
-                class="fl" 
                 style="margin-left: 10px;"
                 icon="el-icon-plus" 
                 type="primary" 
@@ -53,7 +60,6 @@
 <script>
 import { addFreeTime, getFreeTime } from 'api'
 import { mapState, mapActions } from 'vuex'
-import moment from 'moment'
 
 export default {
     name: 'app-free-time',
@@ -61,14 +67,16 @@ export default {
     data (){
         return {
             week: '0',
-            time: [
-                moment('07:30:00', 'HH:mm:ss').format('HH:mm:ss'),
-                moment('23:59:59', 'HH:mm:ss').format('HH:mm:ss')
-            ],
-            cloneTime: [],
+            start_time: '',
+            end_time: '',
             staff: {}, // 个人信息
             allDataList: [], // 一周所有的数据
-            list: []
+            list: [],
+            pickerOptions: {
+                start: '07:30',
+                step: '00:15',
+                end: '23:45'
+            }
         }
     },
     computed: {
@@ -76,9 +84,6 @@ export default {
         ...mapState('dict', ['weekList'])
     },
     methods: {
-        initialFunc(){
-            this.cloneTime = _.cloneDeep(this.time)
-        },
         changeHandle(){
             this.list = this.allDataList[this.week]
         },
@@ -94,21 +99,19 @@ export default {
             }
         },
         addFreeTimeHandle(){
-            // console.log(this.time)
-            let index = this.list.findIndex(item => item.free_time === this.time.join('-'))
+            let index = this.list.findIndex(item => item.free_time === `${this.start_time}-${this.end_time}`)
             if (index != -1){
                 return this.$message.warning('不能重复添加重复的时间段！')
             }
             let recordRow = _.cloneDeep(this.staff)
-            recordRow.free_time = this.time.join('-')
+            recordRow.free_time = `${this.start_time}-${this.end_time}`
             this.list.push(recordRow)
-            this.time = this.cloneTime
         },
         async saveRecord(){
             const response = await addFreeTime({
                 id: this.recordId,
                 week: this.week,
-                times: this.list.map(item => item.free_time).join(',')
+                times: `${this.start_time},${this.end_time}`
             })
             if (response.code == 1){
                 this.closePanle()
@@ -129,7 +132,6 @@ export default {
         }
     },
     created(){
-        this.initialFunc()
         this.getStaffFreeTime()
     }
 }

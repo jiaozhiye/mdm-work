@@ -282,6 +282,12 @@ export const getDefaultTurnover = () => instance.get('/mgr/storeForecastTurnover
 // 获取默认的可变工时
 export const getDefaultTime = () => instance.get('/mgr/variableTimeGuideCtrl/getVariableTimeGuide')
 
+// 获取单店报表列表
+export const getStoreReportList = params => instance.get('/mgr/workTimeCtrl/getWorkTime', {params})
+
+// 获取个人报表列表
+export const getPersonReportList = params => instance.get('/mgr/workTimeDetailCtrl/getWorkTimeDetail', {params})
+
 // nodejs 接口
 // 保存海报
 export const savePoster = params => instance.post('/poster/save', params, {

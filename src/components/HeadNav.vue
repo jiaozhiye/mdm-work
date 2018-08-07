@@ -83,4 +83,7 @@ export default {
 .head-nav ul li a i.graph-editer {
     background-position: -320px 0;
 }
+.head-nav ul li a i.graph-work_time {
+    background-position: -304px 0;
+}
 </style>

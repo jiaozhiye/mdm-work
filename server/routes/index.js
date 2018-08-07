@@ -19,7 +19,6 @@ const opt_template = {
 
 // 路由列表
 router.post('/login', controllers.other.login)
-router.get('/mgr/menu', controllers.other.menu)
 router.post('/poster/save', controllers.poster.save)
 router.post('/poster/upload', koaForm(opt_poster), controllers.poster.upload)
 router.post('/poster/template', koaForm(opt_template), controllers.poster.template)

@@ -1,5 +1,6 @@
 import * as types from '../types'
 import { getPosterList, removeTemplate, getPosterInfo } from 'api'
+import Cookies from 'js-cookie'
 import { Message } from 'element-ui'
 
 // state
@@ -243,6 +244,8 @@ const actions = {
                 type: types.POSTER_GET_RECORD,
                 data: response.data || {}
             })
+            // 重新编辑，设置 cookie
+            Cookies.set('poster_id', params)
         } else {
             Message.error(response.message)
         }

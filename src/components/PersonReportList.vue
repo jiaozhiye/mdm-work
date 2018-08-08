@@ -49,11 +49,12 @@
             :picker-options="pickerOptions"
             @change="searchHandle">
         </el-date-picker>
+        <div class="search-title fl">搜索条件：</div>
         <el-input
             class="fl"
             style="width: 180px"
             size="small"
-            placeholder="员工姓名/拼音"
+            placeholder="员工工号"
             prefix-icon="el-icon-search"
             v-model="search.keyword"
             @keyup.enter.native="searchHandle"

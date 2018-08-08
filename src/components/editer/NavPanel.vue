@@ -34,7 +34,7 @@ export default {
     opacity: 1;
 }
 .mdm-nav-panel .panel {
-    width: 270px;
+    width: 100%;
     height: 100%;
     overflow: hidden;
 }

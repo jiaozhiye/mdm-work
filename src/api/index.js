@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import common from 'assets/js/common'
+import { removeToken } from 'assets/js/auth'
 import store from 'store'
 import { Message } from 'element-ui'
 
@@ -40,6 +41,10 @@ instance.interceptors.request.use(config => {
 // http 响应拦截器
 instance.interceptors.response.use(response => {
     store.dispatch('stateChange/setBtnLoading', !1)
+    // 如果服务端 session 过期，移除cookie
+    if (response.data.code == 'nosid'){
+        removeToken()
+    }
     return response.data
 }, error => {
     store.dispatch('stateChange/setBtnLoading', !1)
@@ -313,11 +318,17 @@ export const uploadUrl = `${serverUrl}poster/template`
 // 获取海报信息 by id
 export const getPosterInfo = params => instance.get('/poster/getone', {params})
 
-// 获取海报列表
+// 获取模版列表
 export const getPosterList = () => instance.get('/poster/getlist')
 
+// 删除模版记录
+export const removeTemplate = params => instance.get('/poster/del_template', {params})
+
+// 获取海报列表 - 分页
+export const getPosterPageList = params => instance.get('/poster/pagelist', {params})
+
 // 删除海报记录
-export const removePoster = params => instance.get('/poster/delete', {params})
+export const removePoster = params => instance.get('/poster/del_poster', {params})
 
 
 

@@ -23,6 +23,7 @@ const AppTimeGuide = () => import('components/TimeGuide.vue')
 const AppPlanJob = () => import('components/PlanJob.vue')
 const AppStoreReportList = () => import('components/StoreReportList.vue')
 const AppPersonReportList = () => import('components/PersonReportList.vue')
+const AppEditerList = () => import('components/EditerList.vue')
 const AppEditer = () => import('components/Editer.vue')
 
 export const allRoutesMap = [
@@ -181,12 +182,12 @@ export const allRoutesMap = [
             {
                 path: '',
                 name: '海报管理-欢迎',
-                component: Home
+                component: AppEditerList
             },
             {
                 path: 'list',
                 name: '海报列表',
-                component: Home
+                component: AppEditerList
             },
             {
                 path: 'create',

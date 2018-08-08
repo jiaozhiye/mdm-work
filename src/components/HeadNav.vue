@@ -43,13 +43,7 @@ export default {
 .head-nav ul li.active a {
     background-color: rgba(0, 0, 0, .2);
 }
-.app-icon {
-    background-image: url(../assets/img/icons.png);
-    background-repeat: no-repeat;
-    display: inline-block;
-    vertical-align: middle;
-}
-.head-nav ul li a i.app-icon {
+.head-nav ul li a i {
     height: 16px;
     width: 16px;
     margin-top: -3px;
@@ -59,7 +53,6 @@ export default {
     font-size: 16px;
     color: #fff;
 }
-
 
 /* 头部导航分类图标 */
 .head-nav ul li a i.graph-sys_setting {

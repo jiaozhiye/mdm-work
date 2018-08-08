@@ -107,7 +107,16 @@ const template = async (ctx, next) => {
 
 // /hrms/poster/getone -> 获取海报信息
 const getone = async (ctx, next) => {
-    // ctx.query.id
+    try {
+        const rows = await db.query('select id, name, description as `desc`, size, type, elements from posters where id=?', [ctx.query.id])
+        if (rows.length){
+            ctx.state.code = 1
+            ctx.state.message = ''
+            ctx.state.data = rows[0]
+        }
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 // /hrms/poster/getlist -> 获取海报列表
@@ -124,10 +133,92 @@ const getlist = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/del -> 获取海报列表
-const del = async (ctx, next) => {
+// /hrms/poster/del_template -> 删除模版
+const del_template = async (ctx, next) => {
     try {
         const rows = await db.query(`update img_template set deleted=? where id=?`, ['1', ctx.query.id])
+        if (rows.affectedRows){
+            ctx.state.code = 1
+            ctx.state.message = '删除成功'
+        } else {
+            ctx.state.message = '删除失败'
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// /hrms/poster/pagelist -> 获取海报分页列表
+const pagelist = async (ctx, next) => {
+    let pageSize = ctx.query.pageSize > 0 ? Number(ctx.query.pageSize) : 10
+    let sqlStr = ``
+
+    // 根据标题查询
+    if (ctx.query.keyword !== ''){
+        sqlStr += db.format(` AND t1.name LIKE ?`, [`%${ctx.query.keyword}%`])
+    }
+
+    const entitys = []
+
+    // 分页sql
+    const pagination = {
+        sql: `
+            SELECT
+                t1.id, t1.name, t1.size, t1.type, t1.img_path img_url, t1.modify_time 
+            FROM
+                posters t1
+            WHERE
+                t1.deleted='0'
+                ${sqlStr}
+            ORDER BY
+                t1.modify_time DESC
+                ${util.generatePageSql(ctx.query.pageNum, pageSize)}
+        `,
+        params: []
+    }
+
+    // 获取总数sql
+    const total = {
+        sql: `
+            SELECT
+                count(*) total
+            FROM
+                posters t1
+            WHERE
+                t1.deleted='0'
+            ${sqlStr}
+        `,
+        params: []
+    }
+
+    entitys.push(pagination)
+    entitys.push(total)
+
+    const sqls = entitys.map(item => item.sql).join(';')
+    const params = []
+
+    try {
+        const rows = await db.query(sqls, params)
+        //console.log(rows)
+        for (let i = 0; i < rows[0].length; i++){
+            rows[0][i].img_url = `${ctx.origin}/${rows[0][i].img_url}`
+        }
+        ctx.state.code = 1
+        ctx.state.message = ''
+        ctx.state.data = {
+            list: rows[0],
+            totalRow: rows[1][0].total,
+            totalPage: Math.ceil(rows[1][0].total / pageSize)
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// /hrms/poster/del_poster -> 删除海报
+const del_poster = async (ctx, next) => {
+    try {
+        const rows = await db.query(`update posters set deleted=? where id=?`, ['1', ctx.query.id])
         if (rows.affectedRows){
             ctx.state.code = 1
             ctx.state.message = '删除成功'
@@ -145,5 +236,7 @@ module.exports = {
     template,
     getone,
     getlist,
-    del
+    del_template,
+    pagelist,
+    del_poster
 }

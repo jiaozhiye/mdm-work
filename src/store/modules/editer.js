@@ -1,5 +1,5 @@
 import * as types from '../types'
-import { getPosterList, removePoster } from 'api'
+import { getPosterList, removeTemplate, getPosterInfo } from 'api'
 import { Message } from 'element-ui'
 
 // state
@@ -223,14 +223,26 @@ const actions = {
             data: params
         })
     },
-    async removePosterRecord ({ state, commit }, params){
-        const response = await removePoster({ id: params })
+    async removeTemplateRecord ({ state, commit }, params){
+        const response = await removeTemplate({ id: params })
         if (response.code == 1){
             commit({
                 type: types.POSTER_REMOVE_TEMPLATE,
                 data: params
             })
             Message.success(response.message)
+        } else {
+            Message.error(response.message)
+        }
+    },
+    async requestPosterRecord ({ state, commit }, params){
+        if (!params) return
+        const response = await getPosterInfo({ id: params })
+        if (response.code == 1){
+            commit({
+                type: types.POSTER_GET_RECORD,
+                data: response.data || {}
+            })
         } else {
             Message.error(response.message)
         }
@@ -314,12 +326,21 @@ const mutations = {
     },
     [types.POSTER_UPLOAD_TEMPLATE](state, { data }){
         state.uploadList.push(data)
+        state.templateList.unshift(data)
     },
     [types.POSTER_REMOVE_TEMPLATE](state, { data }){
         let index = state.uploadList.findIndex(item => item.id === data)
         if (index != -1){
             state.uploadList.splice(index, 1)
         }
+    },
+    [types.POSTER_GET_RECORD](state, { data }){
+        state.poster.name = data.name
+        state.poster.desc = data.desc
+        state.poster.size = data.size.split('*')
+        state.poster.type = data.type
+        state.poster.elements = JSON.parse(data.elements)
+        // console.log(state.poster)
     }
 }
 

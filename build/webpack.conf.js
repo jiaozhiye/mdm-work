@@ -23,7 +23,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsPublicPath: './',
+    assetsPublicPath: '/hrms/',
 
     // Source Maps
     productionSourceMap: true,

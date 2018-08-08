@@ -70,7 +70,7 @@ export default {
             start_time: '',
             end_time: '',
             staff: {}, // 个人信息
-            allDataList: [], // 一周所有的数据
+            allWeekList: [], // 一周所有的数据
             list: [],
             pickerOptions: {
                 start: '07:30',
@@ -85,22 +85,29 @@ export default {
     },
     methods: {
         changeHandle(){
-            this.list = this.allDataList[this.week]
+            if (!this.allWeekList.length) return
+            this.list = this.allWeekList[this.week]
         },
         async getStaffFreeTime(){
             const response = await getFreeTime({ id: this.recordId })
             if (response.code == 1){
                 this.week = response.data.week || this.week
                 this.staff = response.data.staff
-                this.allDataList = response.data.list.map(arr => arr.map(item => ({ ...this.staff, free_time: item })))
+                this.allWeekList = response.data.list.map(arr => arr.map(item => ({ ...this.staff, free_time: item })))
                 this.changeHandle()
             } else {
                 this.$message.error(response.message)
             }
         },
         addFreeTimeHandle(){
+            if (this.start_time == ''){
+                return this.$message.warning('请添加起始时间！')
+            }
+            if (this.end_time == ''){
+                return this.$message.warning('请添加结束时间！')
+            }
             let index = this.list.findIndex(item => item.free_time === `${this.start_time}-${this.end_time}`)
-            if (index != -1){
+            if (this.list.length && index != -1){
                 return this.$message.warning('不能重复添加重复的时间段！')
             }
             let recordRow = _.cloneDeep(this.staff)
@@ -111,7 +118,7 @@ export default {
             const response = await addFreeTime({
                 id: this.recordId,
                 week: this.week,
-                times: `${this.start_time},${this.end_time}`
+                times: this.list.map(item => item.free_time).join(',')
             })
             if (response.code == 1){
                 this.closePanle()

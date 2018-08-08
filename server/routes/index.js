@@ -19,11 +19,14 @@ const opt_template = {
 
 // 路由列表
 router.post('/login', controllers.other.login)
+// router.get('/mgr/menu', controllers.other.menu)
 router.post('/poster/save', controllers.poster.save)
 router.post('/poster/upload', koaForm(opt_poster), controllers.poster.upload)
 router.post('/poster/template', koaForm(opt_template), controllers.poster.template)
 router.get('/poster/getone', controllers.poster.getone)
 router.get('/poster/getlist', controllers.poster.getlist)
-router.get('/poster/delete', controllers.poster.del)
+router.get('/poster/del_template', controllers.poster.del_template)
+router.get('/poster/pagelist', controllers.poster.pagelist)
+router.get('/poster/del_poster', controllers.poster.del_poster)
 
 module.exports = router

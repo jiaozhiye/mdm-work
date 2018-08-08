@@ -2,7 +2,6 @@
 const path = require('path')
 const config = require('./webpack.conf')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const packageConfig = require('../package.json')
 
 const env = process.env.NODE_ENV
 

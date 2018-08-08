@@ -37,8 +37,7 @@
                         <el-upload
                             ref="upload"
                             :action="uploadUrl"
-                            multiple
-                            :limit="1"
+                            :limit="10"
                             :with-credentials="true"
                             :show-file-list="false"
                             :auto-upload="false"
@@ -282,10 +281,12 @@ export default {
             'createHistory',
             'requestTemplateList',
             'createUploadTemplate',
-            'removePosterRecord'
+            'removeTemplateRecord',
+            'requestPosterRecord'
         ]),
         ...mapActions('stateChange', ['setLeaveRemind']),
         initial(){ // 初始化方法
+            this.requestPosterRecord(this.$route.query.id)
             this.requestTemplateList()
         },
         vuexToTexts(){
@@ -355,13 +356,14 @@ export default {
             this.changePosterText({ index, text: val })
         },
         handleAvatarSuccess(res, file){ // res -> response
+            console.log(res);
             (res.code == 1) && this.createUploadTemplate({ id: res.data.id, img_url: res.data.img_url })
         },
         submitUpload(){ // 模版图片上传
             this.$refs.upload.submit()
         },
         deleteTemplateHandler(_id){
-            this.removePosterRecord(_id)
+            this.removeTemplateRecord(_id)
         },
         createElementStyle(obj){ // 生成元素的style对象
             let item = {...obj}

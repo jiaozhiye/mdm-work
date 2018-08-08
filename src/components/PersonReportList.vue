@@ -101,7 +101,7 @@ export default {
                 keyword: ''
             },
             list: [],
-            staff: {},
+            staff: {}, // 员工信息
             loading: !1,
             pickerOptions: {
                 disabledDate: time => {

@@ -4,7 +4,10 @@ const cuid = require('cuid')
 const normalize = require('normalize-path')
 const path = require('path')
 
-// /hrms/poster/save -> 保存
+/**
+ * 保存海报信息
+ * /hrms/poster/save
+ */
 const save = async (ctx, next) => {
     // console.log(ctx.request.body)
     let rows
@@ -12,11 +15,10 @@ const save = async (ctx, next) => {
     if (ctx.request.body.id != ''){ // 说明是 update
         uuid = ctx.request.body.id
         try {
-            rows = await db.query(`update posters set name=?, description=?, elements=?, img_path=?, modify_time=? where id=?`, [
+            rows = await db.query(`update posters set name=?, description=?, elements=?, modify_time=? where id=?`, [
                 ctx.request.body.name,
                 ctx.request.body.desc,
                 JSON.stringify(ctx.request.body.elements),
-                '',
                 util.createTime(),
                 uuid
             ])
@@ -55,7 +57,10 @@ const save = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/upload -> 上传导出图片
+/**
+ * 上传导出图片
+ * /hrms/poster/upload
+ */
 const upload = async (ctx, next) => {
     // ctx.body = { ...ctx.req.files, ...ctx.req.fields }
     if (ctx.req.files.file){
@@ -67,7 +72,10 @@ const upload = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/template -> 上传模版图片
+/**
+ * 上传模版图片
+ * /hrms/poster/template
+ */
 const template = async (ctx, next) => {
     // console.log(ctx.req.files)
     if (ctx.req.files.file){
@@ -105,7 +113,10 @@ const template = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/getone -> 获取海报信息
+/**
+ * 获取海报信息
+ * /hrms/poster/getone
+ */
 const getone = async (ctx, next) => {
     try {
         const rows = await db.query('select id, name, description as `desc`, size, type, elements from posters where id=?', [ctx.query.id])
@@ -119,7 +130,10 @@ const getone = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/getlist -> 获取海报列表
+/**
+ * 获取海报列表
+ * /hrms/poster/getlist
+ */
 const getlist = async (ctx, next) => {
     try {
         const rows = await db.query(`select id, img_path img_url from img_template where deleted=? order by create_time desc`, ['0'])
@@ -133,7 +147,10 @@ const getlist = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/del_template -> 删除模版
+/**
+ * 删除模版
+ * /hrms/poster/del_template
+ */
 const del_template = async (ctx, next) => {
     try {
         const rows = await db.query(`update img_template set deleted=? where id=?`, ['1', ctx.query.id])
@@ -148,7 +165,10 @@ const del_template = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/pagelist -> 获取海报分页列表
+/**
+ * 获取海报分页列表
+ * /hrms/poster/pagelist
+ */
 const pagelist = async (ctx, next) => {
     let pageSize = ctx.query.pageSize > 0 ? Number(ctx.query.pageSize) : 10
     let sqlStr = ``
@@ -215,7 +235,10 @@ const pagelist = async (ctx, next) => {
     }
 }
 
-// /hrms/poster/del_poster -> 删除海报
+/**
+ * 删除海报
+ * /hrms/poster/del_poster
+ */
 const del_poster = async (ctx, next) => {
     try {
         const rows = await db.query(`update posters set deleted=? where id=?`, ['1', ctx.query.id])

@@ -1,6 +1,6 @@
 <template>
   <div class="z-drr-container"
-    @mousedown.stop="elmDown"
+    @mousedown.stop.prevent="elmDown"
     :style="style"
     :class="{
       'z-draggable': draggable,

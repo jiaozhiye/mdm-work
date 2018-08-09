@@ -37,6 +37,7 @@ export default {
         },
         adaptHandler(){ // 适配
             this.createPosterScale((this.element.clientHeight - 40) / this.poster.size[1])
+            this.element.querySelector('.mdm-editor').style.transform = ''
         },
         bindWheelEvent(){
             this.element.addEventListener('mousewheel', this.scrollFunc, false)

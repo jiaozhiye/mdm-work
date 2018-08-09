@@ -8,59 +8,59 @@
 /* 加载字体 */
 @font-face {
     font-family: fangzheng_ssjt;
-    src: url('../fonts/fangzheng_ssjt.woff?gj9y5y') format("woff");
+    src: url('../fonts/fangzheng_ssjt_pre.woff') format("woff");
 }
 @font-face {
     font-family: fangzheng_ktjt;
-    src: url('../fonts/fangzheng_ktjt.woff?gj9y5y') format("woff");
+    src: url('../fonts/fangzheng_ktjt_pre.woff') format("woff");
 }
 @font-face {
     font-family: fangzheng_htjt;
-    src: url('../fonts/fangzheng_htjt.woff?gj9y5y') format("woff");
+    src: url('../fonts/fangzheng_htjt_pre.woff') format("woff");
 }
 @font-face {
     font-family: Zhengqingkehuangyouti;
-    src: url('../fonts/Zhengqingkehuangyouti.woff?gj9y5y') format("woff");
+    src: url('../fonts/Zhengqingkehuangyouti_pre.woff') format("woff");
 }
 @font-face {
     font-family: Zhankukuaileti;
-    src: url('../fonts/Zhankukuaileti.woff?gj9y5y') format("woff");
+    src: url('../fonts/Zhankukuaileti_pre.woff') format("woff");
 }
 @font-face {
     font-family: Zhankuwenyiti;
-    src: url('../fonts/Zhankuwenyiti.woff?gj9y5y') format("woff");
+    src: url('../fonts/Zhankuwenyiti_pre.woff') format("woff");
 }
 @font-face {
     font-family: Zhankugaoduanhei;
-    src: url('../fonts/Zhankugaoduanhei.woff?gj9y5y') format("woff");
+    src: url('../fonts/Zhankugaoduanhei_pre.woff') format("woff");
 }
 @font-face {
     font-family: Zhankukuhei;
-    src: url('../fonts/Zhankukuhei.woff?gj9y5y') format("woff");
+    src: url('../fonts/Zhankukuhei_pre.woff') format("woff");
 }
 @font-face {
     font-family: ZhankuxiaoweiLOGOti;
-    src: url('../fonts/ZhankuxiaoweiLOGOti.woff?gj9y5y') format("woff");
+    src: url('../fonts/ZhankuxiaoweiLOGOti_pre.woff') format("woff");
 }
 @font-face {
     font-family: Yangrendongzhushiticu;
-    src: url('../fonts/Yangrendongzhushiticu.woff?gj9y5y') format("woff");
+    src: url('../fonts/Yangrendongzhushiticu_pre.woff') format("woff");
 }
 @font-face {
     font-family: Yangrendongzhushiti;
-    src: url('../fonts/Yangrendongzhushiti.woff?gj9y5y') format("woff");
+    src: url('../fonts/Yangrendongzhushiti_pre.woff') format("woff");
 }
 @font-face {
     font-family: Yangrendongzhushitixi;
-    src: url('../fonts/Yangrendongzhushitixi.woff?gj9y5y') format("woff");
+    src: url('../fonts/Yangrendongzhushitixi_pre.woff') format("woff");
 }
 @font-face {
     font-family: Pangmenzhengdaobiaotiti;
-    src: url('../fonts/Pangmenzhengdaobiaotiti.woff?gj9y5y') format("woff");
+    src: url('../fonts/Pangmenzhengdaobiaotiti_pre.woff') format("woff");
 }
 @font-face {
     font-family: Arual;
-    src: url('../fonts/Arual.woff?gj9y5y') format("woff");
+    src: url('../fonts/Arual_pre.woff') format("woff");
 }
 /* 加载字体 END */
 

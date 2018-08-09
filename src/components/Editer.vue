@@ -98,17 +98,7 @@
                             <div class="name">文字颜色</div>
                             <setting-color v-model="texts.color"></setting-color>
                             <div class="name">字体</div>
-                            <div class="mdm-base-input">
-                                <el-select v-model="texts.fontFamily" placeholder="默认字体" size="mini">
-                                    <el-option
-                                        v-for="item in fontFamilyList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                        <span :style="{fontFamily: item.value}">{{ item.label }}</span>
-                                    </el-option>
-                                </el-select>
-                            </div>
+                            <font-select v-model="texts.fontFamily"></font-select>
                             <div class="name">文字大小</div>
                             <input-drag 
                                 v-model="texts.fontSize"
@@ -206,6 +196,7 @@ import DragPanel from 'components/editer/DragPanel'
 import SettingColor from 'components/editer/SettingColor'
 import InputDrag from 'components/editer/InputDrag'
 import TextAlign from 'components/editer/TextAlign'
+import FontSelect from 'components/editer/FontSelect'
 
 export default {
     name: 'app-editer',
@@ -235,7 +226,6 @@ export default {
         ...mapState('editer', [
             'poster', 
             'templateList', 
-            'fontFamilyList', 
             'outer_style_arr', 
             'inner_style_arr', 
             'box_style_arr',
@@ -328,16 +318,23 @@ export default {
                 this.createEditingIndex(-1)
             }
         },
-        elboxHandler(index){ // 单机元素可编辑
-            // 图片暂时不可编辑
-            let element = this.findElementByIndex(index)
-            if (!element.url){
-                // 让文本域失去焦点
-                Array.from(document.querySelectorAll('.edit-text')).forEach(el => el.blur())
+        elboxHandler(index){ // 单击 元素可编辑
+            let bool = !1
+            // 如果单击的是当前有焦点的元素
+            if (document.activeElement.getAttribute('index') == index){
+                bool = !0
             }
+            // 让文本域失去焦点
+            Array.from(document.querySelectorAll('.edit-text')).forEach(el => {
+                if (bool && document.activeElement === el){
+                    el.focus()
+                } else {
+                    el.blur()
+                }
+            })
             this.createEditingIndex(index)
         },
-        dblClickHandler(index){ // 双击文本可编辑
+        dblClickHandler(index){ // 双击 文本可编辑
             // 图片暂时不可编辑
             let element = this.findElementByIndex(index)
             if (!element.url){
@@ -356,7 +353,6 @@ export default {
             this.changePosterText({ index, text: val })
         },
         handleAvatarSuccess(res, file){ // res -> response
-            console.log(res);
             (res.code == 1) && this.createUploadTemplate({ id: res.data.id, img_url: res.data.img_url })
         },
         submitUpload(){ // 模版图片上传
@@ -445,7 +441,8 @@ export default {
         DragPanel,
         SettingColor,
         InputDrag,
-        TextAlign
+        TextAlign,
+        FontSelect
     }
 }
 </script>

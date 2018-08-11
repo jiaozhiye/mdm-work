@@ -1,5 +1,5 @@
 <template>
-    <div class="welcome-text">Hello World！</div>
+    <div class="welcome-text">欢迎使用HRMS管理系统</div>
 </template>
 
 <script>

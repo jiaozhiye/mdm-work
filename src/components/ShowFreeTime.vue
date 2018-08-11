@@ -18,37 +18,39 @@
     <h5 class="form-part-line" style="margin-left: 0;">空闲时间列表</h5>
     <div>
         <el-table size="small" :data="list" stripe border>
-            <el-table-column prop="day1" label="星期一"></el-table-column>
-            <el-table-column prop="day2" label="星期二"></el-table-column>
-            <el-table-column prop="day3" label="星期三"></el-table-column>
-            <el-table-column prop="day4" label="星期四"></el-table-column>
-            <el-table-column prop="day5" label="星期五"></el-table-column>
-            <el-table-column prop="day6" label="星期六"></el-table-column>
-            <el-table-column prop="day7" label="星期日"></el-table-column>
+            <el-table-column v-for="(item, key) in tableHeaders" :key="key" 
+                :prop="`day${key+1}`" 
+                :label="tableHeaders[key]">
+            </el-table-column>
         </el-table>
     </div>
 </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import { getAllFreeTime } from 'api'
 import moment from 'moment'
 
 export default {
     name: 'app-show-free-time',
     props: ['recordId'],
+    computed: {
+        ...mapState('dict', ['weekList']),
+        dayList(){
+            return this.weekList.map(item => item.name)
+        }
+    },
     data (){
         return {
             weekDay: null,
             form: {
                 date: ''
             },
+            tableHeaders: [],
             list: [],
             pickerOptions: {
                 firstDayOfWeek: 1,
-                disabledDate(time){
-                    return time.getTime() < moment().subtract(1, 'days')
-                },
                 shortcuts: [{
                     text: '本周',
                     onClick(picker){
@@ -66,13 +68,23 @@ export default {
         }
     },
     methods: {
+        initial(){
+            this.tableHeaders = _.cloneDeep(this.dayList)
+            this.dateChangeHandle(moment().add(7, 'days'))
+        },
         dateChangeHandle(val){ // 日期控件
             if (!val) return
             const weekOfday = moment(val).format('E') // 计算今天是这周第几天  
-            const weekStart = moment(val).subtract(Number(weekOfday) - 1, 'days') // 周一日期  
-            // console.log(weekStart.format('YYYY-MM-DD'))
-            this.form.date = weekStart.format('YYYY-MM-DD')
+            const weekStart = moment(val).subtract(Number(weekOfday) - 1, 'days') // 周一日期
+            this.setDateHandler(weekStart)
             this.getFreeTimeList()
+        },
+        setDateHandler(weekStart){
+            this.weekDay   = weekStart.toDate()
+            this.form.date = weekStart.format('YYYY-MM-DD')
+            for (let i = 0; i < this.dayList.length; i++){
+                this.$set(this.tableHeaders, i, `${this.dayList[i]} ${moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')}`)
+            }
         },
         async getFreeTimeList(){
             const response = await getAllFreeTime({
@@ -85,6 +97,9 @@ export default {
                 this.$message.error(response.message)
             }
         }
+    },
+    created(){
+        this.initial()
     }
 }
 </script>

@@ -20,10 +20,10 @@
                 value-format="yyyy-MM-dd">
             </el-date-picker>
         </el-form-item>
-        <el-form-item label="电话号码" prop="phone">
+        <el-form-item label="手机号码" prop="phone">
             <el-input v-model="form.phone" clearable placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号">
+        <el-form-item label="身份证号" prop="id_num">
             <el-input v-model="form.id_num" clearable placeholder="请输入身份证号"></el-input>
         </el-form-item>
         <el-form-item label="住址">
@@ -105,6 +105,18 @@ export default {
     name: 'app-mod-staff',
     props: ['recordId', 'type'],
     data (){
+        const checkPhone = (rule, value, callback) => {
+            const regExp = /^1\d{10}$/
+            if (!regExp.test(value)){
+                callback(new Error('手机号格式不正确'))
+            }
+        }
+        const checkIdnum = (rule, value, callback) => {
+            const regExp = /^\d{17}[0-9a-zA-Z]$/
+            if (!regExp.test(value)){
+                callback(new Error('身份证号格式不正确'))
+            }
+        }
         return {
             form: {
                 name: '',
@@ -137,7 +149,11 @@ export default {
                     { required: true, message: '请输入生日', trigger: 'blur' }
                 ],
                 phone: [
-                    { required: true, message: '请输入手机号', trigger: 'blur' }
+                    { required: true, message: '请输入手机号', trigger: 'blur' },
+                    { validator: checkPhone, trigger: 'blur' }
+                ],
+                id_num: [
+                    { validator: checkIdnum, trigger: 'blur' }
                 ],
                 hiredate: [
                     { required: true, message: '请输入入职日期', trigger: 'blur' }

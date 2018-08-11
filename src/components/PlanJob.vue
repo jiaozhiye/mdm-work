@@ -64,6 +64,9 @@
                 :loading="btnLoading" 
                 @click="saveHandle">保存</el-button>
         </ul>
+        <div class="search-title fl" style="margin-left: 10px;">
+            当前日期：<span style="color: #409eff;">{{ this.dayList[this.search.day] }}</span>
+        </div>
     </div>
     <div class="component-main">
         <table class="plan-list" ref="table">
@@ -367,7 +370,7 @@ export default {
                     pointPadding: 0.4,
                     pointPlacement: -0.2,
                     tooltip: {
-						valuePrefix: '$',
+						valuePrefix: '￥',
 						valueSuffix: ' 元'
 				    }
                 }, {
@@ -422,8 +425,8 @@ export default {
         async getDataList(callback){
             const response = await getPlanStaffInfo(this.search)
             if (response.code == 1){
-                this.workers = response.data
-                this.cellPromptList = response.problemData
+                this.workers = response.data || []
+                this.cellPromptList = response.problemData || []
                 callback && callback()
             } else {
                 this.$message.error(response.message)

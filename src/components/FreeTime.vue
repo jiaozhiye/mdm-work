@@ -12,7 +12,12 @@
                 style="width: 150px;"
                 placeholder="起始时间"
                 v-model="start_time"
-                :picker-options="pickerOptions">
+                :picker-options="{
+                    maxTime: end_time, 
+                    start: '07:30',
+                    step: '00:15',
+                    end: '23:45'
+                }">
             </el-time-select>
             到
             <el-time-select
@@ -50,7 +55,7 @@
         </el-table>
     </div>
     <div class="tr" style="margin-top: 15px;">
-        <el-button size="small" @click.stop="closePanle">取消</el-button>
+        <el-button size="small" @click.stop="closePanle">关闭</el-button>
         <el-button size="small" type="primary"
             @click.stop="saveRecord" :loading="btnLoading">保存</el-button>
     </div>
@@ -71,12 +76,7 @@ export default {
             end_time: '',
             staff: {}, // 个人信息
             allWeekList: [], // 一周所有的数据
-            list: [],
-            pickerOptions: {
-                start: '07:30',
-                step: '00:15',
-                end: '23:45'
-            }
+            list: []
         }
     },
     computed: {
@@ -113,6 +113,9 @@ export default {
             let recordRow = _.cloneDeep(this.staff)
             recordRow.free_time = `${this.start_time}-${this.end_time}`
             this.list.push(recordRow)
+            // 清空时间段
+            this.start_time = ''
+            this.end_time   = ''
         },
         async saveRecord(){
             const response = await addFreeTime({
@@ -121,7 +124,8 @@ export default {
                 times: this.list.map(item => item.free_time).join(',')
             })
             if (response.code == 1){
-                this.closePanle()
+                // this.closePanle()
+                this.$message.success(response.message)
             } else {
                 this.$message.error(response.message)
             }

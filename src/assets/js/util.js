@@ -77,5 +77,24 @@ function convertBase64UrlToBlob(urlData){
     return new Blob([ab] , { type: 'image/png' })
 }
 
+// 追加 style 内部样式
+function appendStyleNode(fontName){
+    let styleEl = document.createElement('style')
+    styleEl.id  = fontName
+    styleEl.innerHTML = `@font-face{font-family:"${fontName}";src:url(static/fonts/${fontName}.woff) format("woff")}`
+    document.querySelector('head').appendChild(styleEl)
+    styleEl = null
+}
 
-export { cloneObj, getRandom, prefixCss, getUrlHash, recursionTree, debounce, throttle, convertBase64UrlToBlob }
+
+export {
+    cloneObj,
+    getRandom,
+    prefixCss,
+    getUrlHash,
+    recursionTree,
+    debounce,
+    throttle,
+    convertBase64UrlToBlob,
+    appendStyleNode
+}

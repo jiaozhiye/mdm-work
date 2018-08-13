@@ -178,7 +178,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { uploadUrl } from 'api'
-import { debounce } from 'assets/js/util'
+import { debounce, appendStyleNode } from 'assets/js/util'
 
 import 'assets/css/iconfonts.css'
 import 'assets/css/editer.css'
@@ -276,7 +276,16 @@ export default {
         ]),
         ...mapActions('stateChange', ['setLeaveRemind']),
         initial(){ // 初始化方法
-            this.requestPosterRecord(this.$route.query.id)
+            this.requestPosterRecord({
+                id: this.$route.query.id,
+                callback: () => {
+                    this.elements.forEach(item => {
+                        if (item.fontFamily && item.fontFamily !== 'Microsoft YaHei'){
+                            appendStyleNode(item.fontFamily)
+                        }
+                    })
+                }
+            })
             this.requestTemplateList()
         },
         vuexToTexts(){

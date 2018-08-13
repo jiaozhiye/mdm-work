@@ -236,16 +236,18 @@ const actions = {
             Message.error(response.message)
         }
     },
-    async requestPosterRecord ({ state, commit }, params){
-        if (!params) return
-        const response = await getPosterInfo({ id: params })
+    async requestPosterRecord ({ state, commit }, { id, callback }){
+        if (!id) return
+        const response = await getPosterInfo({ id })
         if (response.code == 1){
             commit({
                 type: types.POSTER_GET_RECORD,
                 data: response.data || {}
             })
             // 重新编辑，设置 cookie
-            Cookies.set('poster_id', params)
+            Cookies.set('poster_id', id)
+            // 执行回调
+            callback && callback()
         } else {
             Message.error(response.message)
         }

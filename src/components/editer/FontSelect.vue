@@ -14,6 +14,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { appendStyleNode } from 'assets/js/util'
 
 export default {
     name: 'font-select',
@@ -28,16 +29,8 @@ export default {
     },
     watch: {
         fontFamily(val){
-            this.appendStyleHandle(val)
+            appendStyleNode(val)
             this.$emit('input', val)
-        }
-    },
-    methods: {
-        appendStyleHandle(fontName){
-            const styleEl = document.createElement('style')
-            styleEl.id = fontName
-            styleEl.innerHTML = `@font-face{font-family:"${fontName}";src:url(static/fonts/${fontName}.woff) format("woff")}`
-            document.querySelector('head').appendChild(styleEl)
         }
     }
 }

@@ -109,12 +109,16 @@ export default {
             const regExp = /^1\d{10}$/
             if (!regExp.test(value)){
                 callback(new Error('手机号格式不正确'))
+            } else {
+                callback()
             }
         }
         const checkIdnum = (rule, value, callback) => {
             const regExp = /^\d{17}[0-9a-zA-Z]$/
-            if (!regExp.test(value)){
+            if (value != '' && !regExp.test(value)){
                 callback(new Error('身份证号格式不正确'))
+            } else {
+                callback()
             }
         }
         return {

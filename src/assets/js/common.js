@@ -7,12 +7,17 @@ export default (function (env){
 		// 使控制台 console 输出失效
 		console.log = console.warn = console.error = console.info = function(){}
 		envObj.env = '当前工程环境：production'
-		// envObj.serverUrl = 'http://127.0.0.1:2080/hrms/'
+		// java 接口
 		envObj.serverUrl = '/hrms/'
+		// node 接口
+		envObj.nodeServerUrl = 'http://59.110.152.54:2080/hrms/'
 	} else if (env == 'development'){
 		envObj.env = '当前工程环境：development'
-		// envObj.serverUrl = 'http://127.0.0.1:2080/hrms/'
-		envObj.serverUrl = 'http://192.168.43.16:8080/hrms/'
+		// java 接口
+		envObj.serverUrl = 'http://127.0.0.1:2080/hrms/'
+		// envObj.serverUrl = 'http://59.110.152.54:8082/hrms/'
+		// node 接口
+		envObj.nodeServerUrl = 'http://127.0.0.1:2080/hrms/'
 	}
 	return envObj
 })(process.env.NODE_ENV === 'production' ? 'production' : 'development')

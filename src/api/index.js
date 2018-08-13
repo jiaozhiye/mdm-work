@@ -294,8 +294,12 @@ export const getStoreReportList = params => instance.get('/mgr/workTimeCtrl/getW
 export const getPersonReportList = params => instance.get('/mgr/workTimeDetailCtrl/getWorkTimeDetail', {params})
 
 // nodejs 接口
+const nodeServerUrl = common.nodeServerUrl.charAt(common.nodeServerUrl.length - 1) === '/' 
+    ? common.nodeServerUrl : `${common.nodeServerUrl}/`
+
 // 保存海报
 export const savePoster = params => instance.post('/poster/save', params, {
+    baseURL: nodeServerUrl,
     withCredentials: true,
     headers: {
         post: { 'Content-Type': 'application/json' }
@@ -305,6 +309,7 @@ export const savePoster = params => instance.post('/poster/save', params, {
 
 // 上传导出的海报图片
 export const uploadPoster = params => instance.post('/poster/upload', params, {
+    baseURL: nodeServerUrl,
     withCredentials: true,
     headers: {
         post: { 'Content-Type': 'multipart/form-data' }
@@ -313,22 +318,22 @@ export const uploadPoster = params => instance.post('/poster/upload', params, {
 })
 
 // 模版上传
-export const uploadUrl = `${serverUrl}poster/template`
+export const uploadUrl = `${nodeServerUrl}poster/template`
 
 // 获取海报信息 by id
-export const getPosterInfo = params => instance.get('/poster/getone', {params})
+export const getPosterInfo = params => instance.get('/poster/getone', {params, baseURL: nodeServerUrl})
 
 // 获取模版列表
-export const getPosterList = () => instance.get('/poster/getlist')
+export const getPosterList = () => instance.get('/poster/getlist', {baseURL: nodeServerUrl})
 
 // 删除模版记录
-export const removeTemplate = params => instance.get('/poster/del_template', {params})
+export const removeTemplate = params => instance.get('/poster/del_template', {params, baseURL: nodeServerUrl})
 
 // 获取海报列表 - 分页
-export const getPosterPageList = params => instance.get('/poster/pagelist', {params})
+export const getPosterPageList = params => instance.get('/poster/pagelist', {params, baseURL: nodeServerUrl})
 
 // 删除海报记录
-export const removePoster = params => instance.get('/poster/del_poster', {params})
+export const removePoster = params => instance.get('/poster/del_poster', {params, baseURL: nodeServerUrl})
 
 
 

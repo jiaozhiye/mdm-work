@@ -24,7 +24,7 @@
             @change="searchHandle" 
             placeholder="调出门店">
             <el-option
-                v-for="(item, key) in deptList"
+                v-for="(item, key) in fromDeptList"
                 :key="key"
                 :label="item.name"
                 :value="item.value">
@@ -141,7 +141,7 @@
 <script>
 import { getStaffInList } from 'api'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 
 import AppDialog from 'components/AppDialog.vue'
@@ -178,10 +178,17 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'transferInList'])
+        ...mapGetters('app', ['deptId']),
+        ...mapState('dict', ['deptList', 'fromDeptList', 'transferInList'])
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createTransferInList']),
+        ...mapActions('dict', ['createDeptList', 'createFromDeptList', 'createTransferInList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.in_store_id = this.deptId
+                this.searchHandle()
+            }
+        },
         recordHandler(_id, _type){
             this.dialog[_type] = !0
             this.recordId = _id
@@ -227,8 +234,10 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getStuffList()
         this.createDeptList()
+        this.createFromDeptList()
         this.createTransferInList()
     },
     components: {

@@ -100,7 +100,7 @@
 <script>
 import { getNoticeInfo } from 'api'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppNoticeOut from 'components/NoticeOut.vue'
@@ -128,10 +128,17 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList', 'noticStateList', 'noticTypeList'])
     },
     methods: {
         ...mapActions('dict', ['createDeptList', 'createNoticeStateList', 'createNoticTypeList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.dept = this.deptId
+                this.searchHandle()
+            }
+        },
         recordHandler(_id, _type){
             switch (_type.toString()){
                 case 'apply_movein':
@@ -179,6 +186,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getNoticeList()
         this.createDeptList()
         this.createNoticeStateList()

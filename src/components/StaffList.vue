@@ -192,7 +192,7 @@
 <script>
 import { getStaffInfo } from 'api'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppAddStaff from 'components/AddStaff.vue'
@@ -234,6 +234,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList', 'jobList', 'kindList', 'sexList', 'workTypeList'])
     },
     methods: {
@@ -241,6 +242,12 @@ export default {
         recordHandler(_id, _type, record){
             this.dialog[_type] = !0
             this.recordId = _id
+        },
+        initial(){
+            if (this.deptId != ''){
+                this.search.dept = this.deptId
+                this.searchHandle()
+            }
         },
         async getStuffList(curPage, callback){
             curPage = curPage > 0 ? Number(curPage) : this.curPageIndex
@@ -300,6 +307,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getStuffList()
         this.createDeptList()
         this.createJobList()

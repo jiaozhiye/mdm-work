@@ -1,12 +1,12 @@
 <template>
 <div>
     <div style="padding-bottom: 10px;">
-        来源门店：<span style="margin-right: 20px;">{{ dataInfo.out_store_name }}</span>
-        调入日期：<span style="margin-right: 20px;">{{ dataInfo.date }}</span>
-        类别：<span>{{ dataInfo.type_text }}</span>
+        来源门店：<span style="margin-right: 20px;">{{ form.out_store_name }}</span>
+        调入日期：<span style="margin-right: 20px;">{{ form.date }}</span>
+        类别：<span>{{ form.type_text }}</span>
     </div>
     <div class="component-main">
-        <el-table :data="dataInfo.staffList" stripe border size="mini">
+        <el-table :data="form.staffList" stripe border size="mini">
             <el-table-column prop="name" label="姓名"></el-table-column>
             <el-table-column prop="gender" label="性别"></el-table-column>
             <el-table-column prop="phone" label="电话"></el-table-column>
@@ -17,22 +17,22 @@
         </el-table>
     </div>
     <div class="transfer-desc-box">
-        <p>说明：{{ dataInfo.remark }}</p>
+        <p>说明：{{ form.remark }}</p>
     </div>
     <el-form :model="form" ref="form" label-width="70px" size="small">
         <el-form-item label="拒绝原因">
             <el-input v-model="form.desc" type="textarea" :rows="3" 
-                :disabled="dataInfo.status == '2' || dataInfo.status == '3'" 
+                :disabled="form.status == '2' || form.status == '3'" 
                 clearable placeholder="请输入拒绝原因...">
             </el-input>
         </el-form-item>
-        <el-form-item v-if=" dataInfo.status != '2' && dataInfo.status != '3' ">
+        <el-form-item v-if=" form.status != '2' && form.status != '3' ">
             <el-button type="primary" @click="submitForm('form', 'agree')" :loading="btnLoading">同意</el-button>
             <el-button type="danger" plain @click="submitForm('form', 'refuse')" :loading="btnLoading">拒绝</el-button>
         </el-form-item>
         <el-form-item v-else>
-            <el-tag type="danger" v-if="dataInfo.status == '2'">已拒绝</el-tag>
-            <el-tag type="success" v-if="dataInfo.status == '3'">已同意</el-tag>
+            <el-tag type="danger" v-if="form.status == '2'">已拒绝</el-tag>
+            <el-tag type="success" v-if="form.status == '3'">已同意</el-tag>
         </el-form-item>
     </el-form>
 </div>
@@ -47,9 +47,9 @@ export default {
     props: ['recordId'],
     data (){
         return {
-            dataInfo: {},
             form: {
-                desc: ''
+                desc: '',
+                status: ''
             }
         }
     },
@@ -57,17 +57,16 @@ export default {
         ...mapState('stateChange', ['btnLoading'])
     },
     methods: {
-        async getFormInfo(request, attrName){
+        async getFormInfo(request, attrName, callback){
             const response = await request()
             if (response.code == 1){
-                this[attrName] = response.data || []
+                this[attrName] = response.data || {}
             } else {
                 this.$message.error(response.message)
             }
         },
         async saveRecord(status_num){
             const response = await execApplyInNotice({
-                id: this.dataInfo.id,
                 status2: status_num,
                 ...this.form
             })
@@ -104,7 +103,7 @@ export default {
         }
     },
     created(){
-        this.getFormInfo(async () => getNoticeMoveInById({ id: this.recordId }), 'dataInfo')
+        this.getFormInfo(async () => getNoticeMoveInById({ id: this.recordId }), 'form')
     }
 }
 </script>

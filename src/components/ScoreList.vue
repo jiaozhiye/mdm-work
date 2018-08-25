@@ -99,7 +99,7 @@
 <script>
 import { getStaffScoreList, delStaffScoreRecord } from 'api'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 
 import AppDialog from 'components/AppDialog.vue'
@@ -134,10 +134,17 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList', 'transferInList'])
     },
     methods: {
         ...mapActions('dict', ['createDeptList', 'createTransferInList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.store_id = this.deptId
+                this.searchHandle()
+            }
+        },
         recordHandler(_id, _type){
             this.dialog[_type] = !0
             this.recordId = _id
@@ -193,6 +200,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getStaffScoreInfo()
         this.createDeptList()
         this.createTransferInList()

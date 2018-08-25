@@ -94,7 +94,7 @@ export default {
         async getFormInfo(request, attrName){
             const response = await request()
             if (response.code == 1){
-                this[attrName] = response.data || []
+                this[attrName] = response.data || {}
             } else {
                 this.$message.error(response.message)
             }

@@ -34,7 +34,7 @@
             @change="searchHandle" 
             placeholder="调入门店">
             <el-option
-                v-for="(item, key) in deptList"
+                v-for="(item, key) in fromDeptList"
                 :key="key"
                 :label="item.name"
                 :value="item.value">
@@ -155,7 +155,7 @@
 <script>
 import { getStaffOutList, cancleStaffOut } from 'api'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 
 import AppDialog from 'components/AppDialog.vue'
@@ -191,10 +191,17 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'transferOutList', 'staffOutStatusList'])
+        ...mapGetters('app', ['deptId']),
+        ...mapState('dict', ['deptList', 'fromDeptList', 'transferOutList', 'staffOutStatusList'])
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createTransferOutList', 'createOutStatusList']),
+        ...mapActions('dict', ['createDeptList', 'createFromDeptList', 'createTransferOutList', 'createOutStatusList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.out_store_id = this.deptId
+                this.searchHandle()
+            }
+        },
         recordHandler(_id, _type){
             this.dialog[_type] = !0
             this.recordId = _id
@@ -254,8 +261,10 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getStuffList()
         this.createDeptList()
+        this.createFromDeptList()
         this.createTransferOutList()
         this.createOutStatusList()
     },

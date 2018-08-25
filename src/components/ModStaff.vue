@@ -31,7 +31,7 @@
         </el-form-item>
         <h5 class="form-part-line">员工入职信息</h5>
         <el-form-item label="工号">
-            <el-input v-model="form.emp_num" :disabled="1" clearable placeholder="请输入工号"></el-input>
+            <el-input v-model="form.emp_num" disabled clearable placeholder="请输入工号"></el-input>
         </el-form-item>
         <el-form-item label="入职日期" prop="hiredate">
             <el-date-picker
@@ -43,7 +43,7 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="所在门店" prop="dept_id">
-            <el-select v-model="form.dept_id" clearable placeholder="请选门店">
+            <el-select v-model="form.dept_id" disabled clearable placeholder="请选门店">
                 <el-option v-for="(item, key) in deptList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
@@ -60,7 +60,7 @@
             </el-checkbox-group>
         </el-form-item>
         <el-form-item label="在职状态" prop="status">
-            <el-select v-model="form.status" :disabled="1" clearable placeholder="请选在职状态">
+            <el-select v-model="form.status" disabled clearable placeholder="请选在职状态">
                 <el-option v-for="(item, key) in jobStatusList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>

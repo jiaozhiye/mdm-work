@@ -58,7 +58,8 @@ export default {
                 this.createLoginInfo({
                     id: response.data.id,
                     name: response.data.name,
-                    roles: response.data.roles || []
+                    roles: response.data.roles || [],
+                    dept_id: response.data.dept_id
                 })
                 this.$router.push({ path: '/' })
             } else {

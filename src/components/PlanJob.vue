@@ -146,7 +146,7 @@
 import _ from 'lodash'
 import moment from 'moment'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { getPlanStaffInfo, getCellStaffInfo, savePlanStaff } from 'api'
 
 import TableCell from 'assets/js/table-cell'
@@ -214,6 +214,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['planTheadList', 'deptList', 'weekList']),
         ...mapState('stateChange', ['btnLoading']),
         weeksArr(){
@@ -440,6 +441,10 @@ export default {
         if (this.planTheadList.length > 0){
             this.initialTHeadHandle(this.planTheadList)
             this.initialListHandle()
+        }
+        if (this.deptId != ''){
+            this.search.dept = this.deptId
+            this.searchHandle()
         }
     },
     mounted(){

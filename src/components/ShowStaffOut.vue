@@ -17,7 +17,7 @@
             <span class="form-record-show">{{ form.status_text }}</span>
         </el-form-item>
         <el-form-item label="说明：">
-            <el-input v-model="form.desc" type="textarea" :rows="4" clearable placeholder="请输入说明..."></el-input>
+            <el-input v-model="form.desc" type="textarea" :rows="4" disabled clearable placeholder="请输入说明..."></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">撤销</el-button>

@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { getStoreReportList } from 'api'
 import moment from 'moment'
 
@@ -92,10 +92,17 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList'])
     },
     methods: {
         ...mapActions('dict', ['createDeptList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.dept = this.deptId
+                this.searchHandle()
+            }
+        },
         async getStoreReportInfo(callback){
             this.loading = !0
             const response = await getStoreReportList({ ...this.search })
@@ -112,6 +119,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getStoreReportInfo()
         this.createDeptList()
     }

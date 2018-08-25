@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { getPersonReportList } from 'api'
 import moment from 'moment'
 
@@ -120,10 +120,17 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList'])
     },
     methods: {
         ...mapActions('dict', ['createDeptList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.dept = this.deptId
+                this.searchHandle()
+            }
+        },
         async getPersonReportInfo(callback){
             this.loading = !0
             const response = await getPersonReportList({ ...this.search })
@@ -145,6 +152,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getPersonReportInfo()
         this.createDeptList()
     }

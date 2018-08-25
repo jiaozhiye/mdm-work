@@ -98,7 +98,7 @@
 
 <script>
 import { addStaffInfo } from 'api'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -177,6 +177,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList', 'jobList', 'kindList', 'workTypeList', 'jobStatusDisabledList', 'jobLevelList']),
         ...mapState('stateChange', ['btnLoading']),
         kindListNoAll(){
@@ -185,6 +186,11 @@ export default {
     },
     methods: {
         ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createJobStatusDisabledList', 'createWorkTypeList', 'createJobLevelList']),
+        initial(){
+            if (this.deptId != ''){
+                this.form.dept_id = this.deptId
+            }
+        },
         async saveRecord(){
             const response = await addStaffInfo(this.form)
             if (response.code == 1){
@@ -211,6 +217,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.createDeptList()
         this.createJobList()
         this.createKindList()

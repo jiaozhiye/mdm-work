@@ -162,7 +162,7 @@
 <script>
 import { getNoJobStaffInfo, recoverStaffOnJob } from 'api'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
 import AppShowStaff from 'components/ShowStaff.vue'
@@ -192,10 +192,17 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('app', ['deptId']),
         ...mapState('dict', ['deptList', 'jobList', 'kindList', 'sexList', 'workTypeList'])
     },
     methods: {
         ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createWorkTypeList']),
+        initial(){
+            if (this.deptId != ''){
+                this.search.dept = this.deptId
+                this.searchHandle()
+            }
+        },
         recordHandler(_id, _type){
             this.dialog[_type] = !0
             this.recordId = _id
@@ -272,6 +279,7 @@ export default {
         }
     },
     created(){
+        this.initial()
         this.getStuffList()
         this.createDeptList()
         this.createJobList()

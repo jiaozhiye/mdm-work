@@ -9,6 +9,9 @@
         <el-form-item label="文章标题" prop="title">
             <el-input v-model="form.title" clearable placeholder="请输入文章标题"></el-input>
         </el-form-item>
+        <el-form-item label="视频地址">
+            <el-input v-model="form.video" clearable placeholder="请输入视频地址"></el-input>
+        </el-form-item>
         <el-form-item label="内容">
             <quill-editor v-model="form.content" :options="editorOption"></quill-editor>
         </el-form-item>
@@ -39,6 +42,7 @@ export default {
             form: {
                 class_id: '',
                 title: '',
+                video: '',
                 content: ''
             },
             rules: {

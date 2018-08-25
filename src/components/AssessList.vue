@@ -24,7 +24,7 @@
             class="fl"
             style="width: 180px"
             size="small"
-            placeholder="员工姓名/拼音"
+            placeholder="员工姓名"
             prefix-icon="el-icon-search"
             v-model="search.name"
             @keyup.enter.native="searchHandle"

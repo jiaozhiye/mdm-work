@@ -4,7 +4,7 @@
         <el-form-item label="分类名称" prop="name">
             <el-input v-model="form.name" clearable placeholder="请输入分类名称"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" prop="parent_id">
+        <el-form-item label="上级分类">
             <el-select v-model="form.parent_id" clearable placeholder="上级分类">
                 <el-option v-for="(item, key) in classifyList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
@@ -41,9 +41,6 @@ export default {
             rules: {
                 name: [
                     { required: true, message: '请输入分类名称', trigger: 'blur' }
-                ],
-                parent_id: [
-                    { required: true, message: '请选上级分类', trigger: 'change' }
                 ]
             }
         }

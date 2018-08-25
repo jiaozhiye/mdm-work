@@ -97,6 +97,10 @@
             @keyup.enter.native="searchHandle"
             clearable>
         </el-input>
+        <el-button class="fl" style="margin-left: 10px;" size="small"
+            @click.stop="searchHandle('all')">
+            全部
+        </el-button>
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
@@ -199,7 +203,12 @@ export default {
             }
             this.loading = !1
         },
-        searchHandle(){
+        searchHandle(dir){
+            if (dir === 'all'){
+                for (let attr in this.search){
+                    this.search[attr] = ''
+                }
+            }
             if (moment(this.search.end_date) < moment(this.search.start_date)){
                 this.$message.warning('结束日期不能小于开始日期')
                 return this.search.end_date = ''

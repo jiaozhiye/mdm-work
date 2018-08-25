@@ -30,9 +30,9 @@
             <el-input v-model="form.address" type="textarea" :rows="2" clearable placeholder="请输入住址"></el-input>
         </el-form-item>
         <h5 class="form-part-line">员工入职信息</h5>
-        <el-form-item label="工号">
+        <!-- <el-form-item label="工号">
             <el-input v-model="form.emp_num" clearable placeholder="请输入工号"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="入职日期" prop="hiredate">
             <el-date-picker
                 v-model="form.hiredate"
@@ -61,7 +61,7 @@
         </el-form-item>
         <el-form-item label="在职状态" prop="status">
             <el-select v-model="form.status" clearable placeholder="请选在职状态">
-                <el-option v-for="(item, key) in jobStatusList" :key="key" :label="item.name" :value="item.value"></el-option>
+                <el-option v-for="(item, key) in jobStatusDisabledList" :key="key" :label="item.name" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
         </el-form-item>
         
@@ -177,14 +177,14 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'jobList', 'kindList', 'workTypeList', 'jobStatusList', 'jobLevelList']),
+        ...mapState('dict', ['deptList', 'jobList', 'kindList', 'workTypeList', 'jobStatusDisabledList', 'jobLevelList']),
         ...mapState('stateChange', ['btnLoading']),
         kindListNoAll(){
             return this.kindList.slice(1)
         }
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createJobStatusList', 'createWorkTypeList', 'createJobLevelList']),
+        ...mapActions('dict', ['createDeptList', 'createJobList', 'createKindList', 'createJobStatusDisabledList', 'createWorkTypeList', 'createJobLevelList']),
         async saveRecord(){
             const response = await addStaffInfo(this.form)
             if (response.code == 1){
@@ -215,7 +215,7 @@ export default {
         this.createJobList()
         this.createKindList()
         this.createWorkTypeList()
-        this.createJobStatusList()
+        this.createJobStatusDisabledList()
         this.createJobLevelList()
     }
 }

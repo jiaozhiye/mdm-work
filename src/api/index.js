@@ -293,6 +293,30 @@ export const getStoreReportList = params => instance.get('/mgr/workTimeCtrl/getW
 // 获取个人报表列表
 export const getPersonReportList = params => instance.get('/mgr/workTimeDetailCtrl/getWorkTimeDetail', {params})
 
+// 获取考题分类
+export const getQuestionClassify = params => instance.get('/mgr/question/type/list', {params})
+
+// 添加考题分类
+export const addQuestionClassify = params => instance.post('/mgr/question/type/add', params)
+
+// 获取考核分类记录
+export const getQuestionClassifyRecord = params => instance.get('/mgr/question/type/showById', {params})
+
+// 修改考核分类
+export const modQuestionClassify = params => instance.post('/mgr/question/type/updateById', params)
+
+// 删除考核分类记录
+export const delQuestionClassifyRecord = params => instance.get('/mgr/question/type/deleteById', {params})
+
+// 获取考题分类 for select
+export const getQuestionClaSelect = params => instance.get('/mgr/question/getTypeByKind', {params})
+
+// 获取来源门店
+export const getFromDeptSelect = params => instance.get('/mgr/apply/getFromStoreDict', {params})
+
+// 调入通知
+export const execApplyInNotice = params => instance.post('/mgr/moveIn/in', params)
+
 // nodejs 接口
 const nodeServerUrl = common.nodeServerUrl.charAt(common.nodeServerUrl.length - 1) === '/' 
     ? common.nodeServerUrl : `${common.nodeServerUrl}/`

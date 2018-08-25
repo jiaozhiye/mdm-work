@@ -14,6 +14,7 @@ const AppStaffOutList = () => import('components/StaffOutList.vue')
 const AppScoreList = () => import('components/ScoreList.vue')
 const AppTrainClassList = () => import('components/TrainClassList.vue')
 const AppArticleList = () => import('components/ArticleList.vue')
+const AppQuestionClassify = () => import('components/QuestionClassify.vue')
 const AppQuestionList = () => import('components/QuestionList.vue')
 const AppAssessList = () => import('components/AssessList.vue')
 const AppJobList = () => import('components/JobList.vue')
@@ -25,6 +26,7 @@ const AppStoreReportList = () => import('components/StoreReportList.vue')
 const AppPersonReportList = () => import('components/PersonReportList.vue')
 const AppEditerList = () => import('components/EditerList.vue')
 const AppEditer = () => import('components/Editer.vue')
+
 
 export const allRoutesMap = [
     {
@@ -116,7 +118,12 @@ export const allRoutesMap = [
             {
                 path: '',
                 name: '考核管理-欢迎',
-                component: AppQuestionList
+                component: AppQuestionClassify
+            },
+            {
+                path: 'questiontype',
+                name: '考题分类',
+                component: AppQuestionClassify
             },
             {
                 path: 'question',

@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item label="调入门店" prop="to_store">
             <el-select v-model="form.to_store" clearable placeholder="请选门店">
-                <el-option v-for="(item, key) in deptList" :key="key" :label="item.name" :value="item.value"></el-option>
+                <el-option v-for="(item, key) in fromDeptList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="说明" prop="desc">
@@ -67,10 +67,10 @@ export default {
     },
     computed: {
         ...mapState('stateChange', ['btnLoading']),
-        ...mapState('dict', ['transferOutList', 'deptList'])
+        ...mapState('dict', ['transferOutList', 'fromDeptList'])
     },
     methods: {
-        ...mapActions('dict', ['createTransferOutList', 'createDeptList']),
+        ...mapActions('dict', ['createTransferOutList', 'createFromDeptList']),
         async saveRecord(status_num){
             const response = await execTransferOut({
                 staff_id: this.recordId,
@@ -102,7 +102,8 @@ export default {
     created(){
         this.form.name = this.params.map(item => item.name).join(',')
         this.createTransferOutList()
-        this.createDeptList()
+        this.createFromDeptList()
+        console.log(9)
     }
 }
 </script>

@@ -14,8 +14,8 @@ export default (function (env){
 	} else if (env == 'development'){
 		envObj.env = '当前工程环境：development'
 		// java 接口
-		envObj.serverUrl = 'http://127.0.0.1:2080/hrms/'
-		// envObj.serverUrl = 'http://59.110.152.54:8082/hrms/'
+		// envObj.serverUrl = 'http://127.0.0.1:2080/hrms/'
+		envObj.serverUrl = 'http://192.168.1.110:8080/hrms/'
 		// node 接口
 		envObj.nodeServerUrl = 'http://127.0.0.1:2080/hrms/'
 	}

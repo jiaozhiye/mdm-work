@@ -35,11 +35,18 @@
             <el-input v-model="form.remark" type="textarea" disabled :rows="3" clearable placeholder="请输入说明..."></el-input>
         </el-form-item>
         <el-form-item label="拒绝原因">
-            <el-input v-model="form.desc" type="textarea" :rows="3" clearable placeholder="请输入拒绝原因..."></el-input>
+            <el-input v-model="form.desc" type="textarea" :rows="3" 
+                :disabled="form.status == '2' || form.status == '3'" 
+                clearable placeholder="请输入拒绝原因...">
+            </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if=" form.status != '2' && form.status != '3' ">
             <el-button type="primary" @click="submitForm('form', 'agree')" :loading="btnLoading">同意</el-button>
             <el-button type="danger" plain @click="submitForm('form', 'refuse')" :loading="btnLoading">拒绝</el-button>
+        </el-form-item>
+        <el-form-item v-else>
+            <el-tag type="danger" v-if="form.status == '2'">已拒绝</el-tag>
+            <el-tag type="success" v-if="form.status == '3'">已同意</el-tag>
         </el-form-item>
     </el-form>
 </div>
@@ -59,7 +66,8 @@ export default {
                 type: '',
                 from_store: '',
                 remark: '',
-                desc: ''
+                desc: '',
+                status: ''
             },
             rules: {
                 work_date: [
@@ -93,7 +101,7 @@ export default {
         },
         async saveRecord(status_num){
             const response = await execApplyIn({
-                status: status_num,
+                status2: status_num,
                 ...this.form
             })
             if (response.code == 1){

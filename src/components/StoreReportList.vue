@@ -95,6 +95,7 @@ export default {
         ...mapState('dict', ['deptList'])
     },
     methods: {
+        ...mapActions('dict', ['createDeptList']),
         async getStoreReportInfo(callback){
             this.loading = !0
             const response = await getStoreReportList({ ...this.search })
@@ -112,6 +113,7 @@ export default {
     },
     created(){
         this.getStoreReportInfo()
+        this.createDeptList()
     }
 }
 </script>

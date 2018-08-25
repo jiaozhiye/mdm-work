@@ -109,6 +109,10 @@
             @keyup.enter.native="searchHandle"
             clearable>
         </el-input>
+        <el-button class="fl" style="margin-left: 10px;" size="small"
+            @click.stop="searchHandle('all')">
+            全部
+        </el-button>
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading" @selection-change="handleSelectionChange">
@@ -273,7 +277,15 @@ export default {
         handleSelectionChange(val){
             this.multipleSelection = val
         },
-        searchHandle(){
+        searchHandle(dir){
+            if (dir === 'all'){
+                this.search.dept = ''
+                this.search.gender = ''
+                this.search.job = ''
+                this.search.kind = []
+                this.search.type = ''
+                this.search.keyword = ''
+            }
             this.getStuffList(1)
         },
         handleCurrentChange(index){

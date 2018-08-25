@@ -3,7 +3,12 @@
     <section class="show-arc-wrapper">
         <h4 class="title">{{ form.title }}</h4>
         <h5 class="sub-desc">创建时间：{{ form.create_time }}　作者：{{ form.author }}</h5>
-        <div class="content" v-html="form.content"></div>
+        <div class="content" >
+            <div v-if="form.video">
+                <video controls width="100%" autoplay :src="video"></video>
+            </div>
+            <div v-html="form.content"></div>
+        </div>
     </section>
 </div>
 </template>
@@ -18,6 +23,7 @@ export default {
         return {
             form: {
                 title: '',
+                video: '',
                 content: '',
                 create_time: '',
                 author: ''
@@ -67,6 +73,8 @@ export default {
 .show-arc-wrapper > .content {
     line-height: 24px;
     padding: 5px 10px;
+    height: calc(100% - 300px);
+    overflow-y: auto;
 }
 .show-arc-wrapper > .content img {
     display: inline-block;

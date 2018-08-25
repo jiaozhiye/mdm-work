@@ -15,7 +15,7 @@
             style="width: 160px; margin-right: 10px;"
             v-model="search.dept" 
             clearable 
-            @change="searchHandle" 
+            @change="searchHandle('dept')" 
             placeholder="门店">
             <el-option
                 v-for="(item, key) in deptList"
@@ -50,16 +50,21 @@
             @change="searchHandle">
         </el-date-picker>
         <div class="search-title fl">搜索条件：</div>
-        <el-input
-            class="fl"
-            style="width: 180px"
+        <el-select 
+            class="fl" 
             size="small"
-            placeholder="员工工号"
-            prefix-icon="el-icon-search"
-            v-model="search.keyword"
-            @keyup.enter.native="searchHandle"
-            clearable>
-        </el-input>
+            style="width: 160px; margin-right: 10px;"
+            v-model="search.keyword" 
+            clearable 
+            @change="searchHandle" 
+            placeholder="员工姓名">
+            <el-option
+                v-for="(item, key) in workerList"
+                :key="key"
+                :label="item.name"
+                :value="item.value">
+            </el-option>
+        </el-select>
     </div>
     <div class="component-main">
         <div style="line-height: 32px; padding-left: 10px;" v-if="staff.name">
@@ -102,6 +107,7 @@ export default {
                 keyword: ''
             },
             list: [],
+            workerList: [],
             staff: {}, // 员工信息
             loading: !1,
             pickerOptions: {
@@ -117,11 +123,13 @@ export default {
         ...mapState('dict', ['deptList'])
     },
     methods: {
+        ...mapActions('dict', ['createDeptList']),
         async getPersonReportInfo(callback){
             this.loading = !0
             const response = await getPersonReportList({ ...this.search })
             if (response.code == 1){
                 this.list = response.data
+                this.workerList = response.staffList
                 this.staff = response.staff
                 callback && callback()
             } else {
@@ -129,12 +137,16 @@ export default {
             }
             this.loading = !1
         },
-        searchHandle(){
+        searchHandle(dir){
+            if (dir === 'dept'){
+                this.search.keyword = ''
+            }
             this.getPersonReportInfo()
         }
     },
     created(){
         this.getPersonReportInfo()
+        this.createDeptList()
     }
 }
 </script>

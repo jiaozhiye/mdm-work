@@ -5,7 +5,7 @@
             <span class="form-record-show">{{ form.name }}</span>
         </el-form-item>
         <el-form-item label="离职日期">
-            <span class="form-record-show">{{ form.hiredate }}</span>
+            <span class="form-record-show">{{ form.leavedate }}</span>
         </el-form-item>
         <el-form-item label="离职原因">
             <span class="form-record-show">{{ form.desc }}</span>

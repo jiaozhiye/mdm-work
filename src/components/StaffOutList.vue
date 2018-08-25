@@ -75,7 +75,7 @@
             @change="searchHandle" 
             placeholder="类型">
             <el-option
-                v-for="(item, key) in transferInList"
+                v-for="(item, key) in transferOutList"
                 :key="key"
                 :label="item.name"
                 :value="item.value">
@@ -91,7 +91,7 @@
             @change="searchHandle" 
             placeholder="状态">
             <el-option
-                v-for="(item, key) in jobStatusList"
+                v-for="(item, key) in staffOutStatusList"
                 :key="key"
                 :label="item.name"
                 :value="item.value">
@@ -107,6 +107,10 @@
             @keyup.enter.native="searchHandle"
             clearable>
         </el-input>
+        <el-button class="fl" style="margin-left: 10px;" size="small"
+            @click.stop="searchHandle('all')">
+            全部
+        </el-button>
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
@@ -187,10 +191,10 @@ export default {
         }
     },
     computed: {
-        ...mapState('dict', ['deptList', 'transferInList', 'jobStatusList'])
+        ...mapState('dict', ['deptList', 'transferOutList', 'staffOutStatusList'])
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createTransferInList', 'createJobStatusList']),
+        ...mapActions('dict', ['createDeptList', 'createTransferOutList', 'createOutStatusList']),
         recordHandler(_id, _type){
             this.dialog[_type] = !0
             this.recordId = _id
@@ -226,7 +230,12 @@ export default {
             }
             this.loading = !1
         },
-        searchHandle(){
+        searchHandle(dir){
+            if (dir === 'all'){
+                for (let attr in this.search){
+                    this.search[attr] = ''
+                }
+            }
             if (moment(this.search.end_date) < moment(this.search.start_date)){
                 this.$message.warning('结束日期不能小于开始日期')
                 return this.search.end_date = ''
@@ -247,8 +256,8 @@ export default {
     created(){
         this.getStuffList()
         this.createDeptList()
-        this.createTransferInList()
-        this.createJobStatusList()
+        this.createTransferOutList()
+        this.createOutStatusList()
     },
     components: {
         AppDialog,

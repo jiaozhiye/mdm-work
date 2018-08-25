@@ -15,7 +15,7 @@
             class="fl"
             style="width: 180px"
             size="small"
-            placeholder="考题名称/拼音"
+            placeholder="考题名称"
             prefix-icon="el-icon-search"
             v-model="search.keyword"
             @keyup.enter.native="searchHandle"
@@ -25,6 +25,8 @@
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading">
             <el-table-column prop="title" label="标题" min-width="250"></el-table-column>
+            <el-table-column prop="kind_id" label="岗位"></el-table-column>
+            <el-table-column prop="type_id" label="分类名称"></el-table-column>
             <el-table-column prop="datetime" label="日期"></el-table-column>
             <el-table-column prop="creater_name" label="发布人"></el-table-column>
             <el-table-column label="操作" width="160">

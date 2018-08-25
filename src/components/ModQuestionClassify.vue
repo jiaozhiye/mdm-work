@@ -1,14 +1,13 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
-        <el-form-item label="岗位" prop="kind_id">
+        <el-form-item label="岗位" prop="kind">
             <el-select 
                 class="fl" 
                 size="small"
-                v-model="form.kind_id" 
+                v-model="form.kind" 
                 clearable 
-                placeholder="选择岗位"
-                @change="changeHandle">
+                placeholder="选择岗位">
                 <el-option
                     v-for="(item, key) in kindsList"
                     :key="key"
@@ -17,25 +16,8 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="分类名称" prop="type_id">
-            <el-select 
-                class="fl" 
-                size="small"
-                v-model="form.type_id" 
-                placeholder="选择分类">
-                <el-option
-                    v-for="(item, key) in classifyList"
-                    :key="key"
-                    :label="item.name"
-                    :value="item.value">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="标题" prop="title">
-            <el-input v-model="form.title" clearable placeholder="请输入考题名称"></el-input>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-            <el-input v-model="form.content" type="textarea" :rows="6" clearable placeholder="请输入考题内容..."></el-input>
+        <el-form-item label="分类名称" prop="name">
+            <el-input v-model="form.name" clearable placeholder="请输入分类名称"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
@@ -46,32 +28,24 @@
 </template>
 
 <script>
-import { addQuestionRecord, getQuestionClaSelect } from 'api'
+import { getQuestionClassifyRecord, modQuestionClassify } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-add-question',
+    name: 'app-mod-question-classify',
+    props: ['recordId'],
     data (){
         return {
             form: {
-                kind_id: '',
-                type_id: '',
-                title: '',
-                content: ''
+                kind: '',
+                name: ''
             },
-            classifyList: [],
             rules: {
-                kind_id: [
+                kind: [
                     { required: true, message: '请选择岗位名称', trigger: 'blur' }
                 ],
-                type_id: [
-                    { required: true, message: '请选择分类名称', trigger: 'blur' }
-                ],
-                title: [
+                name: [
                     { required: true, message: '请输入分类名称', trigger: 'blur' }
-                ],
-                content: [
-                    { required: true, message: '请输入考题内容', trigger: 'blur' }
                 ]
             }
         }
@@ -85,19 +59,16 @@ export default {
     },
     methods: {
         ...mapActions('dict', ['createKindList']),
-        changeHandle(){
-            this.getClassify()
-        },
-        async getClassify(){
-            const response = await getQuestionClaSelect({ dict: this.form.kind_id })
+        async getFormInfo(request, attrName){
+            const response = await request()
             if (response.code == 1){
-                this.classifyList = response.data
+                this[attrName] = response.data || []
             } else {
                 this.$message.error(response.message)
             }
         },
-        async saveRecord(){
-            const response = await addQuestionRecord(this.form)
+        async updateRecord(){
+            const response = await modQuestionClassify({ id: this.recordId, ...this.form })
             if (response.code == 1){
                 this.closePanle()
             } else {
@@ -107,7 +78,7 @@ export default {
         submitForm(){
             this.$refs['form'].validate(valid => {
                 if (valid){
-                    this.saveRecord()
+                    this.updateRecord()
                 } else {
                     console.log('error submit!')
                 }
@@ -121,6 +92,7 @@ export default {
         }
     },
     created(){
+        this.getFormInfo(async () => getQuestionClassifyRecord({ id: this.recordId }), 'form')
         this.createKindList()
     }
 }

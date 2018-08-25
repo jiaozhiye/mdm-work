@@ -21,18 +21,25 @@
     </div>
     <el-form :model="form" ref="form" label-width="70px" size="small">
         <el-form-item label="拒绝原因">
-            <el-input v-model="form.desc" type="textarea" :rows="3" clearable placeholder="请输入拒绝原因..."></el-input>
+            <el-input v-model="form.desc" type="textarea" :rows="3" 
+                :disabled="dataInfo.status == '2' || dataInfo.status == '3'" 
+                clearable placeholder="请输入拒绝原因...">
+            </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if=" dataInfo.status != '2' && dataInfo.status != '3' ">
             <el-button type="primary" @click="submitForm('form', 'agree')" :loading="btnLoading">同意</el-button>
             <el-button type="danger" plain @click="submitForm('form', 'refuse')" :loading="btnLoading">拒绝</el-button>
+        </el-form-item>
+        <el-form-item v-else>
+            <el-tag type="danger" v-if="dataInfo.status == '2'">已拒绝</el-tag>
+            <el-tag type="success" v-if="dataInfo.status == '3'">已同意</el-tag>
         </el-form-item>
     </el-form>
 </div>
 </template>
 
 <script>
-import { getNoticeMoveInById, execApplyIn } from 'api'
+import { getNoticeMoveInById, execApplyInNotice } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -59,10 +66,10 @@ export default {
             }
         },
         async saveRecord(status_num){
-            const response = await execApplyIn({
-                status: status_num,
-                ...this.form,
-                ...this.dataInfo
+            const response = await execApplyInNotice({
+                id: this.dataInfo.id,
+                status2: status_num,
+                ...this.form
             })
             if (response.code == 1){
                 this.closePanle()

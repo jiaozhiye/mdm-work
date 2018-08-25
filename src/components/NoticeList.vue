@@ -134,13 +134,13 @@ export default {
         ...mapActions('dict', ['createDeptList', 'createNoticeStateList', 'createNoticTypeList']),
         recordHandler(_id, _type){
             switch (_type.toString()){
-                case '1':
+                case 'apply_movein':
                     this.currentComponent = 'app-notice-out'
                     break;
-                case '2':
+                case 'movein_notice':
                     this.currentComponent = 'app-notice-in'
                     break;
-                case '3':
+                case 'movein_notice':
                     this.currentComponent = 'app-notice-quit'
                     break;
             }

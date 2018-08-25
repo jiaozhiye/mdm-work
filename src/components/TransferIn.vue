@@ -23,7 +23,7 @@
         <el-form-item label="来源门店" prop="from_store">
             <el-select v-model="form.from_store" clearable placeholder="请选择来源门店">
                 <el-option
-                    v-for="(item, key) in deptList"
+                    v-for="(item, key) in fromDeptList"
                     :key="key"
                     :label="item.name"
                     :value="item.value">
@@ -75,10 +75,10 @@ export default {
     },
     computed: {
         ...mapState('stateChange', ['btnLoading']),
-        ...mapState('dict', ['deptList', 'transferInList'])
+        ...mapState('dict', ['fromDeptList', 'transferInList'])
     },
     methods: {
-        ...mapActions('dict', ['createDeptList', 'createTransferInList']),
+        ...mapActions('dict', ['createFromDeptList', 'createTransferInList']),
         async saveRecord(){
             const response = await staffApplyIn(this.form)
             if (response.code == 1){
@@ -104,7 +104,7 @@ export default {
         }
     },
     created(){
-        this.createDeptList()
+        this.createFromDeptList()
         this.createTransferInList()
     }
 }

@@ -106,6 +106,10 @@
             @keyup.enter.native="searchHandle"
             clearable>
         </el-input>
+        <el-button class="fl" style="margin-left: 10px;" size="small"
+            @click.stop="searchHandle('all')">
+            全部
+        </el-button>
     </div>
     <div class="component-main">
         <el-table size="small" :data="list" stripe border v-loading="loading" @selection-change="handleSelectionChange">
@@ -129,7 +133,7 @@
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="quit_time" label="离职日期"></el-table-column>
+            <el-table-column prop="datetime" label="离职日期"></el-table-column>
             <el-table-column prop="wage" label="薪资"></el-table-column>
             <el-table-column prop="type" label="工作类型"></el-table-column>
             <el-table-column label="操作" width="180">
@@ -245,7 +249,15 @@ export default {
         handleSelectionChange(val){
             this.multipleSelection = val
         },
-        searchHandle(){
+        searchHandle(dir){
+            if (dir === 'all'){
+                this.search.dept = ''
+                this.search.gender = ''
+                this.search.job = ''
+                this.search.kind = []
+                this.search.type = ''
+                this.search.keyword = ''
+            }
             this.getStuffList(1)
         },
         handleCurrentChange(index){

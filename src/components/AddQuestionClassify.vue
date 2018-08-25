@@ -1,19 +1,23 @@
 <template>
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
-        <el-form-item label="分类名称" prop="name">
-            <el-input v-model="form.name" clearable placeholder="请输入分类名称"></el-input>
-        </el-form-item>
-        <el-form-item label="上级分类">
-            <el-select v-model="form.parent_id" clearable placeholder="上级分类">
-                <el-option v-for="(item, key) in classifyList" :key="key" :label="item.name" :value="item.value"></el-option>
+        <el-form-item label="岗位" prop="kind">
+            <el-select 
+                class="fl" 
+                size="small"
+                v-model="form.kind" 
+                clearable 
+                placeholder="选择岗位">
+                <el-option
+                    v-for="(item, key) in kindsList"
+                    :key="key"
+                    :label="item.name"
+                    :value="item.value">
+                </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="排序">
-            <el-input type="number" v-model="form.sort" placeholder="输入数字"></el-input>
-        </el-form-item>
-        <el-form-item label="分类描述">
-            <el-input v-model="form.desc" type="textarea" :rows="4" clearable placeholder="请输入分类描述..."></el-input>
+        <el-form-item label="分类名称" prop="name">
+            <el-input v-model="form.name" clearable placeholder="请输入分类名称"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
@@ -24,20 +28,21 @@
 </template>
 
 <script>
-import { addTrainClass } from 'api'
+import { addQuestionClassify } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'app-add-class',
+    name: 'app-add-question-classify',
     data (){
         return {
             form: {
-                name: '',
-                parent_id: '',
-                sort: '',
-                desc: ''
+                kind: '',
+                name: ''
             },
             rules: {
+                kind: [
+                    { required: true, message: '请选择岗位名称', trigger: 'blur' }
+                ],
                 name: [
                     { required: true, message: '请输入分类名称', trigger: 'blur' }
                 ]
@@ -46,12 +51,15 @@ export default {
     },
     computed: {
         ...mapState('stateChange', ['btnLoading']),
-        ...mapState('dict', ['classifyList'])
+        ...mapState('dict', ['kindList']),
+        kindsList(){
+            return this.kindList.slice(1)
+        }
     },
     methods: {
-        ...mapActions('dict', ['createClassifyList']),
+        ...mapActions('dict', ['createKindList']),
         async saveRecord(){
-            const response = await addTrainClass(this.form)
+            const response = await addQuestionClassify(this.form)
             if (response.code == 1){
                 this.closePanle()
             } else {
@@ -75,7 +83,7 @@ export default {
         }
     },
     created(){
-        this.createClassifyList()
+        this.createKindList()
     }
 }
 </script>

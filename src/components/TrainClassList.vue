@@ -69,7 +69,7 @@ export default {
             this.loading = !1
         },
         deleteHandler(_id){
-            this.$confirm(`确认删除次分类吗?`, '提示', {
+            this.$confirm(`确认删除此分类吗?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

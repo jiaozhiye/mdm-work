@@ -2,6 +2,7 @@ import * as types from '../types'
 
 import {
     getDeptSelect,
+    getFromDeptSelect,
     getClassifySelect,
     getDictSelect,
     getPlanThead
@@ -23,6 +24,8 @@ const state = {
     ],
     // 门店(部门)列表
     deptList: [],
+    // 来源门店
+    fromDeptList: [],
     // 职位列表
     jobList: [],
     // 岗位列表
@@ -33,6 +36,8 @@ const state = {
     cityList: [],
     // 员工在职状态列表
     jobStatusList: [],
+    // 员工在职状态列表 - 包含禁用项
+    jobStatusDisabledList: [],
     // 通知的状态
     noticStateList: [],
     // 职位级别
@@ -48,7 +53,9 @@ const state = {
     // 通知类型
     noticTypeList: [],
     // 排班表头列表
-    planTheadList: []
+    planTheadList: [],
+    // 调出员工状态
+    staffOutStatusList: []
 }
 
 // actions
@@ -58,6 +65,14 @@ const actions = {
         const response = await getDeptSelect()
         commit({
             type: types.DEPT_SELECT,
+            data: response.data || []
+        })
+    },
+    async createFromDeptList ({ state, commit }, params){
+        if (state.fromDeptList.length) return
+        const response = await getFromDeptSelect()
+        commit({
+            type: types.FROM_DEPT_SELECT,
             data: response.data || []
         })
     },
@@ -98,6 +113,14 @@ const actions = {
         const response = await getDictSelect({ dict: 'job_type' })
         commit({
             type: types.JOB_STATUS_SELECT,
+            data: response.data || []
+        })
+    },
+    async createJobStatusDisabledList ({ state, commit }, params){
+        if (state.jobStatusDisabledList.length) return
+        const response = await getDictSelect({ dict: 'job_type_disabled' })
+        commit({
+            type: types.JOB_STATUS_DISABLED_SELECT,
             data: response.data || []
         })
     },
@@ -164,13 +187,24 @@ const actions = {
             type: types.PLAN_THEAD,
             data: response.data || []
         })
-    }
+    },
+    async createOutStatusList ({ state, commit }, params){
+        if (state.staffOutStatusList.length) return
+        const response = await getDictSelect({ dict: 'out_status' })
+        commit({
+            type: types.STAFF_OUT_STATUS,
+            data: response.data || []
+        })
+    },
 }
 
 // mutations
 const mutations = {
     [types.DEPT_SELECT](state, { data }){
         state.deptList = data
+    },
+    [types.FROM_DEPT_SELECT](state, { data }){
+        state.fromDeptList = data
     },
     [types.JOB_SELECT](state, { data }){
         state.jobList = data
@@ -186,6 +220,9 @@ const mutations = {
     },
     [types.JOB_STATUS_SELECT](state, { data }){
         state.jobStatusList = data
+    },
+    [types.JOB_STATUS_DISABLED_SELECT](state, { data }){
+        state.jobStatusDisabledList = data
     },
     [types.NOTICE_STATE_SELECT](state, { data }){
         state.noticStateList = data
@@ -210,6 +247,9 @@ const mutations = {
     },
     [types.PLAN_THEAD](state, { data }){
         state.planTheadList = data
+    },
+    [types.STAFF_OUT_STATUS](state, { data }){
+        state.staffOutStatusList = data
     }
 }
 

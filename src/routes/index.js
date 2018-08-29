@@ -26,7 +26,8 @@ const AppStoreReportList = () => import('components/StoreReportList.vue')
 const AppPersonReportList = () => import('components/PersonReportList.vue')
 const AppEditerList = () => import('components/EditerList.vue')
 const AppEditer = () => import('components/Editer.vue')
-
+const AppAreaList = () => import('components/AreaList.vue')
+const AppStaffAreaList = () => import('components/StaffAreaList.vue')
 
 export const allRoutesMap = [
     {
@@ -178,6 +179,16 @@ export const allRoutesMap = [
                 path: 'table',
                 name: '排班表',
                 component: AppPlanJob
+            },
+            {
+                path: 'init',
+                name: '区域初始化',
+                component: AppAreaList
+            },
+            {
+                path: 'edit',
+                name: '区域编辑',
+                component: AppStaffAreaList
             }
         ]
     },

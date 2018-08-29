@@ -1,51 +1,26 @@
-const path = require('path')
 const Koa = require('koa')
-const debug = require('debug')()
-const response = require('./middlewares/response')
-const request = require('./middlewares/request')
-const proxy = require('koa-proxies')
-const cors = require('@koa/cors')
-const session = require('koa-session')
-const bodyParser = require('koa-bodyparser')
-const koaStatic = require('koa-static')
+const debug = require('debug')('debug:log')
 const config = require('./config')
+const middleware = require('./middlewares')
+const router = require('./routes')
+const proxy = require('koa-proxies')
 const app = new Koa()
 
-// use方法 -> 将中间件方法挂载到koa应用, 相应所有http请求
-// 使用 session 中间件
-app.keys = ['a newer secret']
-app.use(session(app))
-
-// 使用 cors 中间件处理跨域
-app.use(cors({
-    origin: config.whitelist[0],
-    credentials: true
-}))
-
-// 解析请求体
-app.use(bodyParser())
-
-// 使用响应处理中间件
-app.use(response)
-
-// 使用请求处理中间件
-app.use(request)
-
-// 静态资源服务中间件
-app.use(koaStatic(path.join(__dirname, 'uploads')))
+// 挂载中间件
+middleware(app)
 
 // 引入路由分发
-const router = require('./routes')
 app.use(router.routes())
 
-// 服务代理中间件 -> http://127.0.0.1:2080/hrms/** 请求被代理到 https://59.110.152.54/hrms/** 
+// 服务代理中间件 -> http://127.0.0.1:2080/hrms/** 请求被代理到 https://59.110.152.54:8082/hrms/** 
 app.use(proxy('/hrms', {
-    target: 'http://59.110.152.54',
+    target: 'http://59.110.152.54:8082',
     changeOrigin: true,
     logs: true,
     headers: {
         host: '59.110.152.54',
-        referer: 'http://59.110.152.54'
+        referer: 'http://59.110.152.54:8082',
+        cookie: 'JSESSIONID=374FB297D49D70F095800DC9A76E6D7E.jvm1' // 为了处理服务端session校验
     }
 }))
 

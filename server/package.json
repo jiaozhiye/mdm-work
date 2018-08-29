@@ -15,7 +15,7 @@
         "cuid": "^2.1.1",
         "dateformat": "^3.0.3",
         "formidable-upload-koa": "^1.0.1",
-        "knex": "^0.13.0",
+        "jsonwebtoken": "^8.3.0",
         "koa": "^2.0.0",
         "koa-bodyparser": "^3.2.0",
         "koa-proxies": "^0.7.0",

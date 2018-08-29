@@ -1,60 +1,5 @@
-import axios from 'axios'
-import qs from 'qs'
 import common from 'assets/js/common'
-import { removeToken } from 'assets/js/auth'
-import store from 'store'
-import { Message } from 'element-ui'
-
-console.info(common.env)
-const serverUrl = common.serverUrl.charAt(common.serverUrl.length - 1) === '/' 
-    ? common.serverUrl : `${common.serverUrl}/`
-
-const instance = axios.create({
-    baseURL: serverUrl,
-    timeout: 5000,
-    // withCredentials: true, // 跨域请求时是否需要使用凭证
-    paramsSerializer: params => {
-        // 序列化 GET 请求参数 -> a: [1, 2] => a=1&a=2
-        // 返回值必须是字符串类型
-        return qs.stringify(params, { arrayFormat: 'repeat' })
-    },
-    transformRequest: [data => {
-        // 在向服务器发送前修改请求数据，只适用于 POST
-        // 返回值必须是字符串类型
-        return qs.stringify(data, { arrayFormat: 'repeat' })
-    }],
-    headers: {
-        post: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }
-})
-
-// http 请求拦截器
-instance.interceptors.request.use(config => {
-    store.dispatch('stateChange/setBtnLoading', !0)
-    return config
-}, error => {
-    store.dispatch('stateChange/setBtnLoading', !1)
-    Message.error('数据加载超时！')
-    return Promise.reject(error)
-})
-
-// http 响应拦截器
-instance.interceptors.response.use(response => {
-    store.dispatch('stateChange/setBtnLoading', !1)
-    // 如果服务端 session 过期，移除cookie
-    if (response.data.code == 'nosid'){
-        removeToken()
-    }
-    return response.data
-}, error => {
-    store.dispatch('stateChange/setBtnLoading', !1)
-    Message.error('数据加载失败！')
-    return Promise.reject(error)
-})
-
-/**
- * 向后台请求数据的 API 接口
- */
+import { instance } from './fetch'
 
 // 登录接口
 export const doLogin = params => instance.post('/login', params)
@@ -317,6 +262,30 @@ export const getFromDeptSelect = params => instance.get('/mgr/apply/getFromStore
 // 调入通知
 export const execApplyInNotice = params => instance.post('/mgr/moveIn/in', params)
 
+// 新增区域
+export const addAreaInfo = params => instance.get('/mgr/areaCtrl/add', {params})
+
+// 修改区域
+export const modAreaInfo = params => instance.get('/mgr/areaCtrl/update', {params})
+
+// 获取区域记录
+export const getAreaRecord = params => instance.get('/mgr/areaCtrl/showById', {params})
+
+// 删除区域记录
+export const delAreaRecord = params => instance.get('/mgr/areaCtrl/delete', {params})
+
+// 获取区域列表
+export const getAreaList = params => instance.get('/mgr/areaCtrl/list', {params})
+
+// 获取区域员工列表
+export const getStoreAreaList = params => instance.get('/mgr/areaCtrl/showAreaStaff', {params})
+
+// 获取区域下员工列表
+export const getAreaStaff = params => instance.get('/mgr/areaCtrl/getStaff', {params})
+
+// 保存区域员工
+export const addAreaStaff = params => instance.get('/mgr/areaCtrl/edit', {params})
+
 // nodejs 接口
 const nodeServerUrl = common.nodeServerUrl.charAt(common.nodeServerUrl.length - 1) === '/' 
     ? common.nodeServerUrl : `${common.nodeServerUrl}/`
@@ -358,9 +327,6 @@ export const getPosterPageList = params => instance.get('/poster/pagelist', {par
 
 // 删除海报记录
 export const removePoster = params => instance.get('/poster/del_poster', {params, baseURL: nodeServerUrl})
-
-
-
 
 
 

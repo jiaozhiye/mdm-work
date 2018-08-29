@@ -1,4 +1,4 @@
-const debug = require('debug')()
+const debug = require('debug')('debug:log')
 
 /**
  * 响应处理模块
@@ -26,7 +26,7 @@ module.exports = async (ctx, next) => {
         // 输出详细的错误信息
         ctx.body = {
             code: -1,
-            error: e && e.message ? e.message : e.toString()
+            message: e && e.message ? e.message : e.toString()
         }
     }
 }

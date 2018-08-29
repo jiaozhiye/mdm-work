@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { testApi } from 'api'
 export default {
     name: 'app-home',
     data (){

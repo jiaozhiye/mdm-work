@@ -25,6 +25,7 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'app-add-area',
+    props: ['dept'],
     data (){
         return {
             form: {
@@ -48,7 +49,7 @@ export default {
     methods: {
         ...mapActions('dict', ['createKindList']),
         async saveRecord(){
-            const response = await addAreaInfo(this.form)
+            const response = await addAreaInfo({ dept: this.dept, ...this.form })
             if (response.code == 1){
                 this.closePanle()
             } else {

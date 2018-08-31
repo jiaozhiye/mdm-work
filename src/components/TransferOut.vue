@@ -20,7 +20,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="调入门店" prop="to_store">
-            <el-select v-model="form.to_store" clearable placeholder="请选门店">
+            <el-select v-model="form.to_store" placeholder="请选门店">
                 <el-option v-for="(item, key) in fromDeptList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>

@@ -20,7 +20,7 @@ app.use(proxy('/hrms', {
     headers: {
         host: '59.110.152.54',
         referer: 'http://59.110.152.54:8082',
-        cookie: 'JSESSIONID=374FB297D49D70F095800DC9A76E6D7E.jvm1' // 为了处理服务端session校验
+        cookie: 'JSESSIONID=F03046CBA902B2F121DA976B72881A95.jvm1' // 为了处理服务端session校验
     }
 }))
 

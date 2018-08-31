@@ -29,17 +29,13 @@ const AppEditer = () => import('components/Editer.vue')
 const AppAreaList = () => import('components/AreaList.vue')
 const AppStaffAreaList = () => import('components/StaffAreaList.vue')
 
-export const allRoutesMap = [
+export const asyncRouterMap = [
     {
         path: '/sys_setting',
         name: '系统管理',
         component: Layout,
+        redirect: '/sys_setting/store_list',
         children: [
-            {
-                path: '',
-                name: '系统管理-欢迎',
-                component: Home
-            },
             {
                 path: 'store_list',
                 name: '门店列表',
@@ -76,12 +72,8 @@ export const allRoutesMap = [
         path: '/performance',
         name: '绩效管理',
         component: Layout,
+        redirect: '/performance/list',
         children: [
-            {
-                path: '',
-                name: '绩效管理-欢迎',
-                component: AppScoreList
-            },
             {
                 path: 'list',
                 name: '绩效列表',
@@ -93,12 +85,8 @@ export const allRoutesMap = [
         path: '/train',
         name: '培训管理',
         component: Layout,
+        redirect: '/train/type_list',
         children: [
-            {
-                path: '',
-                name: '培训管理-欢迎',
-                component: AppTrainClassList
-            },
             {
                 path: 'type_list',
                 name: '分类列表',
@@ -115,12 +103,8 @@ export const allRoutesMap = [
         path: '/assessment',
         name: '考核管理',
         component: Layout,
+        redirect: '/assessment/questiontype',
         children: [
-            {
-                path: '',
-                name: '考核管理-欢迎',
-                component: AppQuestionClassify
-            },
             {
                 path: 'questiontype',
                 name: '考题分类',
@@ -142,12 +126,8 @@ export const allRoutesMap = [
         path: '/notice',
         name: '消息管理',
         component: Layout,
+        redirect: '/notice/list',
         children: [
-            {
-                path: '',
-                name: '消息管理-欢迎',
-                component: AppNoticeList
-            },
             {
                 path: 'list',
                 name: '通知列表',
@@ -159,12 +139,8 @@ export const allRoutesMap = [
         path: '/scheduling',
         name: '排班管理',
         component: Layout,
+        redirect: '/scheduling/variable_time_guide',
         children: [
-            {
-                path: '',
-                name: '排班管理-欢迎',
-                component: AppTimeGuide
-            },
             {
                 path: 'variable_time_guide',
                 name: '可变工时',
@@ -196,12 +172,8 @@ export const allRoutesMap = [
         path: '/editer',
         name: '海报管理',
         component: Layout,
+        redirect: '/editer/list',
         children: [
-            {
-                path: '',
-                name: '海报管理-欢迎',
-                component: AppEditerList
-            },
             {
                 path: 'list',
                 name: '海报列表',
@@ -218,12 +190,8 @@ export const allRoutesMap = [
         path: '/work_time',
         name: '工资管理',
         component: Layout,
+        redirect: '/work_time/any_store',
         children: [
-            {
-                path: '',
-                name: '单店报表-欢迎',
-                component: AppStoreReportList
-            },
             {
                 path: 'any_store',
                 name: '单店报表',
@@ -241,12 +209,26 @@ export const allRoutesMap = [
 export const constantRouterMap = [
     {
         path: '/login',
-        name: 'Login',
-        component: Login
+        name: '登录',
+        component: Login,
+        hidden: true
+    },
+    {
+        path: '/',
+        name: '',
+        component: Layout,
+        redirect: '/home',
+        children: [
+            {
+                path: 'home',
+                name: '首页',
+                component: Home
+            }
+        ]
     },
     {
         path: '/setting',
-        name: 'Setting',
+        name: '设置',
         component: Layout,
         children: [
             {

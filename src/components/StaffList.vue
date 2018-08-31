@@ -23,7 +23,6 @@
             size="small"
             style="width: 160px; margin-right: 10px;"
             v-model="search.dept" 
-            clearable 
             @change="searchHandle" 
             placeholder="门店">
             <el-option
@@ -136,7 +135,7 @@
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="wage" label="薪资"></el-table-column>
+            <el-table-column prop="wage" label="薪资(兼职/全职)"></el-table-column>
             <el-table-column prop="type" label="工作类型"></el-table-column>
             <el-table-column label="状态" width="120">
                 <template slot-scope="scope">
@@ -286,7 +285,7 @@ export default {
         },
         searchHandle(dir){
             if (dir === 'all'){
-                this.search.dept = ''
+                this.search.dept = this.deptId
                 this.search.gender = ''
                 this.search.job = ''
                 this.search.kind = []

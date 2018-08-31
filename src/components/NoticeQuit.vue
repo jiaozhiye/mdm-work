@@ -14,7 +14,7 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="所属门店" prop="from_store">
-            <el-select v-model="form.from_store" clearable disabled placeholder="请选择所属门店">
+            <el-select v-model="form.from_store" disabled placeholder="请选择所属门店">
                 <el-option
                     v-for="(item, key) in deptList"
                     :key="key"

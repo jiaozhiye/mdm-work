@@ -1,4 +1,4 @@
-import router, { allRoutesMap } from 'routes'
+import router from 'routes'
 import store from 'store'
 import { getToken } from 'assets/js/auth'
 import NProgress from 'nprogress' // Progress 进度条
@@ -9,33 +9,6 @@ const list = []
 
 // 不重定向白名单
 const whiteList = ['/login']
-
-// 生成路由列表方法
-const GenerateRoutes = (routesMap, navList) => {
-    // console.log(routesMap, navList)
-    const routes = routesMap.filter(item => {
-        if (navList.some(val => item.name === val.title)){
-            return item
-        }
-    })
-
-    routes.forEach(item => {
-        let _arr = []
-        let element = navList.find(val => val.title === item.name)
-        element.list.forEach(val => {_arr = _arr.concat(val.list)})
-        for (let i = 0; i < item.children.length; i++){
-            if (item.children[i].path != '' && !(_arr.some(val => item.children[i].name === val.title))){
-                item.children.splice(i, 1)
-                i--
-            }
-        }
-    })
-
-    let redirectPath = routes.length ? routes[0].path : '/login'
-    routes.push({ path: '*', redirect: redirectPath, hidden: true })
-
-    return routes
-}
 
 const messageConfirm = next => {
     MessageBox.confirm('您有未保存的数据，确认离开此页面吗?', '提示', {
@@ -58,8 +31,9 @@ router.beforeEach(async (to, from, next) => {
             if ( store.state.app.navList.length == 0 ){
                 // 通过 vuex 管理导航数据
                 await store.dispatch('app/createNavList', list)
+                store.dispatch('app/createRouterMap')
                 // 生成可访问的路由表
-                router.addRoutes(GenerateRoutes(allRoutesMap, store.state.app.navList))
+                router.addRoutes(store.state.app.routerMap)
                 // hack 方法 确保 addRoutes 已完成
                 next({ ...to, replace: true })
             } else {

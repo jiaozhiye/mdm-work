@@ -43,7 +43,7 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="所在门店" prop="dept_id">
-            <el-select v-model="form.dept_id" disabled clearable placeholder="请选门店">
+            <el-select v-model="form.dept_id" disabled placeholder="请选门店">
                 <el-option v-for="(item, key) in deptList" :key="key" :label="item.name" :value="item.value"></el-option>
             </el-select>
         </el-form-item>

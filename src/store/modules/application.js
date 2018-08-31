@@ -1,13 +1,41 @@
 import * as types from '../types'
 import Cookies from 'js-cookie'
 import { setToken, removeToken } from 'assets/js/auth'
-
+import { constantRouterMap, asyncRouterMap } from 'routes'
 import { getNavList } from 'api'
+
+// 生成路由列表方法
+const GenerateRoutes = (routesMap, navList) => {
+    // console.log(routesMap, navList)
+    const routes = routesMap.filter(item => {
+        if (navList.some(val => item.name === val.title)){
+            return item
+        }
+    })
+
+    routes.forEach(item => {
+        if (!item) return
+        let _arr = []
+        let element = navList.find(val => val.title === item.name)
+        element.list.forEach(val => {_arr = _arr.concat(val.list)})
+        for (let i = 0; i < item.children.length; i++){
+            if (item.children[i].path != '' && !(_arr.some(val => item.children[i].name === val.title))){
+                item.children.splice(i, 1)
+                i--
+            }
+        }
+    })
+
+    routes.push({ path: '*', redirect: '/' })
+
+    return routes
+}
 
 // state
 const state = {
     loginInfo: {},
-    navList: []
+    navList: [],
+    routerMap: []
 }
 
 // actions
@@ -34,7 +62,13 @@ const actions = {
         const response = await getNavList()
         commit({
             type: types.NAVLIST,
-            data: response.data || []
+            data: response.data || params
+        })
+    },
+    createRouterMap ({ commit, state }){
+        commit({
+            type: types.ROUTERMAP,
+            data: GenerateRoutes(asyncRouterMap, state.navList)
         })
     }
 }
@@ -49,6 +83,9 @@ const mutations = {
     },
     [types.NAVLIST](state, { data }){
         state.navList = data
+    },
+    [types.ROUTERMAP](state, { data }){
+        state.routerMap = data
     }
 }
 

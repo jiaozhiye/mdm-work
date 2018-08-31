@@ -10,8 +10,8 @@
   },
   "homepage": "https://github.com/jiaozhiye/mdm-work",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.dev.conf.js --open --hot",
-    "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.prod.conf.js --progress"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.conf.js --progress --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js --progress"
   },
   "dependencies": {
     "axios": "^0.17.1",
@@ -45,7 +45,6 @@
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^2.30.1",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
-    "sass-loader": "^7.1.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^1.0.1",
     "vue-loader": "^13.3.0",

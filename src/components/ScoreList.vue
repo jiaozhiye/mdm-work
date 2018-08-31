@@ -14,7 +14,6 @@
             size="small"
             style="width: 160px; margin-right: 10px;"
             v-model="search.store_id" 
-            clearable 
             @change="searchHandle" 
             placeholder="门店">
             <el-option

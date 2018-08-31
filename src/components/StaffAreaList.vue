@@ -14,7 +14,6 @@
             size="small"
             style="width: 160px; margin-right: 10px;"
             v-model="search.dept" 
-            clearable 
             @change="searchHandle" 
             placeholder="门店">
             <el-option
@@ -28,7 +27,7 @@
         <el-date-picker
             class="fl" 
             size="small"
-            style="margin-right: 10px;"
+            style="width: 180px; margin-right: 10px;"
             v-model="search.start_date"
             type="date"
             placeholder="选择日期"

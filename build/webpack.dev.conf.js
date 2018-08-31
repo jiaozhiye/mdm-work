@@ -21,9 +21,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         clientLogLevel: 'warning',
         historyApiFallback: {
             rewrites: [{
-                from: /.*/,
-                to: path.posix.join(config.dev.assetsPublicPath, 'index.html')
-            }, ],
+                from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html')
+            }],
         },
         hot: true,
         contentBase: false, // since we use CopyWebpackPlugin.

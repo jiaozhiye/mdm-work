@@ -22,7 +22,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="调入门店" prop="from_store">
-            <el-select v-model="form.from_store" clearable disabled placeholder="请选择调入门店">
+            <el-select v-model="form.from_store" disabled placeholder="请选择调入门店">
                 <el-option
                     v-for="(item, key) in deptList"
                     :key="key"

@@ -70,11 +70,14 @@ export default {
     text-align: center;
     line-height: 24px;
 }
-.show-arc-wrapper > .content > article {
-    line-height: 24px;
-    padding: 5px 10px;
-    height: calc(100% - 300px);
+.show-arc-wrapper > .content {
+    margin-top: 5px;
+    height: calc(100% - 290px);
     overflow-y: auto;
+}
+.show-arc-wrapper > .content > article {
+    padding: 5px 10px;
+    line-height: 24px;
 }
 .show-arc-wrapper > .content > article img {
     display: inline-block;

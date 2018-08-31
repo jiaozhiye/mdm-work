@@ -1,10 +1,10 @@
 <template>
 <el-container class="is-vertical my-app">
     <app-header style="height: 50px">
-        <app-head-nav slot="topnav" :navList="navList" :curIndex="curIndex"></app-head-nav>
+        <app-head-nav slot="topnav" :list="navList" :path="routerPath"></app-head-nav>
     </app-header>
     <el-container>
-        <app-sidebar :list="sidebarList" :active="sidebarActive" :openeds="sidebarOpeneds"></app-sidebar>
+        <app-sidebar :list="sidebarList" :path="routerPath"></app-sidebar>
         <el-main>
             <transition name="router">
                 <router-view class="view-wrapper" :key="key"></router-view>
@@ -16,7 +16,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { getUrlHash } from 'assets/js/util'
 import { doLogin } from 'api'
 
 import AppHeader from 'components/Header.vue'
@@ -27,68 +26,36 @@ export default {
     name: 'Layout',
     data (){
         return {
-            curIndex: 0, // 当前一级分类索引
-            parentDepth: '', // 父级元素的深度
-            sidebarList: [], // 侧边栏分类数组
-            sidebarActive: '', // 侧边栏选中
-            sidebarOpeneds: '' // 侧边栏展开
+            sidebarList: [] // 侧边栏分类数组
         }
     },
     computed: {
         ...mapState('app', ['navList']),
         ...mapState('dict', ['planTheadList']),
-        key (){
+        routerPath(){
+            return this.$route.path
+        },
+        key(){
             return this.$route.name !== undefined ? this.$route.name + +new Date() : 'view-' + +new Date()
         }
     },
     watch: {
         $route (to, from){
-            if (this.navList.length > 0 && to.path.split('/').length < 3){
-                this.setNavInfo()
-            }
+            this.setNavInfo()
         }
     },
     created(){
-        this.iterFunc(this.navList, '')
         this.setNavInfo()
         this.createPlanTheadList()
     },
     methods: {
         ...mapActions('dict', ['createPlanTheadList']),
         setNavInfo(){
-            // 处理 hash 值
-            let _hash = getUrlHash()
-            // 获取一级分类索引
-            this.curIndex = this.navList.findIndex(item => item.link === '/' + _hash.split('/')[1])
-            // console.log(this.curIndex)
-            if (this.curIndex === -1) this.curIndex = 0
-            // 设置导航菜单信息
-            this.sidebarList = _.cloneDeep(this.navList[this.curIndex].list)
-            // 获取父元素的深度
-            this.findParDepth(this.navList, _hash)
-            // console.log(_hash, this.parentDepth)
-            // 切换导航菜单选中状态
-            this.sidebarActive  = _hash
-            this.sidebarOpeneds = this.parentDepth
-        },
-        iterFunc(arr, str){
-            for (let i = 0; i < arr.length; i++){
-                arr[i].depth = str + i
-                if (_.isArray(arr[i].list)){
-                    this.iterFunc(arr[i].list, arr[i].depth + '-')
-                }
+            let curNavObj = this.navList.find(item => item.link === '/' + this.routerPath.split('/')[1])
+            if (!curNavObj){
+                curNavObj = this.navList[0] || []
             }
-        },
-        findParDepth(arr, str){
-            for (let i = 0; i < arr.length; i++){
-                if (arr[i].link === str){
-                    this.parentDepth = arr[i].depth.slice(0, -2)
-                } else {
-                    if (_.isArray(arr[i].list)){
-                        this.findParDepth(arr[i].list, str)
-                    }
-                }
-            }
+            this.sidebarList = curNavObj.list
         }
     },
     components: {

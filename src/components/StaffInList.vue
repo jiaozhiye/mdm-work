@@ -20,7 +20,6 @@
             size="small"
             style="width: 120px; margin-right: 10px;"
             v-model="search.out_store_id" 
-            clearable 
             @change="searchHandle" 
             placeholder="调出门店">
             <el-option
@@ -36,7 +35,6 @@
             size="small"
             style="width: 120px; margin-right: 10px;"
             v-model="search.in_store_id" 
-            clearable 
             @change="searchHandle" 
             placeholder="调入门店">
             <el-option
@@ -75,7 +73,7 @@
         <el-select 
             class="fl" 
             size="small"
-            style="width: 80px; margin-right: 10px;"
+            style="width: 100px; margin-right: 10px;"
             v-model="search.type" 
             clearable 
             @change="searchHandle" 
@@ -213,6 +211,10 @@ export default {
         searchHandle(dir){
             if (dir === 'all'){
                 for (let attr in this.search){
+                    if (attr == 'in_store_id'){
+                        this.search[attr] = this.deptId
+                        continue
+                    }
                     this.search[attr] = ''
                 }
             }

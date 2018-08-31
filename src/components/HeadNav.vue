@@ -1,7 +1,7 @@
 <template>
 <nav class="head-nav">
    <ul class="clearFix">
-        <li v-for="(item, key) in navList" :key="key" :class="{active: key == curIndex}">
+        <li v-for="(item, key) in list" :key="key" :class="{ active: path.indexOf(item.link) != -1 }">
             <router-link :to="item.link">
                 <i class="app-icon" :class="'graph-' + item.iconName"></i>
                 <span>{{ item.title }}</span>
@@ -15,13 +15,13 @@
 export default {
     name: 'app-head-nav',
     props: {
-        navList: {
+        list: {
             type: Array,
             default: []
         },
-        curIndex: {
-            type: Number,
-            default: 0
+        path: {
+            type: String,
+            default: '/'
         }
     }
 }

@@ -46,6 +46,8 @@ export default {
         async saveRecord(){
             const response = await addAreaStaff({
                 id: this.recordId,
+                dept: this.dept,
+                date: this.date,
                 ...this.form
             })
             if (response.code == 1){

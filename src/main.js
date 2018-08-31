@@ -8,7 +8,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from 'routes'
 import store from 'store'
-import './permission'
+import 'routes/permission'
 import _ from 'lodash'
 
 import ElementUI from 'element-ui'

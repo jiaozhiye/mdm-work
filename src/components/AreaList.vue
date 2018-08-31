@@ -14,7 +14,6 @@
             size="small"
             style="width: 160px; margin-right: 10px;"
             v-model="search.dept" 
-            clearable 
             @change="searchHandle" 
             placeholder="门店">
             <el-option
@@ -52,7 +51,7 @@
         </el-table>
     </div>
     <app-dialog title="新增区域" :visible.sync="dialog.addVisible">
-        <app-add-area @reloadEvent="reloadGetData"></app-add-area>
+        <app-add-area :dept="search.dept" @reloadEvent="reloadGetData"></app-add-area>
     </app-dialog>
     <app-dialog title="修改区域" :visible.sync="dialog.modVisible">
         <app-mod-area :record-id="recordId" @reloadEvent="reloadGetData"></app-mod-area>

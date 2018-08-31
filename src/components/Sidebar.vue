@@ -1,18 +1,17 @@
 <template>
 <div class="app-sidebar">
-    <el-menu router class="sidebar-menu" 
-        :default-active="active" 
-        :default-openeds="[openeds]"
+    <el-menu router unique-opened class="sidebar-menu" 
+        :default-active="path" 
         background-color="#001529"
         text-color="#fff"
         active-text-color="#ffd04b"
         :collapse="isCollapse">
-        <el-submenu v-for="(val, key) in list" :key="key" :index="val.depth">
+        <el-submenu v-for="val in list" :key="val.title" :index="val.title">
             <template slot="title">
                 <i :class="'el-icon-' + val.iconName"></i>
                 <span>{{ val.title }}</span>
             </template>
-            <el-menu-item v-for="(item, index) in val.list" :key="index" :index="item.link">
+            <el-menu-item v-for="item in val.list" :key="item.link" :index="item.link">
                 {{ item.title }}
             </el-menu-item>
         </el-submenu>
@@ -28,8 +27,7 @@ export default {
     name: 'app-sidebar',
     props: {
         list: Array,
-        active: String,
-        openeds: String
+        path: String
     },
     data(){
         return {

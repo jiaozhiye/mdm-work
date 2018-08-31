@@ -13,20 +13,20 @@
                 <span class="form-record-show">{{ form.name }}</span>
             </el-form-item>
             <el-form-item label="性别：">
-                <span class="form-record-show">{{ form.gender }}</span>
+                <span class="form-record-show">{{ form.gender_text }}</span>
             </el-form-item>
             <el-form-item label="门店：">
-                <span class="form-record-show">{{ form.store }}</span>
+                <span class="form-record-show">{{ form.dept_text }}</span>
             </el-form-item>
             <el-form-item label="职务：">
-                <span class="form-record-show">{{ form.job }}</span>
+                <span class="form-record-show">{{ form.job_text }}</span>
             </el-form-item>
             <el-form-item label="电话：">
                 <span class="form-record-show">{{ form.phone }}</span>
             </el-form-item>
             <h5 class="form-part-line">帐号信息</h5>
-            <el-form-item label="邮箱：">
-                <span class="form-record-show">{{ form.email }}</span>
+            <el-form-item label="登录名：">
+                <span class="form-record-show">{{ form.username }}</span>
             </el-form-item>
             <el-form-item label="密码：">
                 <span class="form-record-show">
@@ -55,11 +55,11 @@ export default {
         return {
             form: {
                 name: '',
-                gender: '',
-                store: '',
-                job: '',
+                gender_text: '',
+                dept_text: '',
+                job_text: '',
                 phone: '',
-                email: '',
+                username: '',
                 password: ''
             },
             dialog: {

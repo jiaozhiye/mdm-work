@@ -2,13 +2,13 @@
 <div style="width: 70%;">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small">
         <el-form-item label="当前密码" prop="currentPwd">
-            <el-input v-model="form.currentPwd" clearable placeholder="当前密码..."></el-input>
+            <el-input v-model="form.currentPwd" clearable placeholder="当前密码"></el-input>
         </el-form-item>
         <el-form-item label="新密码" prop="password">
-            <el-input v-model="form.password" clearable placeholder="新密码..."></el-input>
+            <el-input v-model="form.password" clearable placeholder="新密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPwd">
-            <el-input v-model="form.confirmPwd" clearable placeholder="确认密码..."></el-input>
+            <el-input v-model="form.confirmPwd" clearable placeholder="确认密码"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm" :loading="btnLoading">提交</el-button>
@@ -60,7 +60,8 @@ export default {
         async saveRecord(){
             const response = await updateUserInfo(this.form)
             if (response.code == 1){
-                this.closePanle()
+                this.$message.success(response.message)
+                setTimeout(() => this.closePanle(), 500)
             } else {
                 this.$message.error(response.message)
             }

@@ -1,7 +1,8 @@
 export default (function (env){
 	let envObj = {
 		env: '请配置工程环境~~~',
-		serverUrl: ''
+		serverUrl: '',
+		nodeServerUrl: ''
 	}
 	if (env == 'production'){
 		// 使控制台 console 输出失效
@@ -15,7 +16,7 @@ export default (function (env){
 		envObj.env = '当前工程环境：development'
 		// java 接口
 		envObj.serverUrl = 'http://127.0.0.1:2080/hrms/'
-		// envObj.serverUrl = 'http://192.168.1.113:8080/hrms/'
+		// envObj.serverUrl = 'http://192.168.1.115:8081/hrms/'
 		// node 接口
 		envObj.nodeServerUrl = 'http://127.0.0.1:2080/hrms/'
 	}

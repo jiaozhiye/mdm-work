@@ -101,7 +101,7 @@ export default {
                 this.list.total = response.data.totalRow || 1
                 callback && callback()
             } else {
-                this.$message.error(response.data.message)
+                this.$message.error(response.message)
             }
             this.loading = !1
         },

@@ -139,7 +139,7 @@ export default {
                 this.staff = response.staff
                 callback && callback()
             } else {
-                this.$message.error(response.data.message)
+                this.$message.error(response.message)
             }
             this.loading = !1
         },

@@ -91,7 +91,7 @@
                 <tr v-for="(item1, key1) in list" :key="key1">
                     <td class="thead-y">{{ timePart[key1] }}</td>
                     <td v-for="(item2, key2) in item1" :key="key2" :data-index="key1 + ',' + key2">
-                        <strong v-if="item2.point" class="cell-point"></strong>
+                        <strong v-if="item2.point" class="cell-point">{{ item2.num }}</strong>
                         <em v-for="(item3, key3) in item2" :key="key3" :style="{'color': item3.color}">{{ item3.name }},</em>
                         <span v-if="isEdit">
                             <i class="handle-cell-btn el-icon-plus" @click.stop="addWorkerHandle(item2, [key1, key2])"></i>
@@ -193,9 +193,6 @@ export default {
             }, 
             pickerOptions: {
                 firstDayOfWeek: 1,
-                disabledDate(time){
-                    return time.getTime() < moment().subtract(1, 'days')
-                },
                 shortcuts: [{
                     text: '本周',
                     onClick(picker){
@@ -406,6 +403,7 @@ export default {
             })
             this.cellPromptList.forEach(item => {
                 if (this.list[item.pos[0]][item.pos[1]].length < item.maxNum){ // 说明没排满
+                    this.list[item.pos[0]][item.pos[1]].num = item.maxNum
                     this.list[item.pos[0]][item.pos[1]].point = !0
                 }
             })
@@ -532,10 +530,13 @@ export default {
     position: relative;
 }
 .plan-list tbody td > strong.cell-point {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: red;
+    padding: 0 2px;
+    border-radius: 2px;
+    background-color: rgb(228, 59, 59);
+    color: #fff;
+    font-size: 12px;
+    font-family: Tahoma;
+    line-height: 13px;
     position: absolute;
     right: 2px;
     top: 2px;

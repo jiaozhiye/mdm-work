@@ -6,7 +6,7 @@
             <el-breadcrumb-item>排班管理</el-breadcrumb-item>
             <el-breadcrumb-item>排班表</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="message-prompt fr"><i class="el-icon-info"></i>注意：点击编辑按钮可手动排班，表格上的红色圆点说明没排满</div>
+        <div class="message-prompt fr"><i class="el-icon-info"></i>注意：点击编辑按钮可手动排班，表格上的红色标记说明没排满</div>
     </nav>
     <div class="component-top">
         <div class="search-title fl">门店：</div>
@@ -92,7 +92,9 @@
                     <td class="thead-y">{{ timePart[key1] }}</td>
                     <td v-for="(item2, key2) in item1" :key="key2" :data-index="key1 + ',' + key2">
                         <strong v-if="item2.point" class="cell-point">{{ item2.num }}</strong>
-                        <em v-for="(item3, key3) in item2" :key="key3" :style="{'color': item3.color}">{{ item3.name }},</em>
+                        <em v-for="(item3, key3) in item2" :key="key3" :style="{'color': item3.color}">
+                            {{ item3.name }}<i v-if="key3 !== (item2.length - 1)">,</i>
+                        </em>
                         <span v-if="isEdit">
                             <i class="handle-cell-btn el-icon-plus" @click.stop="addWorkerHandle(item2, [key1, key2])"></i>
                             <i class="handle-cell-btn el-icon-delete" @click.stop="removeWorkerHandle([key1, key2])"></i>
@@ -441,7 +443,6 @@ export default {
         }
         if (this.deptId != ''){
             this.search.dept = this.deptId
-            this.searchHandle()
         }
     },
     mounted(){
@@ -542,6 +543,9 @@ export default {
     top: 2px;
     z-index: 1;
 }
+.plan-list tbody td > em > i {
+    color: #606266;
+}
 
 .plan-list tbody > tr:hover {
     background-color: #f5f7fa;
@@ -567,7 +571,6 @@ export default {
 
 /* 单元格中的 新增 删除 按钮 */
 .plan-list tbody td .handle-cell-btn {
-    /* display: none; */
     visibility: hidden;
     pointer-events: none;
     cursor: pointer;
@@ -579,7 +582,6 @@ export default {
     padding: 2px 2px 2px 0;
 }
 .plan-list tbody td:hover .handle-cell-btn {
-    /* display: block; */
     visibility: visible;
     pointer-events: auto;
 }

@@ -58,7 +58,7 @@
             :total="list.total" @current-change="handleCurrentChange">
         </el-pagination>
     </div>
-    <app-dialog title="添加文章" :visible.sync="dialog.addVisible" top="0" custom-class="dialog-full-height">
+    <app-dialog title="添加文章" :visible.sync="dialog.addVisible">
         <app-add-article @reloadEvent="reloadGetData"></app-add-article>
     </app-dialog>
     <app-dialog title="查看文章" :visible.sync="dialog.showVisible" top="0" custom-class="dialog-full-height">
@@ -76,9 +76,9 @@ import { getArticleList, delArticleRecord } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 import AppDialog from 'components/AppDialog.vue'
-import AppAddArticle from 'components/AddArticle.vue'
-import AppShowArticle from 'components/ShowArticle.vue'
-import AppModArticle from 'components/ModArticle.vue'
+import AppAddArticle from 'components/AddArticle2.vue'
+import AppShowArticle from 'components/ShowArticle2.vue'
+import AppModArticle from 'components/ModArticle2.vue'
 
 export default {
     name: 'app-article-list',

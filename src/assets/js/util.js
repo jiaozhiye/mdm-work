@@ -86,6 +86,11 @@ function appendStyleNode(fontName){
     styleEl = null
 }
 
+// 获取文件名
+function getFileName(filePath){
+    return filePath.slice(filePath.lastIndexOf('\/') + 1)
+}
+
 
 export {
     cloneObj,
@@ -96,5 +101,6 @@ export {
     debounce,
     throttle,
     convertBase64UrlToBlob,
-    appendStyleNode
+    appendStyleNode,
+    getFileName
 }

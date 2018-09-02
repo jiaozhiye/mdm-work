@@ -50,6 +50,10 @@
         </el-date-picker>
     </div>
     <div class="component-main">
+        <div style="line-height: 32px; padding-left: 10px;" v-if="list.length">
+            总工时：{{ list.totalWorkTime }} 小时，
+            总工资：{{ list.totalSalary }} 元
+        </div>
         <el-table size="small" :data="list" stripe border v-loading="loading">
             <el-table-column label="门店名称" min-width="200">
                 <template slot-scope="scope">
@@ -107,6 +111,8 @@ export default {
             const response = await getStoreReportList({ ...this.search })
             if (response.code == 1){
                 this.list = response.data
+                this.list.totalSalary = response.allSalary || ''
+                this.list.totalWorkTime = response.allWorkTime || ''
                 callback && callback()
             } else {
                 this.$message.error(response.message)

@@ -66,11 +66,11 @@
         </el-select>
     </div>
     <div class="component-main">
-        <div style="line-height: 32px; padding-left: 10px;" v-if="staff.name">
+        <div style="line-height: 32px; padding-left: 10px;" v-if="list.length">
             姓名：{{staff.staff_name}}，
-            总工时：{{staff.total_work_time}}，
-            时薪：{{staff.hour_wage}}，
-            总工资：{{staff.total}}
+            总工时：{{staff.total_work_time}} 小时，
+            时薪：{{staff.hour_wage}} 元，
+            总工资：{{staff.total}} 元
         </div>
         <el-table size="small" :data="list" stripe border v-loading="loading">
             <el-table-column prop="date" label="日期"></el-table-column>

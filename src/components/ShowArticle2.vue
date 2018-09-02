@@ -7,14 +7,13 @@
             <section v-if="form.video">
                 <video controls width="100%" autoplay :src="video"></video>
             </section>
-            <article class="ql-editor" v-html="form.content"></article>
+            <iframe :src="form.pdf_path" width="100%" height="100%" frameborder="0"></iframe>
         </div>
     </section>
 </div>
 </template>
 
 <script>
-import 'quill/dist/quill.core.css'
 import { getArticleRecord } from 'api'
 
 export default {
@@ -25,7 +24,7 @@ export default {
             form: {
                 title: '',
                 video: '',
-                content: '',
+                pdf_path: '',
                 create_time: '',
                 author: ''
             }
@@ -75,17 +74,7 @@ export default {
     overflow: hidden;
 }
 .show-arc-wrapper > .content {
-    margin-top: 5px;
-    height: calc(100% - 290px);
-    overflow-y: auto;
-}
-.show-arc-wrapper > .content > article {
-    padding: 5px 10px;
-    line-height: 24px;
-}
-.show-arc-wrapper > .content > article img {
-    display: inline-block;
-    text-align: center;
-    max-width: 100%;
+    height: calc(100% - 280px);
+    /* overflow-y: auto; */
 }
 </style>

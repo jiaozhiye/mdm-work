@@ -9,6 +9,10 @@ console.info(common.env)
 const serverUrl = common.serverUrl.charAt(common.serverUrl.length - 1) === '/' 
     ? common.serverUrl : `${common.serverUrl}/`
 
+// nodejs 接口
+const nodeServerUrl = common.nodeServerUrl.charAt(common.nodeServerUrl.length - 1) === '/' 
+    ? common.nodeServerUrl : `${common.nodeServerUrl}/`
+
 const instance = axios.create({
     baseURL: serverUrl,
     timeout: 5000,
@@ -52,4 +56,4 @@ instance.interceptors.response.use(response => {
     return Promise.reject(error)
 })
 
-export { instance }
+export { instance, serverUrl, nodeServerUrl }

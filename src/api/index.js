@@ -1,5 +1,5 @@
 import common from 'assets/js/common'
-import { instance } from './fetch'
+import { instance, serverUrl, nodeServerUrl } from './fetch'
 
 // 登录接口
 export const doLogin = params => instance.post('/login', params)
@@ -286,10 +286,12 @@ export const getAreaStaff = params => instance.get('/mgr/areaCtrl/getStaff', {pa
 // 保存区域员工
 export const addAreaStaff = params => instance.get('/mgr/areaCtrl/edit', {params})
 
-// nodejs 接口
-const nodeServerUrl = common.nodeServerUrl.charAt(common.nodeServerUrl.length - 1) === '/' 
-    ? common.nodeServerUrl : `${common.nodeServerUrl}/`
+// 培训 pdf 文件上传地址
+export const uploadPdfUrl = `${serverUrl}mgr/train/article/uploadPDF`
+// export const uploadPdfUrl = `${nodeServerUrl}poster/template`
 
+
+// nodejs 接口
 // 保存海报
 export const savePoster = params => instance.post('/poster/save', params, {
     baseURL: nodeServerUrl,

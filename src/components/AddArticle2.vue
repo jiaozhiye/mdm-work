@@ -45,6 +45,7 @@ export default {
                 class_id: '',
                 title: '',
                 video: '',
+                org_name: '',
                 pdf_path: ''
             },
             rules: {
@@ -68,7 +69,8 @@ export default {
         ...mapActions('dict', ['createClassifyList']),
         handleAvatarSuccess(res, file){ // res -> response
             if (res.code == 1){
-                this.form.pdf_path = res.data.filePath
+                this.form.org_name = res.data.org_name
+                this.form.pdf_path = res.data.url
             } else {
                 this.$message.error(res.message)
             }

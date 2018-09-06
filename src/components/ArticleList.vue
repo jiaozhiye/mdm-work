@@ -64,7 +64,7 @@
     <app-dialog title="查看文章" :visible.sync="dialog.showVisible" top="0" custom-class="dialog-full-height">
         <app-show-article :record-id="recordId"></app-show-article>
     </app-dialog>
-    <app-dialog title="修改文章" :visible.sync="dialog.modVisible" top="0" custom-class="dialog-full-height">
+    <app-dialog title="修改文章" :visible.sync="dialog.modVisible">
         <app-mod-article :record-id="recordId" @reloadEvent="reloadGetData"></app-mod-article>
     </app-dialog>
 </div>

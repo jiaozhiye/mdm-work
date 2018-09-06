@@ -103,7 +103,10 @@ export default {
             }
         },
         async saveRecord(){
-            const response = await modArticleRecord(this.form)
+            const response = await modArticleRecord({
+                id: this.recordId,
+                ...this.form
+            })
             if (response.code == 1){
                 this.closePanle()
             } else {

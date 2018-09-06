@@ -49,6 +49,7 @@ export default {
                 class_id: '',
                 title: '',
                 video: '',
+                org_name: '',
                 pdf_path: ''
             },
             fileList: [],
@@ -78,7 +79,8 @@ export default {
         },
         handleAvatarSuccess(res, file){ // res -> response
             if (res.code == 1){
-                this.form.pdf_path = res.data.filePath
+                this.form.org_name = res.data.org_name
+                this.form.pdf_path = res.data.url
             } else {
                 this.$message.error(res.message)
             }
@@ -96,7 +98,10 @@ export default {
             }
         },
         async saveRecord(){
-            const response = await modArticleRecord(this.form)
+            const response = await modArticleRecord({
+                id: this.recordId,
+                ...this.form
+            })
             if (response.code == 1){
                 this.closePanle()
             } else {

@@ -10,17 +10,15 @@
             <el-input v-model="form.title" clearable placeholder="请输入文章标题"></el-input>
         </el-form-item>
         <el-form-item label="视频地址">
-            <el-input v-model="form.video" clearable placeholder="请输入视频地址"></el-input>
+            <el-input type="textarea" :rows="3" v-model="form.video" clearable placeholder="格式：多个视频地址用逗号分割"></el-input>
         </el-form-item>
-        <el-form-item label="PDF文件" prop="pdf_path">
+        <el-form-item label="PDF文件">
             <el-upload
                 ref="upload"
                 :action="uploadUrl"
-                :multiple="false"
-                :auto-upload="false"
+                :multiple="true"
                 :on-success="handleAvatarSuccess">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
                 <div slot="tip" class="el-upload__tip">只能上传 pdf 文件，大小不超过 5M</div>
             </el-upload>
         </el-form-item>
@@ -54,9 +52,6 @@ export default {
                 ],
                 class_id: [
                     { required: true, message: '请选所属分类', trigger: 'change' }
-                ],
-                pdf_path: [
-                    { required: true, message: '请上传PDF文件' }
                 ]
             }
         }
@@ -69,14 +64,11 @@ export default {
         ...mapActions('dict', ['createClassifyList']),
         handleAvatarSuccess(res, file){ // res -> response
             if (res.code == 1){
-                this.form.org_name = res.data.org_name
-                this.form.pdf_path = res.data.url
+                this.form.org_name += `${res.data.org_name},`
+                this.form.pdf_path += `${res.data.url},`
             } else {
                 this.$message.error(res.message)
             }
-        },
-        submitUpload(){
-            this.$refs.upload.submit()
         },
         async saveRecord(){
             const response = await addArticleRecord(this.form)

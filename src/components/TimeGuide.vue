@@ -151,6 +151,7 @@ export default {
             this.list.push(_arr)
         },
         getArrayTotal(arr){
+            if (!arr.length) return 0
             return arr.reduce((sum, cur) => {
                 if ( Array.isArray(sum) ) sum = sum.length
                 return sum + cur.length

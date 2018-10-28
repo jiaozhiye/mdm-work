@@ -9,7 +9,7 @@ import App from './App.vue'
 import router from 'routes'
 import store from 'store'
 import 'routes/permission'
-import _ from 'lodash'
+import 'lodash'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'

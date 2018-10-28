@@ -16,8 +16,12 @@
             <el-upload
                 ref="upload"
                 :action="uploadUrl"
-                :multiple="true"
-                :on-success="handleAvatarSuccess">
+                :data="postData"
+                :file-list="fileList"
+                :on-remove="handleRemove"
+                :before-upload="beforeAvatarUpload"
+                :on-success="handleAvatarSuccess"
+                :on-error="handleError">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 <div slot="tip" class="el-upload__tip">只能上传 pdf 文件，大小不超过 5M</div>
             </el-upload>
@@ -31,7 +35,7 @@
 </template>
 
 <script>
-import { addArticleRecord, uploadPdfUrl } from 'api'
+import { addArticleRecord, uploadPdfUrl, getQnToken } from 'api'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -39,6 +43,11 @@ export default {
     data (){
         return {
             uploadUrl: uploadPdfUrl,
+            postData: {
+                key: '',
+                token: ''
+            },
+            qiniu_url: 'http://pgvjtieqt.bkt.clouddn.com',
             form: {
                 class_id: '',
                 title: '',
@@ -46,6 +55,7 @@ export default {
                 org_name: '',
                 pdf_path: ''
             },
+            fileList: [], // 上传文件列表
             rules: {
                 title: [
                     { required: true, message: '请输入文章标题', trigger: 'blur' }
@@ -62,15 +72,30 @@ export default {
     },
     methods: {
         ...mapActions('dict', ['createClassifyList']),
+        handleRemove(file, fileList){
+            // 重置 fileList 数组
+            this.fileList = fileList
+        },
+        beforeAvatarUpload(file){
+            this.postData.key = file.name
+            return true
+        },
         handleAvatarSuccess(res, file){ // res -> response
-            if (res.code == 1){
-                this.form.org_name += `${res.data.org_name},`
-                this.form.pdf_path += `${res.data.url},`
-            } else {
-                this.$message.error(res.message)
+            // 在 fileList 中追加新上传的数据
+            this.fileList.push({ name: res.key, url: `${this.qiniu_url}/${res.key}` })
+        },
+        handleError(res){
+            this.$message.error('上传失败!')
+        },
+        async getQiniuToken(){
+            const response = await getQnToken()
+            if (response.code == 1){
+                this.postData.token = response.token
             }
         },
         async saveRecord(){
+            this.form.org_name = this.fileList.map(item => item.name).join(',')
+            this.form.pdf_path = this.fileList.map(item => item.url).join(',')
             const response = await addArticleRecord(this.form)
             if (response.code == 1){
                 this.closePanle()
@@ -96,6 +121,7 @@ export default {
     },
     created(){
         this.createClassifyList()
+        this.getQiniuToken()
     }
 }
 </script>

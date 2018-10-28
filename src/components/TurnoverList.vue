@@ -118,7 +118,7 @@ export default {
             this.tableHeaders = _.cloneDeep(this.dayList)
         },
         initialWeek(){
-            this.dateChangeHandle(new Date())
+            this.dateChangeHandle(moment().add(7, 'days'))
         },
         initialListHandle(){
             this.timePart.forEach(() => {
@@ -129,22 +129,25 @@ export default {
         },
         setDateHandler(weekStart){
             this.weekDay   = weekStart.toDate()
-            this.form.date = weekStart.format('MM-DD')
+            this.form.date = weekStart.format('YYYY-MM-DD')
             for (let i = 0; i < this.dayList.length; i++){
                 this.$set(this.tableHeaders, i, `${this.dayList[i]} ${moment(new Date(weekStart).getTime() + 3600 * 1000 * 24 * i).format('MM-DD')}`)
             }
+            this.getTurnoverList()
         },
         async getTurnoverList(){
-            const response = await getDefaultTurnover()
+            const response = await getDefaultTurnover({ date: this.form.date })
             if (response.code == 1){
                 const respLen = this.getArrayTotal(response.data)
                 const listLen = this.getArrayTotal(this.list)
+
                 if (respLen !== listLen){
                     this.$message.error('数据有误！')
                 } else {
                     this.list = response.data
                 }
-            } else {
+            }
+            if (response.code == 0){
                 this.$message.error(response.message)
             }
         },
@@ -164,6 +167,7 @@ export default {
             }
         },
         getArrayTotal(arr){
+            if (!arr.length) return 0
             return arr.reduce((sum, cur) => {
                 if ( Array.isArray(sum) ) sum = sum.length
                 return sum + cur.length
@@ -174,7 +178,6 @@ export default {
         this.initialTHead()
         this.initialWeek()
         this.initialListHandle()
-        this.getTurnoverList()
     },
     mounted(){
         const oTable = new TableCell({

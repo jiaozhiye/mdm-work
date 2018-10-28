@@ -9,6 +9,8 @@ console.info(common.env)
 const serverUrl = common.serverUrl.charAt(common.serverUrl.length - 1) === '/' 
     ? common.serverUrl : `${common.serverUrl}/`
 
+const qnTokenUrl = common.qnTokenUrl || ''
+
 // nodejs 接口
 const nodeServerUrl = common.nodeServerUrl.charAt(common.nodeServerUrl.length - 1) === '/' 
     ? common.nodeServerUrl : `${common.nodeServerUrl}/`
@@ -56,4 +58,4 @@ instance.interceptors.response.use(response => {
     return Promise.reject(error)
 })
 
-export { instance, serverUrl, nodeServerUrl }
+export { instance, serverUrl, qnTokenUrl, nodeServerUrl }

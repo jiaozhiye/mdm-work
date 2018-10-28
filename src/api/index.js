@@ -1,5 +1,5 @@
 import common from 'assets/js/common'
-import { instance, serverUrl, nodeServerUrl } from './fetch'
+import { instance, serverUrl, qnTokenUrl, nodeServerUrl } from './fetch'
 
 // 登录接口
 export const doLogin = params => instance.post('/login', params)
@@ -227,7 +227,7 @@ export const getFreeTime = params => instance.get('/mgr/staffIdleTimeCtrl/getSta
 export const getAllFreeTime = params => instance.get('/mgr/staffIdleTimeCtrl/getStaffIdleTimeById', {params})
 
 // 获取默认的预估营业额
-export const getDefaultTurnover = () => instance.get('/mgr/storeForecastTurnoverCtrl/getForecastTurnover')
+export const getDefaultTurnover = params => instance.get('/mgr/storeForecastTurnoverCtrl/getForecastTurnover', {params})
 
 // 获取默认的可变工时
 export const getDefaultTime = () => instance.get('/mgr/variableTimeGuideCtrl/getVariableTimeGuide')
@@ -287,8 +287,13 @@ export const getAreaStaff = params => instance.get('/mgr/areaCtrl/getStaff', {pa
 export const addAreaStaff = params => instance.get('/mgr/areaCtrl/edit', {params})
 
 // 培训 pdf 文件上传地址
-export const uploadPdfUrl = `${serverUrl}mgr/train/article/uploadPDF`
+export const uploadPdfUrl = `http://upload.qiniup.com/`
 // export const uploadPdfUrl = `${nodeServerUrl}poster/template`
+
+// 获取七牛云 token
+export const getQnToken = () => instance.post('/qiniu_token/token/getJlmdmToken', {}, {
+    baseURL: qnTokenUrl
+})
 
 
 // nodejs 接口
